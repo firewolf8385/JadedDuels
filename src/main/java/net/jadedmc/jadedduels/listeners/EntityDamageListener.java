@@ -58,27 +58,23 @@ public class EntityDamageListener implements Listener {
         Game game = plugin.gameManager().game(player);
 
         if(game == null) {
-            System.out.println("Game Null");
             return;
         }
 
         // Prevent spectators from taking damage.
         if(game.spectators().contains(player)) {
-            System.out.println("Spectator");
             event.setCancelled(true);
             return;
         }
 
         // Players can only take damage when the game is running.
         if(game.gameState() != GameState.RUNNING) {
-            System.out.println("GameState not RUNNING");
             event.setCancelled(true);
             return;
         }
 
         // Prevents "killing" a player twice.
         if(event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE || event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-            System.out.println("Double Kill Detection");
             return;
         }
 
