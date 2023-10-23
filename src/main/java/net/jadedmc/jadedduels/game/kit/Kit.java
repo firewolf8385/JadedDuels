@@ -125,6 +125,22 @@ public class Kit {
     }
 
     /**
+     * Get the Icon Material of the kit,
+     * @return Icon Material.
+     */
+    public Material iconMaterial() {
+        return iconMaterial;
+    }
+
+    /**
+     * Change the Icon material of the kit.
+     * @param iconMaterial New Icon material.
+     */
+    public void iconMaterial(Material iconMaterial) {
+        this.iconMaterial = iconMaterial;
+    }
+
+    /**
      * Get the id of the kit.
      * @return Kit id.
      */
@@ -133,10 +149,58 @@ public class Kit {
     }
 
     /**
+     * Get the max health of the kit.
+     * @return Kit's max health.
+     */
+    public double maxHealth() {
+        return maxHealth;
+    }
+
+    /**
+     * Change the max health of the kit.
+     * @param maxHealth New max health.
+     */
+    public void maxHealth(double maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    /**
      * Get the name of the kit.
      * @return Kit name.
      */
     public String name() {
         return name;
+    }
+
+    /**
+     * Get the starting health of the kit.
+     * @return Starting health.
+     */
+    public double startingHealth() {
+        return startingHealth;
+    }
+
+    /**
+     * Change the starting health of the kit.
+     * @param startingHealth New starting health.
+     */
+    public void startingHealth(double startingHealth) {
+        this.startingHealth = startingHealth;
+    }
+
+    /**
+     * Get the starting hunger of the kit.
+     * @return New starting hunger.
+     */
+    public int startingHunger() {
+        return startingHunger;
+    }
+
+    /**
+     * Change the starting hunger
+     * @param startingHunger New starting health.
+     */
+    public void startingHunger(int startingHunger) {
+        this.startingHunger = startingHunger;
     }
 }
