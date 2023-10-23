@@ -101,6 +101,10 @@ class Placeholders extends PlaceholderExpansion {
                 return PlaceholderAPI.setPlaceholders(player, "%jadedcore_rank_chat_prefix_legacy%&7");
             }
 
+            if(game.spectators().contains(player)) {
+                return "&7[SPEC] ";
+            }
+
             Team team = game.teamManager().team(player);
             return team.teamColor().chatColor() + "[" + team.teamColor().abbreviation() + "] ";
         }
@@ -110,6 +114,10 @@ class Placeholders extends PlaceholderExpansion {
 
             if(game == null) {
                 return null;
+            }
+
+            if(game.spectators().contains(player)) {
+                return "&7[SPEC] ";
             }
 
             Team team = game.teamManager().team(player);
