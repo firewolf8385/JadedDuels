@@ -55,4 +55,27 @@ public class GameUtils {
         return "" + color + percent + "%";
     }
 
+    /**
+     * Get a colored string of a player's ping.
+     * @param player Player to get ping of.
+     * @return Formatted ping.
+     */
+    public static String getFormattedPing(Player player) {
+        int ping = player.getPing();
+        ChatColor color;
+
+        if(ping < 40) {
+            color = ChatColor.GREEN;
+        }
+        else if(ping < 70) {
+            color = ChatColor.YELLOW;
+        }
+        else if (ping < 110) {
+            color = ChatColor.GOLD;
+        }
+        else {
+            color = ChatColor.RED;
+        }
+        return color + "" + ping + " ms";
+    }
 }

@@ -109,7 +109,7 @@ public class Game {
             for(Player player : team.players()) {
                 player.teleport(spawns.get(spawnCount));
                 kit.apply(player);
-                // TODO: Game Scoreboard
+                new GameScoreboard(player, this).update(player);
             }
 
             spawnCount++;
