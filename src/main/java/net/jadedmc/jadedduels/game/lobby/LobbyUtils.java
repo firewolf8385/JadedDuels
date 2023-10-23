@@ -54,6 +54,8 @@ public class LobbyUtils {
         player.setFlying(false);
         player.setCollidable(true);
 
+        player.setArrowsInBody(0);
+
         player.setExp(0);
         player.setLevel(0);
 
