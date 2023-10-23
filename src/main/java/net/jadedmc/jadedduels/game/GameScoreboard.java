@@ -25,6 +25,7 @@
 package net.jadedmc.jadedduels.game;
 
 import net.jadedmc.jadedduels.game.team.Team;
+import net.jadedmc.jadedduels.utils.DateUtils;
 import net.jadedmc.jadedduels.utils.GameUtils;
 import net.jadedmc.jadedduels.utils.scoreboard.CustomScoreboard;
 import net.jadedmc.jadedduels.utils.scoreboard.ScoreHelper;
@@ -68,7 +69,7 @@ public class GameScoreboard extends CustomScoreboard {
 
                 helper.setTitle("&a&lDUELS");
 
-                helper.setSlot(15, "&7Date");
+                helper.setSlot(15, "&7" + DateUtils.currentDateToString());
                 helper.setSlot(14, "");
                 helper.setSlot(13, "&aTime: &f" + game.timer().toString());
                 helper.setSlot(12, "");
