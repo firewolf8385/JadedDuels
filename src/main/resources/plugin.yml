@@ -5,6 +5,8 @@ api-version: 1.20
 
 depend:
   - JadedCore
+  - PlaceholderAPI
+
 commands:
   arena:
     description: Runs the arena command.

@@ -61,6 +61,9 @@ public final class JadedDuelsPlugin extends JavaPlugin {
 
         // Updates scoreboards every second
         new ScoreboardUpdate().runTaskTimer(this, 20L, 20L);
+
+        // Register placeholders
+        new Placeholders(this).register();
     }
 
     /**
