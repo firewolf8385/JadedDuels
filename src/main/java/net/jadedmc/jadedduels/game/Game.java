@@ -278,7 +278,6 @@ public class Game {
      * @param player Player to add.
      */
     public void addPlayer(Player player) {
-        System.out.println("Added " + player.getName() + " to game.");
         List<Player> members = new ArrayList<>();
         members.add(player);
         teamManager.createTeam(members);

@@ -135,9 +135,7 @@ public class ArenaManager {
      * @param file Arena configuration file.
      */
     public void loadArena(File file) {
-        System.out.println("Loading Arena");
         Arena arena = new Arena(plugin, file);
-        System.out.println("Loaded " + arena.name());
         arenas.put(arena.id(), arena);
     }
 

@@ -92,7 +92,6 @@ public class GameManager {
             World world = null;
             while(!loaded) {
                 try {
-                    System.out.println("Not Loaded");
                     Thread.sleep(60);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -102,7 +101,6 @@ public class GameManager {
                     if(w.getName().equals(gameUUID.toString())) {
                         loaded = true;
                         world = w;
-                        System.out.println("Loaded");
                         break;
                     }
                 }
