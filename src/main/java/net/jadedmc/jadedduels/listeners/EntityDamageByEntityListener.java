@@ -26,6 +26,7 @@ package net.jadedmc.jadedduels.listeners;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
+import net.jadedmc.jadedduels.utils.GameUtils;
 import net.jadedmc.jadedutils.MathUtils;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import org.bukkit.Bukkit;
@@ -107,11 +108,11 @@ public class EntityDamageByEntityListener implements Listener {
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 if(event.getFinalDamage() >= player.getHealth()) {
-                    // TODO: Action Bar ActionBarUtils.sendActionText(damager, "&a" + player.getName() + "'s Health: &c0%");
+                    damager.sendActionBar(ChatUtils.translate(game.teamManager().team(player).teamColor().chatColor() + player.getName() + "&a's Health: &c0%"));
                     game.playerKilled(player, damager);
                 }
                 else {
-                    // TODO: Action bar ActionBarUtils.sendActionText(damager, game.getTeam(player).teamColor().chatColor() + player.getName() + "&a's Health: " + ChatUtils.getFormattedHealthPercent(player));
+                    damager.sendActionBar(ChatUtils.translate(game.teamManager().team(player).teamColor().chatColor() + player.getName() + "&a's Health: " + GameUtils.getFormattedHealth(player)));
                 }
             }, 1);
         }
