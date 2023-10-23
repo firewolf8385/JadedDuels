@@ -183,6 +183,8 @@ public class Game {
                 player.closeInventory();
                 player.setFireTicks(0);
             }
+
+            spawnCount++;
         }
     }
 
