@@ -6,6 +6,7 @@ import net.jadedmc.jadedcore.JadedCore;
 import net.jadedmc.jadedcore.features.player.JadedPlayer;
 import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.team.Team;
+import net.jadedmc.jadedduels.utils.GameUtils;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -122,6 +123,10 @@ class Placeholders extends PlaceholderExpansion {
 
             Team team = game.teamManager().team(player);
             return team.teamColor().chatColor() + "[" + team.teamColor().displayName() + "]";
+        }
+
+        if(identifier.equals("health")) {
+            return GameUtils.getFormattedHealth(player);
         }
 
         return null;
