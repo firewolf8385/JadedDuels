@@ -115,7 +115,38 @@ public class Game {
             spawnCount++;
         }
 
-        // TODO: Send start message.
+        for(Player player : players()) {
+            List<Player> opponents = new ArrayList<>();
+
+            Team team = this.teamManager.team(player);
+            for(Team opposingTeam : this.teamManager.teams()) {
+                if(team.equals(opposingTeam)) {
+                    continue;
+                }
+
+                opponents.addAll(opposingTeam.players());
+            }
+
+            ChatUtils.chat(player, "&8&m+-----------------------***-----------------------+");
+            ChatUtils.chat(player, ChatUtils.centerText("&a&l" + kit.name() + " Duel"));
+            ChatUtils.chat(player, "");
+
+            // Display the opponents label, based on the number.
+            if(opponents.size() == 1) {
+                ChatUtils.chat(player, ChatUtils.centerText("&aOpponent:"));
+            }
+            else {
+                ChatUtils.chat(player, ChatUtils.centerText("&aOpponents:"));
+            }
+
+            // Lists the opponents.
+            for(Player opponent : opponents) {
+                ChatUtils.chat(player, ChatUtils.centerText(opponent.getName()));
+            }
+
+            ChatUtils.chat(player, "");
+            ChatUtils.chat(player, "&8&m+-----------------------***-----------------------+");
+        }
 
         countdown();
     }
