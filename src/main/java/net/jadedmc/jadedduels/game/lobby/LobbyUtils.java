@@ -24,6 +24,7 @@
  */
 package net.jadedmc.jadedduels.game.lobby;
 
+import net.jadedmc.jadedchat.JadedChat;
 import net.jadedmc.jadedcore.features.items.CustomItem;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.utils.LocationUtils;
@@ -44,7 +45,6 @@ public class LobbyUtils {
      * @param player Player to send to the lobby.
      */
     public static void sendToLobby(final JadedDuelsPlugin plugin, Player player) {
-        // TODO: JadedChat JadedChat.setChannel(player, JadedChat.getDefaultChannel());
         player.teleport(LocationUtils.getSpawn(plugin));
         player.setGameMode(GameMode.ADVENTURE);
         player.setHealth(20);
@@ -67,6 +67,12 @@ public class LobbyUtils {
         new LobbyScoreboard(plugin, player).update(player);
 
         giveLobbyItems(player);
+
+        // Update player's chat channel.
+        if(JadedChat.getChannel(player).equals(JadedChat.getChannel("GAME")) || JadedChat.getChannel(player).equals(JadedChat.getChannel("TEAM"))) {
+            JadedChat.setChannel(player, JadedChat.getDefaultChannel());
+        }
+
     }
 
     /**

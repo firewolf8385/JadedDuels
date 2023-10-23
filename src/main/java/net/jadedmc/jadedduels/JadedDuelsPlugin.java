@@ -24,13 +24,15 @@
  */
 package net.jadedmc.jadedduels;
 
+import net.jadedmc.jadedchat.JadedChat;
+import net.jadedmc.jadedchat.features.channels.channel.ChatChannel;
+import net.jadedmc.jadedchat.features.channels.channel.ChatChannelBuilder;
+import net.jadedmc.jadedchat.features.channels.fomat.ChatFormatBuilder;
 import net.jadedmc.jadedduels.commands.AbstractCommand;
 import net.jadedmc.jadedduels.game.GameManager;
 import net.jadedmc.jadedduels.game.arena.ArenaManager;
 import net.jadedmc.jadedduels.game.kit.KitManager;
-import net.jadedmc.jadedduels.listeners.EntityDamageByEntityListener;
-import net.jadedmc.jadedduels.listeners.EntityDamageListener;
-import net.jadedmc.jadedduels.listeners.PlayerDropItemListener;
+import net.jadedmc.jadedduels.listeners.*;
 import net.jadedmc.jadedduels.utils.scoreboard.ScoreboardUpdate;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -55,6 +57,8 @@ public final class JadedDuelsPlugin extends JavaPlugin {
 
         AbstractCommand.registerCommands(this);
 
+        getServer().getPluginManager().registerEvents(new ChannelMessageSendListener(this), this);
+        getServer().getPluginManager().registerEvents(new ChannelSwitchListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityDamageListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityDamageByEntityListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), this);
@@ -64,6 +68,42 @@ public final class JadedDuelsPlugin extends JavaPlugin {
 
         // Register placeholders
         new Placeholders(this).register();
+
+        // Create Chat Channels
+        if(!JadedChat.channelExists("GAME")) {
+            ChatChannel gameChannel = new ChatChannelBuilder("GAME")
+                    .setDisplayName("<green>GAME</green>")
+                    .useDiscordSRV(true)
+                    .addChatFormat(new ChatFormatBuilder("default")
+                            .addSection("channel", "<green>[GAME]</green> ")
+                            .addSection("team", "%duels_team_prefix% ")
+                            .addSection("prefix", "%jadedcore_rank_chat_prefix%")
+                            .addSection("player", "<gray>%player_name%")
+                            .addSection("seperator", "<dark_gray> » ")
+                            .addSection("message", "<gray><message>")
+                            .build())
+                    .build();
+            gameChannel.saveToFile("game.yml");
+            JadedChat.loadChannel(gameChannel);
+        }
+
+        if(!JadedChat.channelExists("TEAM")) {
+            ChatChannel gameChannel = new ChatChannelBuilder("TEAM")
+                    .setDisplayName("<white>TEAM</white>")
+                    .addAlias("T")
+                    .addAlias("TC")
+                    .addChatFormat(new ChatFormatBuilder("default")
+                            .addSection("channel", "<white>[TEAM]</white> ")
+                            .addSection("team", "%duels_team_prefix% ")
+                            .addSection("prefix", "%jadedcore_rank_chat_prefix%")
+                            .addSection("player", "<gray>%player_name%")
+                            .addSection("seperator", "<dark_gray> » ")
+                            .addSection("message", "<gray><message>")
+                            .build())
+                    .build();
+            gameChannel.saveToFile("team.yml");
+            JadedChat.loadChannel(gameChannel);
+        }
     }
 
     /**

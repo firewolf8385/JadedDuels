@@ -25,6 +25,7 @@
 package net.jadedmc.jadedduels.game;
 
 import com.cryptomorin.xseries.XSound;
+import net.jadedmc.jadedchat.JadedChat;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.arena.Arena;
 import net.jadedmc.jadedduels.game.kit.Kit;
@@ -281,6 +282,11 @@ public class Game {
         List<Player> members = new ArrayList<>();
         members.add(player);
         teamManager.createTeam(members);
+
+        // Update player's chat channel.
+        if(JadedChat.getChannel(player).isDefaultChannel()) {
+            JadedChat.setChannel(player, JadedChat.getChannel("GAME"));
+        }
     }
 
     /**

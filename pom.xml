@@ -90,5 +90,10 @@
             <version>2.11.4</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.JadedMC</groupId>
+            <artifactId>JadedChat</artifactId>
+            <version>0.6</version>
+        </dependency>
     </dependencies>
 </project>
