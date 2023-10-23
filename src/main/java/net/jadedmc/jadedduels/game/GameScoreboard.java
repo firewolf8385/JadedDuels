@@ -73,7 +73,7 @@ public class GameScoreboard extends CustomScoreboard {
                 helper.setSlot(14, "");
                 helper.setSlot(13, "&aTime: &f" + game.timer().toString());
                 helper.setSlot(12, "");
-                helper.setSlot(11, "&aLadder:");
+                helper.setSlot(11, "&aKit:");
                 helper.setSlot(10, "  &f" + game.kit().name());
                 helper.setSlot(9, "");
 
