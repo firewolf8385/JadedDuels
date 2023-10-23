@@ -1,0 +1,12 @@
+name: JadedDuels
+version: '${project.version}'
+main: net.jadedmc.jadedduels.JadedDuelsPlugin
+api-version: 1.20
+
+depend:
+  - JadedCore
+commands:
+  arena:
+    description: Runs the arena command.
+  testgame:
+    description: Test game
