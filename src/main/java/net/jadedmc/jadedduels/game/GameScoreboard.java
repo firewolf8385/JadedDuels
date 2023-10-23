@@ -87,7 +87,7 @@ public class GameScoreboard extends CustomScoreboard {
                     }
 
                     for(Player opponent : opponents) {
-                        helper.setSlot(slot, "  " + opponent.getName());
+                        helper.setSlot(slot, "  " + game.teamManager().team(opponent).teamColor().chatColor()  + opponent.getName());
                         slot--;
 
                         if(game.teamManager().team(opponent).deadPlayers().contains(opponent)) {
