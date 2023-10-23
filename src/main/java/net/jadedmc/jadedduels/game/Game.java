@@ -402,7 +402,7 @@ public class Game {
             return;
         }
 
-        player.getLocation().getWorld().strikeLightning(player.getLocation());
+        player.getLocation().getWorld().strikeLightningEffect(player.getLocation());
         addSpectator(player);
         teamManager.team(player).killPlayer(player);
         broadcast(teamManager.team(player).teamColor().chatColor()  + player.getName() + " &ahas died!");
@@ -435,7 +435,7 @@ public class Game {
             return;
         }
 
-        player.getLocation().getWorld().strikeLightning(player.getLocation());
+        player.getLocation().getWorld().strikeLightningEffect(player.getLocation());
         addSpectator(player);
         teamManager.team(player).killPlayer(player);
         broadcast(teamManager.team(player).teamColor().chatColor()  + player.getName() + " &awas killed by " + teamManager.team(killer).teamColor().chatColor() + killer.getName() + " &a(" + GameUtils.getFormattedHealth(killer) + "&a)");
