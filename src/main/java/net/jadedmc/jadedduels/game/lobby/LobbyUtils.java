@@ -59,14 +59,12 @@ public class LobbyUtils {
         player.setExp(0);
         player.setLevel(0);
 
-        // TODO: Fix arrows ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0);
-
         // Remove potion effects.
         for(PotionEffect effect : player.getActivePotionEffects()) {
             player.removePotionEffect(effect.getType());
         }
 
-        // TODO: Scoreboard new LobbyScoreboard(plugin, player).update(player);
+        new LobbyScoreboard(plugin, player).update(player);
 
         giveLobbyItems(player);
     }

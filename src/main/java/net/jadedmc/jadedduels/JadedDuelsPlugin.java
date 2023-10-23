@@ -30,6 +30,7 @@ import net.jadedmc.jadedduels.game.arena.ArenaManager;
 import net.jadedmc.jadedduels.game.kit.KitManager;
 import net.jadedmc.jadedduels.listeners.EntityDamageByEntityListener;
 import net.jadedmc.jadedduels.listeners.EntityDamageListener;
+import net.jadedmc.jadedduels.utils.scoreboard.ScoreboardUpdate;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class JadedDuelsPlugin extends JavaPlugin {
@@ -55,6 +56,9 @@ public final class JadedDuelsPlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new EntityDamageListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityDamageByEntityListener(this), this);
+
+        // Updates scoreboards every second
+        new ScoreboardUpdate().runTaskTimer(this, 20L, 20L);
     }
 
     /**
