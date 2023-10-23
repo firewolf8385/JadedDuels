@@ -77,7 +77,7 @@
         <dependency>
             <groupId>com.github.JadedMC</groupId>
             <artifactId>JadedCore</artifactId>
-            <version>26da6bef0c</version>
+            <version>fa66be1f13</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

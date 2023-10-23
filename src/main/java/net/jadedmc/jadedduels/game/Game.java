@@ -202,21 +202,21 @@ public class Game {
 
         broadcast("&8&m+-----------------------***-----------------------+");
         broadcast(" ");
-        broadcast("&a&l" + kit.name() + " Duel &7- &f&l" + timer.toString());
+        broadcast(ChatUtils.centerText("&a&l" + kit.name() + " Duel &7- &f&l" + timer));
         broadcast(" ");
         if(winner.players().size() > 1) {
-            broadcast("&aWinners:");
+            broadcast(ChatUtils.centerText("&aWinners:"));
         }
         else {
-            broadcast("&aWinner:");
+            broadcast(ChatUtils.centerText("&aWinner:"));
         }
 
         for(Player player : winner.players()) {
             if(teamManager.team(player).deadPlayers().contains(player)) {
-                broadcast("&f" + player.getName() + " &a(&c0%&a)");
+                broadcast(ChatUtils.centerText("&f" + player.getName() + " &a(&c0%&a)"));
             }
             else {
-                broadcast("&f" + player.getName() + " &a(" + GameUtils.getFormattedHealth(player) + "&a)");
+                broadcast(ChatUtils.centerText("&f" + player.getName() + " &a(" + GameUtils.getFormattedHealth(player) + "&a)"));
             }
         }
         broadcast(" ");
