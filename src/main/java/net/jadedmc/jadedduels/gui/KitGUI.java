@@ -11,17 +11,17 @@ import org.bukkit.inventory.ItemStack;
 public class KitGUI extends CustomGUI {
 
     public KitGUI(JadedDuelsPlugin plugin) {
-        super(45, "Kits");
-        addFiller(0,1,2,3,4,5,6,7,8,9,10,17,18,19,20,21,22,23,24,25,26,27,35,36,37,38,39,40,41,42,43,44);
+        super(27, "Kits");
+        addFiller(0,1,2,3,4,5,6,7,8,9,10,17,18,19,20,21,22,23,24,25,26);
 
-        int[] iconSlots = new int[]{10,11,12,13,14,15,16,28,29,30,31,32,33,34,21,23};
+        int[] iconSlots = new int[]{10,11,12,13,14,15,16};
         int i = 0;
         for(Kit kit : plugin.kitManager().kits()) {
 
             ItemStack item = new ItemBuilder(kit.iconMaterial(), 1)
-                    .setDisplayName("&a" + kit.name())
-                    .addLore("&7Playing: " + plugin.queueManager().getPlaying(kit))
-                    .addLore("&7Queuing: " + plugin.queueManager().getQueueing(kit, GameType.UNRANKED))
+                    .setDisplayName("<green>" + kit.name())
+                    .addLore("<gray>Playing: " + plugin.queueManager().getPlaying(kit))
+                    .addLore("<gray>Queuing: " + plugin.queueManager().getQueueing(kit, GameType.UNRANKED))
                     .addFlag(ItemFlag.HIDE_ATTRIBUTES)
                     .build();
 
