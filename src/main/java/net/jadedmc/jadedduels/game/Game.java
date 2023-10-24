@@ -390,7 +390,29 @@ public class Game {
      * @param player Player who disconnected.
      */
     public void playerDisconnect(Player player) {
-        // TODO: Player disconnect logic.
+        if(spectators.contains(player)) {
+            return;
+        }
+
+        broadcast(teamManager.team(player).teamColor().chatColor() + player.getName() + " disconnected.");
+        teamManager.team(player).killPlayer(player);
+        player.getLocation().getWorld().strikeLightningEffect(player.getLocation());
+
+        for(Team team : teamManager.teams()) {
+            if(team.alivePlayers().size() == 0) {
+                teamManager.killTeam(team);
+
+                if(teamManager.aliveTeams().size() == 1) {
+                    Team winner = teamManager.aliveTeams().get(0);
+                    end(winner);
+                    break;
+                }
+            }
+        }
+
+        for(Player spectator : spectators) {
+            // TODO: Spectators player.showPlayer(spectator);
+        }
     }
 
     /**
@@ -469,7 +491,7 @@ public class Game {
             return;
         }
 
-        // TODO: Send removed players to the lobby. LobbyUtils.sendToLobby(plugin, player);
+        removePlayer(player);
 
         teamManager.team(player).killPlayer(player);
         player.getLocation().getWorld().strikeLightning(player.getLocation());
