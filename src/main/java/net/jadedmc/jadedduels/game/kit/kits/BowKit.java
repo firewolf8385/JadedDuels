@@ -39,6 +39,7 @@ public class BowKit extends Kit {
      */
     public BowKit(final JadedDuelsPlugin plugin) {
         super(plugin, "bow", "Bow");
+        iconMaterial(Material.BOW);
 
         // Items
         ItemStack helmet = new ItemBuilder(Material.DIAMOND_HELMET)
