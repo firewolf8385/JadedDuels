@@ -13,3 +13,5 @@ commands:
     description: Runs the arena command.
   testgame:
     description: Test game
+  kits:
+    description: View the available kits.

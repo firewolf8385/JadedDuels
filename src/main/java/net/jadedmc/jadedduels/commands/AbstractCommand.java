@@ -25,6 +25,7 @@
 package net.jadedmc.jadedduels.commands;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import net.jadedmc.jadedduels.gui.KitGUI;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -59,6 +60,7 @@ public abstract class AbstractCommand implements CommandExecutor {
         plugin = pl;
         new ArenaCMD(pl);
         new TestGameCMD(pl);
+        new KitsCMD(pl);
     }
 
     /**
