@@ -66,13 +66,12 @@ public class LobbyUtils {
 
         new LobbyScoreboard(plugin, player).update(player);
 
-        giveLobbyItems(player);
-
         // Update player's chat channel.
         if(JadedChat.getChannel(player).equals(JadedChat.getChannel("GAME")) || JadedChat.getChannel(player).equals(JadedChat.getChannel("TEAM"))) {
             JadedChat.setChannel(player, JadedChat.getDefaultChannel());
         }
 
+        giveLobbyItems(player);
     }
 
     /**
@@ -84,7 +83,7 @@ public class LobbyUtils {
 
         player.getInventory().setItem(0, CustomItem.GAME_SELECTOR.toItemStack());
         //player.getInventory().setItem(2, new ItemBuilder(Material.EMERALD).setDisplayName("&a&lShop").build());
-        player.getInventory().setItem(4, new ItemBuilder(Material.NETHER_STAR).setDisplayName("&a&lKits").build());
-        player.getInventory().setItem(7, new ItemBuilder(Material.PAPER).setDisplayName("&a&lStats").build());
+        player.getInventory().setItem(4, new ItemBuilder(Material.NETHER_STAR).setDisplayName("<green><bold>Kits").build());
+        //player.getInventory().setItem(7, new ItemBuilder(Material.PAPER).setDisplayName("&a&lStats").build());
     }
 }
