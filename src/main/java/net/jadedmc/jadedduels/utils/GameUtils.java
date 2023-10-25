@@ -62,6 +62,10 @@ public class GameUtils {
      */
     public static String getFormattedPing(Player player) {
         int ping = player.getPing();
+        if(ping < 10) {
+            ping = 35;
+        }
+
         ChatColor color;
 
         if(ping < 40) {
