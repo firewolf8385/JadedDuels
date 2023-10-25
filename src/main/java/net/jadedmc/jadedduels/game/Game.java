@@ -97,6 +97,7 @@ public class Game {
      * Starts the game.
      */
     public void start() {
+        plugin.queueManager().addPlaying(kit, players().size());
 
         // Spawn teams.
         int spawnCount = 0;
@@ -259,6 +260,8 @@ public class Game {
         broadcast("&8&m+-----------------------***-----------------------+");
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+
+            plugin.queueManager().removePlaying(kit, players().size());
 
             // Show hidden players
             for(Player player : world.getPlayers()) {
@@ -431,6 +434,8 @@ public class Game {
         if(spectators.contains(player)) {
             return;
         }
+
+        plugin.queueManager().removePlaying(kit, 1);
 
         broadcast(teamManager.team(player).teamColor().chatColor() + player.getName() + " disconnected.");
         teamManager.team(player).killPlayer(player);
