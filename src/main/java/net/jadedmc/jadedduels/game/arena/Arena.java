@@ -85,8 +85,14 @@ public class Arena {
         }
 
         // Load kits
-        for(String kit :config.getStringList("kits")) {
-            kits.add(plugin.kitManager().kit(kit));
+        for(String kitID :config.getStringList("kits")) {
+            Kit kit = plugin.kitManager().kit(kitID);
+
+            if(kit == null) {
+                continue;
+            }
+
+            kits.add(kit);
         }
 
         spectatorSpawn = LocationUtils.fromConfig(Objects.requireNonNull(config.getConfigurationSection("spectatorSpawn")));
