@@ -95,8 +95,16 @@ public class QueueManager {
             Collections.shuffle(arenas);
             plugin.gameManager().createGame(arenas.get(0), kit, gameType).thenAccept(game -> {
                 plugin.getServer().getScheduler().runTask(plugin, () -> {
-                    game.addPlayer(player);
-                    game.addPlayer(other);
+                    List<Player> players = new ArrayList<>();
+                    players.add(player);
+                    players.add(other);
+
+                    Collections.shuffle(players);
+
+                    for(Player gamePlayer : players) {
+                        game.addPlayer(gamePlayer);
+                    }
+
                     game.start();
                 });
             });
