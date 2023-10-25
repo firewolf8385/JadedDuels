@@ -57,6 +57,7 @@ public class Kit {
     private double startingHealth = 20.0;
     private int startingHunger = 20;
     private float startingSaturation = 10;
+    private boolean hunger = true;
 
     /**
      * Create a kit.
@@ -122,6 +123,22 @@ public class Kit {
         for(PotionEffect effect : potionEffects) {
             player.addPotionEffect(effect);
         }
+    }
+
+    /**
+     * Check if the kit should have hunger.
+     * @return Whether the kit has hunger.
+     */
+    public boolean hunger() {
+        return hunger;
+    }
+
+    /**
+     * Change if the kit should have hunger.
+     * @param hunger Whether the kit has hunger.
+     */
+    public void hunger(boolean hunger) {
+        this.hunger = hunger;
     }
 
     /**
