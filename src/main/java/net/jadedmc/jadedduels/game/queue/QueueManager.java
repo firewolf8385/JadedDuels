@@ -24,6 +24,7 @@
  */
 package net.jadedmc.jadedduels.game.queue;
 
+import com.cryptomorin.xseries.XMaterial;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.arena.Arena;
@@ -76,8 +77,8 @@ public class QueueManager {
             getQueue(gameType).put(player, kit);
 
             player.getInventory().clear();
-            ItemStack leave = new ItemBuilder(Material.REDSTONE)
-                    .setDisplayName("&cLeave Queue")
+            ItemStack leave = new ItemBuilder(XMaterial.RED_DYE)
+                    .setDisplayName("<red>Leave Queue")
                     .build();
             player.getInventory().setItem(8, leave);
 
