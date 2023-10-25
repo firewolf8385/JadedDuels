@@ -24,6 +24,7 @@
  */
 package net.jadedmc.jadedduels.game;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import net.jadedmc.jadedchat.JadedChat;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
@@ -36,10 +37,13 @@ import net.jadedmc.jadedduels.utils.GameUtils;
 import net.jadedmc.jadedduels.utils.LocationUtils;
 import net.jadedmc.jadedduels.utils.Timer;
 import net.jadedmc.jadedutils.chat.ChatUtils;
+import net.jadedmc.jadedutils.items.ItemBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -255,6 +259,12 @@ public class Game {
         broadcast("&8&m+-----------------------***-----------------------+");
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+
+            // Show hidden players
+            for(Player player : world.getPlayers()) {
+                player.spigot().getHiddenPlayers().forEach(hidden -> player.showPlayer(plugin, hidden));
+            }
+
             players().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
             spectators().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
 
@@ -310,7 +320,35 @@ public class Game {
      * @param spectator Spectator to add.
      */
     public void addSpectator(Player spectator) {
-        // TODO: Spectators
+        spectators.add(spectator);
+
+        // Doesn't teleport player if they were in the game before.
+        if(teamManager.team(spectator) == null) {
+            spectator.teleport(arena.spectatorSpawn(this.world));
+        }
+
+        spectator.getInventory().clear();
+        spectator.getInventory().setArmorContents(null);
+        spectator.setAllowFlight(true);
+        spectator.setFlying(true);
+        spectator.setMaxHealth(20.0);
+        spectator.setHealth(20.0);
+        spectator.setFoodLevel(20);
+        spectator.setGameMode(GameMode.ADVENTURE);
+
+        // Prevents player from interfering.
+        spectator.setCollidable(false);
+
+        ItemStack leave = new ItemBuilder(XMaterial.RED_BED)
+                .setDisplayName("<red>Leave Match")
+                .build();
+        spectator.getInventory().setItem(8, leave);
+
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            for(Player pl : world.getPlayers()) {
+                pl.hidePlayer(plugin, spectator);
+            }
+        }, 2);
     }
 
     /**
