@@ -387,4 +387,8 @@ public class DuelEvent {
             }
         }, 200);
     }
+
+    public Tournament tournament() {
+        return tournament;
+    }
 }

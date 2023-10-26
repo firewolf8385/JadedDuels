@@ -63,6 +63,7 @@ public abstract class AbstractCommand implements CommandExecutor {
         new CreateCMD(pl);
         new StartCMD(pl);
         new TournamentCMD(pl);
+        new BracketCMD(pl);
     }
 
     /**

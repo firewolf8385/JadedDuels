@@ -21,3 +21,5 @@ commands:
     description: start tournament.
   tournament:
     description: teleport to tournament.
+  bracket:
+    description: View the current tournament bracket.
