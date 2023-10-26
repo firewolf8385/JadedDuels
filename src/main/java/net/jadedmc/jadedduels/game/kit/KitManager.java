@@ -28,6 +28,7 @@ import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.kit.kits.AxeKit;
 import net.jadedmc.jadedduels.game.kit.kits.BowKit;
 import net.jadedmc.jadedduels.game.kit.kits.SwordKit;
+import net.jadedmc.jadedduels.game.kit.kits.UHCKit;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -43,6 +44,7 @@ public class KitManager {
      * @param plugin Instance of the plugin.
      */
     public KitManager(final JadedDuelsPlugin plugin) {
+        kits.add(new UHCKit(plugin));
         kits.add(new BowKit(plugin));
         kits.add(new AxeKit(plugin));
         kits.add(new SwordKit(plugin));
