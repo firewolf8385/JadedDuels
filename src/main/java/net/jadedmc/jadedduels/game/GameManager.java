@@ -24,6 +24,7 @@
  */
 package net.jadedmc.jadedduels.game;
 
+import at.stefangeyer.challonge.model.Match;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.arena.Arena;
 import net.jadedmc.jadedduels.game.arena.ArenaChunkGenerator;
@@ -107,6 +108,45 @@ public class GameManager {
             }
 
             return new Game(plugin, kit,gameType, arena, world, gameUUID);
+        });
+
+        return arenaCopy.thenCompose(file -> gameCreation);
+    }
+
+    public CompletableFuture<Game> createGame(Arena arena, Kit kit, GameType gameType, Match match) {
+        UUID gameUUID = UUID.randomUUID();
+
+        // Makes a copy of the arena with the generated uuid.
+        CompletableFuture<File> arenaCopy = arena.arenaFile().createCopy(gameUUID.toString());
+
+        // Creates the game.
+        CompletableFuture<Game> gameCreation = CompletableFuture.supplyAsync(() -> {
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                WorldCreator worldCreator = new WorldCreator(gameUUID.toString());
+                worldCreator.generator(new ArenaChunkGenerator());
+                Bukkit.createWorld(worldCreator);
+            });
+
+            // Wait for the world to be generated.
+            boolean loaded = false;
+            World world = null;
+            while(!loaded) {
+                try {
+                    Thread.sleep(60);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                for(World w : Bukkit.getWorlds()) {
+                    if(w.getName().equals(gameUUID.toString())) {
+                        loaded = true;
+                        world = w;
+                        break;
+                    }
+                }
+            }
+
+            return new Game(plugin, kit,gameType, arena, world, gameUUID, match);
         });
 
         return arenaCopy.thenCompose(file -> gameCreation);

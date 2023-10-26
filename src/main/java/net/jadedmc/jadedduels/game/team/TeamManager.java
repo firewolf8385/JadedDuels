@@ -25,6 +25,7 @@
 package net.jadedmc.jadedduels.game.team;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import net.jadedmc.jadedduels.game.tournament.team.EventTeam;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -62,6 +63,14 @@ public class TeamManager {
      */
     public Team createTeam(List<Player> players) {
         Team team = new Team(players, availableColors.get(0));
+        availableColors.remove(availableColors.get(0));
+        teams().add(team);
+        aliveTeams.add(team);
+        return team;
+    }
+
+    public Team createTeam(EventTeam eventTeam) {
+        Team team = new Team(eventTeam.players(), availableColors.get(0), eventTeam);
         availableColors.remove(availableColors.get(0));
         teams().add(team);
         aliveTeams.add(team);

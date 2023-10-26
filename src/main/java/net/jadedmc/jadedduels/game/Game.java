@@ -24,6 +24,7 @@
  */
 package net.jadedmc.jadedduels.game;
 
+import at.stefangeyer.challonge.model.Match;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import net.jadedmc.jadedchat.JadedChat;
@@ -33,6 +34,7 @@ import net.jadedmc.jadedduels.game.kit.Kit;
 import net.jadedmc.jadedduels.game.lobby.LobbyUtils;
 import net.jadedmc.jadedduels.game.team.Team;
 import net.jadedmc.jadedduels.game.team.TeamManager;
+import net.jadedmc.jadedduels.game.tournament.team.EventTeam;
 import net.jadedmc.jadedduels.utils.GameUtils;
 import net.jadedmc.jadedduels.utils.LocationUtils;
 import net.jadedmc.jadedduels.utils.Timer;
@@ -66,6 +68,7 @@ public class Game {
 
     private GameState gameState;
     private final Collection<Player> spectators = new HashSet<>();
+    private final Match match;
 
 
     /**
@@ -87,6 +90,22 @@ public class Game {
 
         this.timer = new Timer(plugin);
         this.teamManager = new TeamManager(plugin);
+        this.match = null;
+
+        plugin.gameManager().addGame(this);
+    }
+
+    public Game(final JadedDuelsPlugin plugin, final Kit kit, final GameType gameType, final Arena arena, final World world, final UUID uuid, final Match match) {
+        this.plugin = plugin;
+        this.kit = kit;
+        this.gameType = gameType;
+        this.arena = arena;
+        this.world = world;
+        this.uuid = uuid;
+
+        this.timer = new Timer(plugin);
+        this.teamManager = new TeamManager(plugin);
+        this.match = match;
 
         plugin.gameManager().addGame(this);
     }
@@ -234,6 +253,7 @@ public class Game {
             return;
         }
 
+        winner.addPoint();
         gameState = GameState.END;
         timer.stop();
 
@@ -268,8 +288,28 @@ public class Game {
                 player.spigot().getHiddenPlayers().forEach(hidden -> player.showPlayer(plugin, hidden));
             }
 
-            players().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
-            spectators().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
+            // Runs tournament specific code.
+            if(gameType == GameType.TOURNAMENT) {
+                Team loser = winner;
+                for(Team team : teamManager.teams()) {
+                    if(team.equals(winner)) {
+                        continue;
+                    }
+
+                    loser = team;
+                }
+
+                plugin.duelEventManager().activeEvent().addResults(match, winner, loser);
+                plugin.duelEventManager().activeEvent().broadcast("&a&lTournament &8» &f" + winner.eventTeam().name() + " &ahas defeated &f" + loser.eventTeam().name() + " &7(&f" + winner.score() + " &7-&f " + loser.score() + "&7)&a.");
+
+                // Replace this with tournament lobby stuff.
+                players().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
+                spectators().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
+            }
+            else {
+                players().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
+                spectators().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
+            }
 
             for(Team team : teamManager.teams()) {
                 team.players().clear();
@@ -308,6 +348,18 @@ public class Game {
      */
     public void addPlayers(List<Player> players) {
         teamManager.createTeam(players);
+    }
+
+    public void addPlayers(EventTeam team) {
+        teamManager.createTeam(team);
+
+        for(Player player : team.players()) {
+
+            // Update player's chat channel.
+            if(JadedChat.getChannel(player).isDefaultChannel()) {
+                JadedChat.setChannel(player, JadedChat.getChannel("GAME"));
+            }
+        }
     }
 
     /**

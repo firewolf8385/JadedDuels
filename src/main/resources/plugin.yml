@@ -15,3 +15,9 @@ commands:
     description: Test game
   kits:
     description: View the available kits.
+  create:
+    description: create tournament.
+  start:
+    description: start tournament.
+  tournament:
+    description: teleport to tournament.

@@ -24,6 +24,7 @@
  */
 package net.jadedmc.jadedduels.game.team;
 
+import net.jadedmc.jadedduels.game.tournament.team.EventTeam;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -39,6 +40,8 @@ public class Team {
     private final Set<Player> alivePlayers;
     private final Set<Player> deadPlayers = new HashSet<>();
     private final TeamColor teamColor;
+    private int score = 0;
+    private final EventTeam eventTeam;
 
     /**
      * Creates a new team with specific players.
@@ -48,6 +51,18 @@ public class Team {
         this.players = players;
         this.alivePlayers = new HashSet<>(players);
         this.teamColor = teamColor;
+        this.eventTeam = null;
+    }
+
+    public Team(List<Player> players, TeamColor teamColor, EventTeam eventTeam) {
+        this.players = players;
+        this.alivePlayers = new HashSet<>(players);
+        this.teamColor = teamColor;
+        this.eventTeam = eventTeam;
+    }
+
+    public void addPoint() {
+        score++;
     }
 
     /**
@@ -64,6 +79,10 @@ public class Team {
      */
     public Set<Player> deadPlayers() {
         return deadPlayers;
+    }
+
+    public EventTeam eventTeam() {
+        return eventTeam;
     }
 
     /**
@@ -100,5 +119,9 @@ public class Team {
         players().remove(player);
         alivePlayers().remove(player);
         deadPlayers().remove(player);
+    }
+
+    public int score() {
+        return score;
     }
 }
