@@ -365,14 +365,14 @@ public class DuelEvent {
            broadcast("");
            broadcast(ChatUtils.centerText("&aKit: &f" + plugin.duelEventManager().kit().name()));
            broadcast("");
-           broadcast(ChatUtils.centerText("&6&lGold: &f" + top.get(0).getName()));
-           broadcast(ChatUtils.centerText("&f&lSilver: &f" + top.get(1).getName()));
+           broadcast(ChatUtils.centerText("&6&l1st: &f" + top.get(0).getName()));
+           broadcast(ChatUtils.centerText("&f&l2nd: &f" + top.get(1).getName()));
 
            if(top.size() >= 3) {
-               broadcast(ChatUtils.centerText("&c&lBronze: &f" + top.get(2).getName()));
+               broadcast(ChatUtils.centerText("&c&l3rd: &f" + top.get(2).getName()));
            }
            else {
-               broadcast(ChatUtils.centerText("&c&lBronze: &fNone"));
+               broadcast(ChatUtils.centerText("&c&l3rd: &fNone"));
            }
             broadcast("&8&m+-----------------------***-----------------------+");
         });
