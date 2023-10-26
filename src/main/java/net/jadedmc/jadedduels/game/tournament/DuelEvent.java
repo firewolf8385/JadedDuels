@@ -197,7 +197,7 @@ public class DuelEvent {
             ChatUtils.broadcast(world, ChatUtils.centerText("&aKit: &f" + plugin.duelEventManager().kit().name()));
             ChatUtils.broadcast(world, ChatUtils.centerText("&aTeams: &f1v1 &7(" + plugin.duelEventManager().bestOf() + ")"));
             ChatUtils.broadcast(world, "");
-            ChatUtils.broadcast(world, ChatUtils.centerText("&aBracket: &fhttps://challonge.com/" + tournament.getUrl()));
+            ChatUtils.broadcast(world, ChatUtils.centerText("<green>Bracket: <white><click:open_url:'https://www.challonge.com/" + tournament.getUrl() + "'>https://challonge.com/" + tournament.getUrl() + "</click>"));
             ChatUtils.broadcast(world, "");
             ChatUtils.broadcast(world, "&8&m+-----------------------***-----------------------+");
 
