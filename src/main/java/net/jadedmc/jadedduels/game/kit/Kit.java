@@ -25,9 +25,12 @@
 package net.jadedmc.jadedduels.game.kit;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import net.jadedmc.jadedduels.game.Game;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
@@ -123,6 +126,9 @@ public class Kit {
         for(PotionEffect effect : potionEffects) {
             player.addPotionEffect(effect);
         }
+
+        // Run kit-specific kit apply code.
+        onKitApply(plugin.gameManager().game(player), player);
     }
 
     /**
@@ -204,6 +210,27 @@ public class Kit {
     public String name() {
         return name;
     }
+
+    /**
+     * Called when a block is broken in game.
+     * @param game Current Game
+     * @param event BlockBreakEvent
+     */
+    public void onBlockBreak(Game game, BlockBreakEvent event) {}
+
+    /**
+     * Called when a block is placed in game.
+     * @param game Current Game
+     * @param event BlockPlaceEvent
+     */
+    public void onBlockPlace(Game game, BlockPlaceEvent event) {}
+
+    /**
+     * Called when a kit is applied.
+     * @param game Current Game.
+     * @param player Player kit is being applied to.
+     */
+    public void onKitApply(Game game, Player player) {}
 
     /**
      * Get the starting health of the kit.

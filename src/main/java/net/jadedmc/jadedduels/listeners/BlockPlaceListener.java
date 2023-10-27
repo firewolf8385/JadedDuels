@@ -55,7 +55,10 @@ public class BlockPlaceListener implements Listener {
             return;
         }
 
-        // TODO: Block place event for the kit. game.getKit().onBlockPlace(game, event);
+        // Run kit-specific BlockPlaceEvent code.
+        game.kit().onBlockPlace(game, event);
+
+
         game.addBlock(event.getBlock());
     }
 }

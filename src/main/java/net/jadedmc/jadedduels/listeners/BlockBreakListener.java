@@ -68,8 +68,6 @@ public class BlockBreakListener implements Listener {
             return;
         }
 
-        // TODO: Kit block break event. game.kit().onBlockBreak(game, event);
-
         // Prevent spectators from placing/breaking blocks.
         if(game.spectators().contains(player)) {
             event.setCancelled(true);
@@ -80,6 +78,9 @@ public class BlockBreakListener implements Listener {
             event.setCancelled(true);
             return;
         }
+
+        // Use kit-specific BlockBreakEvent code.
+        game.kit().onBlockBreak(game, event);
 
         // Get the drops from the block and add them to the inventory.
         Collection<ItemStack> drops = event.getBlock().getDrops(player.getInventory().getItemInMainHand());
