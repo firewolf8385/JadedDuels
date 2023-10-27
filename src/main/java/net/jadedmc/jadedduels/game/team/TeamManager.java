@@ -124,4 +124,15 @@ public class TeamManager {
     public void killTeam(Team team) {
         aliveTeams.remove(team);
     }
+
+    public void reset() {
+        aliveTeams.clear();
+        aliveTeams.addAll(teams);
+
+        for(Team team : teams) {
+            team.deadPlayers().clear();
+            team.alivePlayers().clear();
+            team.alivePlayers().addAll(team.players());
+        }
+    }
 }

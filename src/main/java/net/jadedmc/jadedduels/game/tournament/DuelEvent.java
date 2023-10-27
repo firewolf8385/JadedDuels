@@ -283,7 +283,7 @@ public class DuelEvent {
                                 plugin.getServer().getScheduler().runTask(plugin, () -> {
                                     game.addPlayers(team1);
                                     game.addPlayers(team2);
-                                    game.start();
+                                    game.startGame();
                                 });
                             });
                         }, 2);

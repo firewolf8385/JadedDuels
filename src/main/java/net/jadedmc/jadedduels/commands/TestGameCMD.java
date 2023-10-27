@@ -42,7 +42,7 @@ public class TestGameCMD extends AbstractCommand {
                     game.addPlayer(player);
                 }
 
-                game.start();
+                game.startGame();
             });
         });
 

@@ -63,12 +63,14 @@ public class Game {
     private final World world;
     private final UUID uuid;
     private final GameType gameType;
-    private final Timer timer;
+    private Timer timer;
     private final TeamManager teamManager;
 
     private GameState gameState;
     private final Collection<Player> spectators = new HashSet<>();
     private final Match match;
+    private int round = 0;
+    private int pointsNeeded;
 
 
     /**
@@ -91,6 +93,7 @@ public class Game {
         this.timer = new Timer(plugin);
         this.teamManager = new TeamManager(plugin);
         this.match = null;
+        this.pointsNeeded = 1;
 
         plugin.gameManager().addGame(this);
     }
@@ -106,39 +109,15 @@ public class Game {
         this.timer = new Timer(plugin);
         this.teamManager = new TeamManager(plugin);
         this.match = match;
+        this.pointsNeeded = plugin.duelEventManager().bestOf().neededWins();
 
         plugin.gameManager().addGame(this);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    /**
-     * Starts the game.
-     */
-    public void start() {
+    public void startGame() {
         plugin.queueManager().addPlaying(kit, players().size());
-
-        // Spawn teams.
-        int spawnCount = 0;
-        List<Location> spawns = arena.spawns(world);
-
-
-        for(Team team : this.teamManager.teams()) {
-
-            // Loop back if we run out of spawns.
-            if(spawnCount == spawns.size()) {
-                spawnCount = 0;
-            }
-
-            // Spawn in each player in the team.
-            for(Player player : team.players()) {
-                player.teleport(spawns.get(spawnCount));
-                kit.apply(player);
-                new GameScoreboard(player, this).update(player);
-            }
-
-            spawnCount++;
-        }
 
         for(Player player : players()) {
             List<Player> opponents = new ArrayList<>();
@@ -173,10 +152,61 @@ public class Game {
             ChatUtils.chat(player, "&8&m+-----------------------***-----------------------+");
         }
 
-        countdown();
+        startRound();
     }
 
-    private void countdown() {
+    private void startRound() {
+        round++;
+        teamManager.reset();
+
+        for(Player player : players()) {
+            spectators.remove(player);
+            player.setCollidable(true);
+            player.setArrowsInBody(0);
+        }
+
+        // Spawn teams.
+        int spawnCount = 0;
+        List<Location> spawns = arena.spawns(world);
+
+
+        for(Team team : this.teamManager.teams()) {
+
+            // Loop back if we run out of spawns.
+            if(spawnCount == spawns.size()) {
+                spawnCount = 0;
+            }
+
+            // Spawn in each player in the team.
+            for(Player player : team.players()) {
+                player.teleport(spawns.get(spawnCount));
+                kit.apply(player);
+                new GameScoreboard(player, this).update(player);
+            }
+
+            spawnCount++;
+        }
+
+        // Show invisible players for round reset.
+        for(Player player : players()) {
+            for(Player other : players()) {
+                if(player.equals(other)) {
+                    continue;
+                }
+
+                player.showPlayer(plugin, other);
+            }
+
+            // Show each player to each spectator.
+            for(Player spectator : spectators()) {
+                spectator.showPlayer(plugin, player);
+            }
+        }
+
+        roundCountdown();
+    }
+
+    private void roundCountdown() {
         // Make sure the game isn't already in countdown.
         if(gameState == GameState.COUNTDOWN) {
             return;
@@ -202,7 +232,7 @@ public class Game {
                 else {
                     for(Player player : players()) {
                         player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1, 2);
-                        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> running(), 1);
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> runRound(), 1);
                         cancel();
                     }
                 }
@@ -211,15 +241,13 @@ public class Game {
         countdown.runTaskTimer(plugin, 0, 20);
     }
 
-    /**
-     * Marks the game as running.
-     */
-    private void running() {
+    private void runRound() {
         if(gameState == GameState.RUNNING) {
             return;
         }
 
         gameState = GameState.RUNNING;
+        timer = new Timer(plugin);
         timer.start();
 
         // Spawn teams.
@@ -242,6 +270,103 @@ public class Game {
 
             spawnCount++;
         }
+    }
+
+    public void endRound(Team winner) {
+        if(gameState == GameState.END) {
+            return;
+        }
+
+        winner.addPoint();
+        gameState = GameState.END;
+        timer.stop();
+
+        broadcast("&8&m+-----------------------***-----------------------+");
+        broadcast(" ");
+        broadcast(ChatUtils.centerText("&a&l" + kit.name() + " Duel &7- &f&l" + timer));
+        broadcast(" ");
+        if(winner.players().size() > 1) {
+            broadcast(ChatUtils.centerText("&aWinners:"));
+        }
+        else {
+            broadcast(ChatUtils.centerText("&aWinner:"));
+        }
+
+        for(Player player : winner.players()) {
+            if(teamManager.team(player).deadPlayers().contains(player)) {
+                broadcast(ChatUtils.centerText("&f" + player.getName() + " &a(&c0%&a)"));
+            }
+            else {
+                broadcast(ChatUtils.centerText("&f" + player.getName() + " &a(" + GameUtils.getFormattedHealth(player) + "&a)"));
+            }
+        }
+
+        if(gameType == GameType.TOURNAMENT) {
+            Team loser = winner;
+            for(Team team : teamManager.teams()) {
+                if(team.equals(winner)) {
+                    continue;
+                }
+
+                loser = team;
+            }
+
+            broadcast("");
+            broadcast(ChatUtils.centerText("&aScore: &f" + winner.score() + " - " + loser.score()));
+        }
+
+        broadcast(" ");
+        broadcast("&8&m+-----------------------***-----------------------+");
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+
+            if(winner.score() < pointsNeeded) {
+                startRound();
+            }
+            else {
+                plugin.queueManager().removePlaying(kit, players().size());
+
+                // Show hidden players
+                for(Player player : world.getPlayers()) {
+                    player.spigot().getHiddenPlayers().forEach(hidden -> player.showPlayer(plugin, hidden));
+                }
+
+                // Runs tournament specific code.
+                if(gameType == GameType.TOURNAMENT) {
+                    Team loser = winner;
+                    for(Team team : teamManager.teams()) {
+                        if(team.equals(winner)) {
+                            continue;
+                        }
+
+                        loser = team;
+                    }
+
+                    plugin.duelEventManager().activeEvent().addResults(match, winner, loser);
+                    plugin.duelEventManager().activeEvent().broadcast("&a&lTournament &8» &f" + winner.eventTeam().name() + " &ahas defeated &f" + loser.eventTeam().name() + " &7(&f" + winner.score() + " &7-&f " + loser.score() + "&7)&a.");
+
+                    // Replace this with tournament lobby stuff.
+                    players().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
+                    spectators().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
+                }
+                else {
+                    players().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
+                    spectators().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
+                }
+
+                for(Team team : teamManager.teams()) {
+                    team.players().clear();
+                    team.alivePlayers().clear();
+                    team.deadPlayers().clear();
+                }
+
+
+                spectators.clear();
+                teamManager.teams().clear();
+
+                plugin.gameManager().deleteGame(this);
+            }
+        }, 100);
     }
 
     /**
@@ -535,7 +660,7 @@ public class Game {
 
                 if(teamManager.aliveTeams().size() == 1) {
                     Team winner = teamManager.aliveTeams().get(0);
-                    end(winner);
+                    endRound(winner);
                     break;
                 }
             }
@@ -568,7 +693,7 @@ public class Game {
 
                 if(teamManager.aliveTeams().size() == 1) {
                     Team winner = teamManager.aliveTeams().get(0);
-                    end(winner);
+                    endRound(winner);
                     break;
                 }
             }

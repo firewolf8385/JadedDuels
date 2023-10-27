@@ -105,7 +105,7 @@ public class QueueManager {
                         game.addPlayer(gamePlayer);
                     }
 
-                    game.start();
+                    game.startGame();
                 });
             });
         }
