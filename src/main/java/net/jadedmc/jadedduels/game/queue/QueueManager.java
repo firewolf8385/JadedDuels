@@ -32,7 +32,6 @@ import net.jadedmc.jadedduels.game.kit.Kit;
 import net.jadedmc.jadedduels.utils.Timer;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.jadedmc.jadedutils.items.ItemBuilder;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -53,7 +52,7 @@ public class QueueManager {
         this.plugin = plugin;
         playing = 0;
 
-        for(Kit kit : plugin.kitManager().kits()) {
+        for(Kit kit : plugin.kitManager().activeKits()) {
             playingKit.put(kit, 0);
         }
     }

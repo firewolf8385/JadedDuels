@@ -16,7 +16,7 @@ public class KitGUI extends CustomGUI {
 
         int[] iconSlots = new int[]{10,11,12,13,14,15,16};
         int i = 0;
-        for(Kit kit : plugin.kitManager().kits()) {
+        for(Kit kit : plugin.kitManager().activeKits()) {
 
             ItemStack item = new ItemBuilder(kit.iconMaterial(), 1)
                     .setDisplayName("<green>" + kit.name())

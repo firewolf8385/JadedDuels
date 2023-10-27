@@ -30,6 +30,7 @@ import net.jadedmc.jadedduels.game.kit.kits.BowKit;
 import net.jadedmc.jadedduels.game.kit.kits.SwordKit;
 import net.jadedmc.jadedduels.game.kit.kits.UHCKit;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -37,17 +38,18 @@ import java.util.Set;
  * Manages all existing kits.
  */
 public class KitManager {
-    private final Set<Kit> kits = new LinkedHashSet<>();
+    private final Set<Kit> activeKits = new LinkedHashSet<>();
+    private final Set<Kit> duelKits = new LinkedHashSet<>();
 
     /**
      * Creates the Kit Manager.
      * @param plugin Instance of the plugin.
      */
     public KitManager(final JadedDuelsPlugin plugin) {
-        kits.add(new UHCKit(plugin));
-        kits.add(new BowKit(plugin));
-        kits.add(new AxeKit(plugin));
-        kits.add(new SwordKit(plugin));
+        activeKits.add(new UHCKit(plugin));
+        activeKits.add(new BowKit(plugin));
+        activeKits.add(new AxeKit(plugin));
+        activeKits.add(new SwordKit(plugin));
     }
 
     /**
@@ -56,7 +58,13 @@ public class KitManager {
      * @return Kit from name.
      */
     public Kit kit(final String kitName) {
-        for(Kit kit : this.kits) {
+        for(Kit kit : this.activeKits) {
+            if(kit.name().equalsIgnoreCase(kitName) || kit.id().equalsIgnoreCase(kitName)) {
+                return kit;
+            }
+        }
+
+        for(Kit kit : this.duelKits) {
             if(kit.name().equalsIgnoreCase(kitName) || kit.id().equalsIgnoreCase(kitName)) {
                 return kit;
             }
@@ -66,10 +74,22 @@ public class KitManager {
     }
 
     /**
-     * Get all existing kits.
+     * Get all active kits.
+     * @return All active kits.
+     */
+    public Set<Kit> activeKits() {
+        return activeKits;
+    }
+
+    /**
+     * Get all currently loaded kits, both active and duel kits.
      * @return All kits.
      */
     public Set<Kit> kits() {
+        Set<Kit> kits = new HashSet<>();
+        kits.addAll(activeKits);
+        kits.addAll(duelKits);
+
         return kits;
     }
 }
