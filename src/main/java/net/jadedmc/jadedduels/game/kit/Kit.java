@@ -166,6 +166,22 @@ public class Kit {
     }
 
     /**
+     * Get the game mode players should be put in.
+     * @return Gamemode to put players in.
+     */
+    public GameMode gameMode() {
+        return gameMode;
+    }
+
+    /**
+     * Change what gamemode the kit uses.
+     * @param gameMode New gamemode to put players in.
+     */
+    public void gameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
+    }
+
+    /**
      * Get the max health of the kit.
      * @return Kit's max health.
      */

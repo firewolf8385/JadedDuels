@@ -44,6 +44,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -71,6 +72,7 @@ public class Game {
     private final Match match;
     private int round = 0;
     private int pointsNeeded;
+    private final Collection<Block> blocks = new HashSet<>();
 
 
     /**
@@ -452,6 +454,10 @@ public class Game {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    public void addBlock(Block block) {
+        blocks.add(block);
+    }
+
     /**
      * Add a player to the game.
      * @param player Player to add.
@@ -529,6 +535,10 @@ public class Game {
                 pl.hidePlayer(plugin, spectator);
             }
         }, 2);
+    }
+
+    public Collection<Block> blocks() {
+        return blocks;
     }
 
     /**
@@ -698,6 +708,10 @@ public class Game {
                 }
             }
         }
+    }
+
+    public void removeBlock(Block block) {
+        blocks.remove(block);
     }
 
     /**

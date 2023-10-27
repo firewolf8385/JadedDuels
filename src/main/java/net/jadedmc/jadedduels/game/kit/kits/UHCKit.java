@@ -28,6 +28,7 @@ import com.cryptomorin.xseries.XMaterial;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.kit.Kit;
 import net.jadedmc.jadedutils.items.ItemBuilder;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -41,6 +42,7 @@ public class UHCKit extends Kit {
     public UHCKit(JadedDuelsPlugin plugin) {
         super(plugin, "uhc", "UHC");
         iconMaterial(Material.GOLDEN_APPLE);
+        gameMode(GameMode.SURVIVAL);
 
         // TODO: Disable natural regeneration.
 

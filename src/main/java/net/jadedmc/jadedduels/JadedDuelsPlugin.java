@@ -63,6 +63,8 @@ public final class JadedDuelsPlugin extends JavaPlugin {
 
         AbstractCommand.registerCommands(this);
 
+        getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
+        getServer().getPluginManager().registerEvents(new BlockPlaceListener(this), this);
         getServer().getPluginManager().registerEvents(new ChannelMessageSendListener(this), this);
         getServer().getPluginManager().registerEvents(new ChannelSwitchListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityDamageListener(this), this);
