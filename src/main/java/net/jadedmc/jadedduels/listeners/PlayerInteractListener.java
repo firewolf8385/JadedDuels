@@ -29,6 +29,7 @@ import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.GameState;
 import net.jadedmc.jadedduels.game.lobby.LobbyScoreboard;
 import net.jadedmc.jadedduels.game.lobby.LobbyUtils;
+import net.jadedmc.jadedduels.game.tournament.EventStatus;
 import net.jadedmc.jadedduels.gui.KitGUI;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.md_5.bungee.api.ChatColor;
@@ -104,6 +105,12 @@ public class PlayerInteractListener implements Listener {
             }
 
             case "Back to Duels" -> {
+                // Cancel tournament if the player is the host.
+                if(plugin.duelEventManager().eventStatus() == EventStatus.WAITING
+                        && plugin.duelEventManager().host().equals(player)) {
+                    plugin.getServer().dispatchCommand(player, "cancel");
+                }
+
                 LobbyUtils.sendToLobby(plugin, player);
                 event.setCancelled(true);
             }
