@@ -40,6 +40,7 @@ import at.stefangeyer.challonge.rest.retrofit.RetrofitRestClient;
 import at.stefangeyer.challonge.serializer.Serializer;
 import at.stefangeyer.challonge.serializer.gson.GsonSerializer;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.arena.Arena;
 import net.jadedmc.jadedduels.game.team.Team;
@@ -276,6 +277,25 @@ public class DuelEvent {
 
                         // Physically start the match, delayed by 2 ticks (100 ms)
                         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                            List<Player> players = new ArrayList<>();
+                            players.addAll(team1.players());
+                            players.addAll(team2.players());
+
+                            for(Player player : players) {
+                                Game game = plugin.gameManager().game(player);
+
+                                if(game == null) {
+                                    continue;
+                                }
+
+                                if(game.gameType() != GameType.TOURNAMENT) {
+                                    game.removePlayer(player);
+                                }
+                                else {
+                                    return;
+                                }
+                            }
+
                             List<Arena> arenas = new ArrayList<>(plugin.arenaManager().getArenas(plugin.duelEventManager().kit()));
                             Collections.shuffle(arenas);
 

@@ -725,10 +725,7 @@ public class Game {
             return;
         }
 
-        removePlayer(player);
-
-        teamManager.team(player).killPlayer(player);
-        player.getLocation().getWorld().strikeLightning(player.getLocation());
+        teamManager.team(player).removePlayer(player);
 
         for(Team team : teamManager.teams()) {
             if(team.alivePlayers().size() == 0) {
@@ -748,7 +745,18 @@ public class Game {
      * @param player Spectator to remove.
      */
     public void removeSpectator(Player player) {
-        // TODO: remove spectator.
+        spectators.remove(player);
+
+        for(Player pl : world.getPlayers()) {
+            pl.showPlayer(plugin, player);
+        }
+
+        if(gameType == GameType.TOURNAMENT) {
+            LobbyUtils.sendToTournamentLobby(plugin, player);
+        }
+        else {
+            LobbyUtils.sendToLobby(plugin, player);
+        }
     }
 
     /**
