@@ -64,6 +64,7 @@ public abstract class AbstractCommand implements CommandExecutor {
         new StartCMD(pl);
         new TournamentCMD(pl);
         new BracketCMD(pl);
+        new CancelCMD(pl);
     }
 
     /**

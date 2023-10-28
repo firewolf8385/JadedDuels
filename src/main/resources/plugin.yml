@@ -23,3 +23,5 @@ commands:
     description: teleport to tournament.
   bracket:
     description: View the current tournament bracket.
+  cancel:
+    description: Cancel a tournament.
