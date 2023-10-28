@@ -1,6 +1,7 @@
 package net.jadedmc.jadedduels.commands;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import net.jadedmc.jadedduels.game.lobby.LobbyUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,6 +17,6 @@ public class TournamentCMD extends AbstractCommand {
     public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
 
-        player.teleport(plugin.duelEventManager().world().getSpawnLocation());
+        LobbyUtils.sendToTournamentLobby(plugin, player);
     }
 }

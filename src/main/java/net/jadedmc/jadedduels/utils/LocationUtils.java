@@ -141,4 +141,24 @@ public class LocationUtils {
     public static Location replaceWorld(World world, Location location) {
         return new Location(world, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
+
+    /**
+     * Get the tournament spawn Location from the Config
+     * @return Tournament spawn Location
+     */
+    public static Location getTournamentSpawn(final JadedDuelsPlugin plugin) {
+
+        if(!plugin.settingsManager().getConfig().getBoolean("TournamentSpawn.Set")) {
+            return plugin.duelEventManager().world().getSpawnLocation();
+        }
+
+        String world = plugin.settingsManager().getConfig().getString("TournamentSpawn.World");
+        double x = plugin.settingsManager().getConfig().getDouble("TournamentSpawn.X");
+        double y = plugin.settingsManager().getConfig().getDouble("TournamentSpawn.Y");
+        double z = plugin.settingsManager().getConfig().getDouble("TournamentSpawn.Z");
+        float pitch = (float) plugin.settingsManager().getConfig().getDouble("TournamentSpawn.Pitch");
+        float yaw = (float) plugin.settingsManager().getConfig().getDouble("TournamentSpawn.Yaw");
+
+        return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
+    }
 }

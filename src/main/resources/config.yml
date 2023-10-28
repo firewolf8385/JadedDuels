@@ -10,3 +10,12 @@ Spawn:
 challonge:
   username: ""
   api-key: ""
+
+TournamentSpawn:
+  World: tournament
+  X: 0
+  Y: 0
+  Z: 0
+  Pitch: 0
+  Yaw: 0
+  Set: false

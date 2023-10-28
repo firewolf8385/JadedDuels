@@ -348,8 +348,8 @@ public class Game {
                     plugin.duelEventManager().activeEvent().broadcast("&a&lTournament &8» &f" + winner.eventTeam().name() + " &ahas defeated &f" + loser.eventTeam().name() + " &7(&f" + winner.score() + " &7-&f " + loser.score() + "&7)&a.");
 
                     // Replace this with tournament lobby stuff.
-                    players().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
-                    spectators().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
+                    players().forEach(player -> LobbyUtils.sendToTournamentLobby(plugin, player));
+                    spectators().forEach(player -> LobbyUtils.sendToTournamentLobby(plugin, player));
                 }
                 else {
                     players().forEach(player -> LobbyUtils.sendToLobby(plugin, player));

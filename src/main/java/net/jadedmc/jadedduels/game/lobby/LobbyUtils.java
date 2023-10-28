@@ -24,9 +24,11 @@
  */
 package net.jadedmc.jadedduels.game.lobby;
 
+import com.cryptomorin.xseries.XMaterial;
 import net.jadedmc.jadedchat.JadedChat;
 import net.jadedmc.jadedcore.features.items.CustomItem;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import net.jadedmc.jadedduels.game.tournament.TournamentScoreboard;
 import net.jadedmc.jadedduels.utils.LocationUtils;
 import net.jadedmc.jadedutils.items.ItemBuilder;
 import org.bukkit.GameMode;
@@ -85,5 +87,47 @@ public class LobbyUtils {
         //player.getInventory().setItem(2, new ItemBuilder(Material.EMERALD).setDisplayName("&a&lShop").build());
         player.getInventory().setItem(4, new ItemBuilder(Material.NETHER_STAR).setDisplayName("<green><bold>Kits").build());
         //player.getInventory().setItem(7, new ItemBuilder(Material.PAPER).setDisplayName("&a&lStats").build());
+    }
+
+    public static void sendToTournamentLobby(final JadedDuelsPlugin plugin, Player player) {
+        player.teleport(LocationUtils.getTournamentSpawn(plugin));
+        player.setGameMode(GameMode.ADVENTURE);
+        player.setHealth(20);
+        player.setFoodLevel(20);
+
+        player.setAllowFlight(false);
+        player.setFlying(false);
+        player.setCollidable(true);
+
+        player.setArrowsInBody(0);
+
+        player.setExp(0);
+        player.setLevel(0);
+
+        // Remove potion effects.
+        for(PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
+        }
+
+        new TournamentScoreboard(plugin, player).update(player);
+
+        // Update player's chat channel.
+        if(JadedChat.getChannel(player).equals(JadedChat.getChannel("GAME")) || JadedChat.getChannel(player).equals(JadedChat.getChannel("TEAM"))) {
+            JadedChat.setChannel(player, JadedChat.getDefaultChannel());
+        }
+
+        giveTournamentItems(player);
+    }
+
+    public static void giveTournamentItems(Player player) {
+        player.getInventory().clear();
+
+        player.getInventory().setItem(1, new ItemBuilder(Material.ENDER_EYE).setDisplayName("<green><bold>Spectate").build());
+        player.getInventory().setItem(7, new ItemBuilder(Material.COMPARATOR).setDisplayName("<green><bold>Settings").build());
+        player.getInventory().setItem(8, new ItemBuilder(XMaterial.RED_DYE).setDisplayName("<green><bold>Back to Duels").build());
+
+        if(player.hasPermission("tournament.host")) {
+            player.getInventory().setItem(4, new ItemBuilder(Material.NETHER_STAR).setDisplayName("<green><bold>Host").build());
+        }
     }
 }
