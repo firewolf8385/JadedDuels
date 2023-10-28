@@ -63,7 +63,7 @@ public class CreateCMD extends AbstractCommand {
             super(54, "Select Bracket");
             addFiller(0,1,2,3,4,5,6,7,8,45,46,47,48,49,50,51,52,53);
 
-            ItemStack singleElim = new SkullBuilder("6d65ce83f1aa5b6e84f9b233595140d5b6beceb62b6d0c67d1a1d83625ffd")
+            ItemStack singleElim = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmQ2NWNlODNmMWFhNWI2ZTg0ZjliMjMzNTk1MTQwZDViNmJlY2ViNjJiNmQwYzY3ZDFhMWQ4MzYyNWZmZCJ9fX0=")
                     .asItemBuilder()
                     .setDisplayName("<green><bold>Single Elimination")
                     .addLore("").addLore("<green>Click to Select!").build();
@@ -72,7 +72,7 @@ public class CreateCMD extends AbstractCommand {
                 new SetBestOfGUI().open(p);
             });
 
-            ItemStack doubleElim = new SkullBuilder("dd54d1f8fbf91b1e7f55f1bdb25e2e33baf6f46ad8afbe08ffe757d3075e3")
+            ItemStack doubleElim = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGQ1NGQxZjhmYmY5MWIxZTdmNTVmMWJkYjI1ZTJlMzNiYWY2ZjQ2YWQ4YWZiZTA4ZmZlNzU3ZDMwNzVlMyJ9fX0=")
                     .asItemBuilder()
                     .setDisplayName("<green><bold>Double Elimination")
                     .addLore("").addLore("<green>Click to Select!").build();
@@ -88,7 +88,7 @@ public class CreateCMD extends AbstractCommand {
             super(54, "Select Best Of");
             addFiller(0,1,2,3,4,5,6,7,8,45,46,47,48,49,50,51,52,53);
 
-            ItemStack bo1 = new SkullBuilder("6d65ce83f1aa5b6e84f9b233595140d5b6beceb62b6d0c67d1a1d83625ffd")
+            ItemStack bo1 = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmQ2NWNlODNmMWFhNWI2ZTg0ZjliMjMzNTk1MTQwZDViNmJlY2ViNjJiNmQwYzY3ZDFhMWQ4MzYyNWZmZCJ9fX0=")
                     .asItemBuilder()
                     .setDisplayName("<green><bold>Best of 1")
                     .addLore("").addLore("<green>Click to Select!").build();
@@ -100,7 +100,7 @@ public class CreateCMD extends AbstractCommand {
                 // TODO: Update Bungeecord.
             });
 
-            ItemStack bo3 = new SkullBuilder("21e4ea59b54cc99416bc9f624548ddac2a38eea6a2dbf6e4ccd83cec7ac969")
+            ItemStack bo3 = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjFlNGVhNTliNTRjYzk5NDE2YmM5ZjYyNDU0OGRkYWMyYTM4ZWVhNmEyZGJmNmU0Y2NkODNjZWM3YWM5NjkifX19")
                     .asItemBuilder()
                     .setDisplayName("<green><bold>Best of 3")
                     .addLore("").addLore("<green>Click to Select!").build();
@@ -111,7 +111,7 @@ public class CreateCMD extends AbstractCommand {
                 // TODO: Update Bungeecord.
             });
 
-            ItemStack bo5 = new SkullBuilder("84c8c3710da2559a291adc39629e9ccea31ca9d3d3586bfea6e6e06124b3c")
+            ItemStack bo5 = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODRjOGMzNzEwZGEyNTU5YTI5MWFkYzM5NjI5ZTljY2VhMzFjYTlkM2QzNTg2YmZlYTZlNmUwNjEyNGIzYyJ9fX0=")
                     .asItemBuilder()
                     .setDisplayName("<green><bold>Best of 5")
                     .addLore("").addLore("<green>Click to Select!").build();
@@ -123,7 +123,7 @@ public class CreateCMD extends AbstractCommand {
                 // TODO: Update Bungeecord.
             });
 
-            ItemStack bo7 = new SkullBuilder("24bde79f84fc5f3f1fbc5bc01071066bd20cd263a1654d64d60d84248ba9cd")
+            ItemStack bo7 = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjRiZGU3OWY4NGZjNWYzZjFmYmM1YmMwMTA3MTA2NmJkMjBjZDI2M2ExNjU0ZDY0ZDYwZDg0MjQ4YmE5Y2QifX19")
                     .asItemBuilder()
                     .setDisplayName("<green><bold>Best of 7")
                     .addLore("").addLore("<green>Click to Select!").build();
