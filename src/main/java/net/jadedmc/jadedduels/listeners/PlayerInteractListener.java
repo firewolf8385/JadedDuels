@@ -30,6 +30,7 @@ import net.jadedmc.jadedduels.game.GameState;
 import net.jadedmc.jadedduels.game.lobby.LobbyScoreboard;
 import net.jadedmc.jadedduels.game.lobby.LobbyUtils;
 import net.jadedmc.jadedduels.gui.KitGUI;
+import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -93,6 +94,22 @@ public class PlayerInteractListener implements Listener {
 
             case "Spectate" -> {
                 // TODO: Spectating System: new SpectateGUI(plugin).open(player);
+                ChatUtils.chat(player, "&cComing soon.");
+                event.setCancelled(true);
+            }
+
+            case "Host" -> {
+                plugin.getServer().dispatchCommand(player, "create");
+                event.setCancelled(true);
+            }
+
+            case "Back to Duels" -> {
+                LobbyUtils.sendToLobby(plugin, player);
+                event.setCancelled(true);
+            }
+
+            case "Settings" -> {
+                ChatUtils.chat(player, "&cComing soon.");
                 event.setCancelled(true);
             }
         }
