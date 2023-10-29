@@ -87,7 +87,7 @@ public class KitManager {
      * @return All kits.
      */
     public Set<Kit> kits() {
-        Set<Kit> kits = new HashSet<>();
+        Set<Kit> kits = new LinkedHashSet<>();
         kits.addAll(activeKits);
         kits.addAll(duelKits);
 
