@@ -49,6 +49,7 @@ public class KitManager {
         activeKits.add(new SwordKit(plugin));
 
         duelKits.add(new HorseKit(plugin));
+        duelKits.add(new IronPotKit(plugin));
     }
 
     /**
