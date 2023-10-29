@@ -45,6 +45,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -160,6 +161,15 @@ public class Game {
     private void startRound() {
         round++;
         teamManager.reset();
+
+        // Remove old entities at the start of each round.
+        for(Entity entity : world.getEntities()) {
+            if(entity instanceof Player) {
+                continue;
+            }
+
+            entity.remove();
+        }
 
         for(Player player : players()) {
             spectators.remove(player);
