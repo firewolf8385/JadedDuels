@@ -120,7 +120,9 @@ public class Game {
     // -----------------------------------------------------------------------------------------------------------------
 
     public void startGame() {
-        plugin.queueManager().addPlaying(kit, players().size());
+        if(gameType == GameType.UNRANKED) {
+            plugin.queueManager().addPlaying(kit, players().size());
+        }
 
         for(Player player : players()) {
             List<Player> opponents = new ArrayList<>();
