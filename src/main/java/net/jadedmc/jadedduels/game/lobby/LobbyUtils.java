@@ -87,6 +87,7 @@ public class LobbyUtils {
         //player.getInventory().setItem(2, new ItemBuilder(Material.EMERALD).setDisplayName("&a&lShop").build());
         player.getInventory().setItem(4, new ItemBuilder(Material.NETHER_STAR).setDisplayName("<green><bold>Kits").build());
         //player.getInventory().setItem(7, new ItemBuilder(Material.PAPER).setDisplayName("&a&lStats").build());
+        player.getInventory().setItem(8, new ItemBuilder(Material.GOLD_INGOT).setDisplayName("<green><bold>Visit Tournament Lobby").build());
     }
 
     public static void sendToTournamentLobby(final JadedDuelsPlugin plugin, Player player) {

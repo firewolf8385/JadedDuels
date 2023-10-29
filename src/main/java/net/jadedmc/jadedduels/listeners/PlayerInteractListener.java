@@ -37,6 +37,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class PlayerInteractListener implements Listener {
     private final JadedDuelsPlugin plugin;
@@ -73,6 +74,10 @@ public class PlayerInteractListener implements Listener {
             return;
         }
 
+        if(event.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
+
         switch (item) {
             case "Kits" -> {
                 new KitGUI(plugin).open(player);
@@ -105,18 +110,28 @@ public class PlayerInteractListener implements Listener {
             }
 
             case "Back to Duels" -> {
-                // Cancel tournament if the player is the host.
-                if(plugin.duelEventManager().eventStatus() == EventStatus.WAITING
-                        && plugin.duelEventManager().host().equals(player)) {
-                    plugin.getServer().dispatchCommand(player, "cancel");
-                }
+                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                    // Cancel tournament if the player is the host.
+                    if(plugin.duelEventManager().eventStatus() == EventStatus.WAITING
+                            && plugin.duelEventManager().host().equals(player)) {
+                        plugin.getServer().dispatchCommand(player, "cancel");
+                    }
 
-                LobbyUtils.sendToLobby(plugin, player);
+                    LobbyUtils.sendToLobby(plugin, player);
+                }, 1);
                 event.setCancelled(true);
             }
 
             case "Settings" -> {
                 ChatUtils.chat(player, "&cComing soon.");
+                event.setCancelled(true);
+            }
+
+            case "Visit Tournament Lobby" -> {
+                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                    LobbyUtils.sendToTournamentLobby(plugin, player);
+                }, 1);
+
                 event.setCancelled(true);
             }
         }
