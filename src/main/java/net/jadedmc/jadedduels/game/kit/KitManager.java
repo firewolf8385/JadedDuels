@@ -25,10 +25,7 @@
 package net.jadedmc.jadedduels.game.kit;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
-import net.jadedmc.jadedduels.game.kit.kits.AxeKit;
-import net.jadedmc.jadedduels.game.kit.kits.BowKit;
-import net.jadedmc.jadedduels.game.kit.kits.SwordKit;
-import net.jadedmc.jadedduels.game.kit.kits.UHCKit;
+import net.jadedmc.jadedduels.game.kit.kits.*;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -50,6 +47,8 @@ public class KitManager {
         activeKits.add(new BowKit(plugin));
         activeKits.add(new AxeKit(plugin));
         activeKits.add(new SwordKit(plugin));
+
+        duelKits.add(new HorseKit(plugin));
     }
 
     /**

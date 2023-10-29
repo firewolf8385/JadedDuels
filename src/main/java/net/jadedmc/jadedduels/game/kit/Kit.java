@@ -61,6 +61,7 @@ public class Kit {
     private int startingHunger = 20;
     private float startingSaturation = 10;
     private boolean hunger = true;
+    private boolean exitVehicle = true;
 
     /**
      * Create a kit.
@@ -68,7 +69,7 @@ public class Kit {
      */
     public Kit(final JadedDuelsPlugin plugin, final String id, final String name) {
         this.plugin = plugin;
-        this.id = id    ;
+        this.id = id;
         this.name = name;
     }
 
@@ -129,6 +130,22 @@ public class Kit {
 
         // Run kit-specific kit apply code.
         onKitApply(plugin.gameManager().game(player), player);
+    }
+
+    /**
+     * Get if the player should be allowed to exit their vehicles.
+     * @return If the player can exit their vehicles.
+     */
+    public boolean exitVehicle() {
+        return exitVehicle;
+    }
+
+    /**
+     * Change if players should be allowed to exit their vehicles.
+     * @param exitVehicle If the player can exit their vehicles.
+     */
+    public void exitVehicle(boolean exitVehicle) {
+        this.exitVehicle = exitVehicle;
     }
 
     /**
