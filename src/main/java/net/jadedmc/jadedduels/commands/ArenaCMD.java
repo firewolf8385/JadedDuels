@@ -256,7 +256,7 @@ public class ArenaCMD extends AbstractCommand {
         plugin.arenaManager().arenaBuilder().addSpawn(player.getLocation());
 
         int spawnCount = plugin.arenaManager().arenaBuilder().spawns().size();
-        ChatUtils.chat(player, "&a&lCactusRush &8» &Set spawn point &f#" + spawnCount + "&a to your location.");
+        ChatUtils.chat(player, "&a&lCactusRush &8» &aSet spawn point &f#" + spawnCount + "&a to your location.");
 
         if(spawnCount == 2) {
             ChatUtils.chat(player, "&a&lCactusRush &8» &aWhen you are done, finish the setup with &f/arena finish.");
