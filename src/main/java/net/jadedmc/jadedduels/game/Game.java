@@ -338,7 +338,9 @@ public class Game {
                 startRound();
             }
             else {
-                plugin.queueManager().removePlaying(kit, players().size());
+                if(gameType == GameType.UNRANKED) {
+                    plugin.queueManager().removePlaying(kit, players().size());
+                }
 
                 // Show hidden players
                 for(Player player : world.getPlayers()) {
