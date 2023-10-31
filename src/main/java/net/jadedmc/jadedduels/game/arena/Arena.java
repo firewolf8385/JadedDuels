@@ -215,10 +215,11 @@ public class Arena {
     /**
      * Get the arena's tournament spawn.
      * Returns null if it doesn't have one.
+     * @param world World to get the tournament spawn of.
      * @return The arena's tournament spawn.
      */
-    public Location tournamentSpawn() {
-        return tournamentSpawn;
+    public Location tournamentSpawn(World world) {
+        return LocationUtils.replaceWorld(world, tournamentSpawn);
     }
 
     /**
