@@ -101,7 +101,7 @@ public class TournamentScoreboard extends CustomScoreboard {
                 helper.setSlot(6, "&aBracket: &f" + plugin.duelEventManager().eventType());
                 helper.setSlot(5, "&aTeam: &f1v1 &7(" + plugin.duelEventManager().bestOf().toString() + "&7)");
                 helper.setSlot(4, "");
-                helper.setSlot(3, "&aPlayers: &f" + Bukkit.getOnlinePlayers().size());
+                helper.setSlot(3, "&aPlayers: &f" + plugin.duelEventManager().world().getPlayers().size());
                 helper.setSlot(2, "");
                 helper.setSlot(1, "&aplay.jadedmc.net");
             }
