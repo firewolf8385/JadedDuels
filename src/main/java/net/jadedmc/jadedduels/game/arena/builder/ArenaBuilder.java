@@ -77,6 +77,11 @@ public class ArenaBuilder {
         this.spectatorSpawn = arena.spectatorSpawn(Bukkit.getWorld(id));
         this.voidLevel = arena.voidLevel();
         this.name = arena.name();
+        this.tournamentMap = arena.isTournamentMap();
+
+        if(tournamentMap) {
+            this.tournamentSpawn = arena.tournamentSpawn(Bukkit.getWorld(id));
+        }
 
         kits.addAll(arena.kits());
         editMode = true;
