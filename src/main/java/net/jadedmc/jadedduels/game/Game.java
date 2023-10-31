@@ -229,7 +229,7 @@ public class Game {
         gameState = GameState.COUNTDOWN;
 
         BukkitRunnable countdown = new  BukkitRunnable() {
-            int counter = 6;
+            int counter = 4;
             public void run() {
                 counter--;
 
