@@ -25,6 +25,8 @@
 package net.jadedmc.jadedduels.game.arena;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import net.jadedmc.jadedduels.game.Game;
+import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.arena.builder.ArenaBuilder;
 import net.jadedmc.jadedduels.game.arena.file.ArenaFileManager;
 import net.jadedmc.jadedduels.game.kit.Kit;
@@ -100,12 +102,19 @@ public class ArenaManager {
     /**
      * Gets all arenas that support a given kit.
      * @param kit Kit to get arenas for.
+     * @param gameType Game type.
      * @return Collection of arenas for that mode.
      */
-    public Collection<Arena> getArenas(Kit kit) {
+    public Collection<Arena> getArenas(Kit kit, GameType gameType) {
         Collection<Arena> kitArenas = new HashSet<>();
 
         for(Arena arena : getArenas()) {
+            if(arena.isTournamentMap()) {
+                if(gameType != GameType.TOURNAMENT) {
+                    continue;
+                }
+            }
+
             if(arena.kits().contains(kit)) {
                 kitArenas.add(arena);
             }

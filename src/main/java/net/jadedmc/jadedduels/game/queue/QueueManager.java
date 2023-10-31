@@ -90,7 +90,7 @@ public class QueueManager {
         else {
             removePlayer(other);
 
-            List<Arena> arenas = new ArrayList<>(plugin.arenaManager().getArenas(kit));
+            List<Arena> arenas = new ArrayList<>(plugin.arenaManager().getArenas(kit, GameType.UNRANKED));
             Collections.shuffle(arenas);
             plugin.gameManager().createGame(arenas.get(0), kit, gameType).thenAccept(game -> {
                 plugin.getServer().getScheduler().runTask(plugin, () -> {

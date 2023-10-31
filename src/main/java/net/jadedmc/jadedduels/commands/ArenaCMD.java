@@ -76,6 +76,8 @@ public class ArenaCMD extends AbstractCommand {
             case "addkit" -> addKit(player, args);
             case "setvoidlevel" -> setVoidLevel(player, args);
             case "setspectatorspawn" -> setSpectatorSpawn(player);
+            case "settournamentmap" -> setTournamentMap(player);
+            case "settournamentspawn" -> setTournamentSpawn(player);
             case "addspawn" -> addSpawn(player);
             case "finish" -> finishCMD(player);
             case "edit" -> editCMD(player, args);
@@ -238,6 +240,31 @@ public class ArenaCMD extends AbstractCommand {
         // Sets the waiting area spawn.
         plugin.arenaManager().arenaBuilder().spectatorSpawn(player.getLocation());
         ChatUtils.chat(player, "&a&lCactusRush &8» &aYou have set the spectator spawn to your location.");
+        ChatUtils.chat(player, "&a&lCactusRush &8» &aNext, add your spawns with &f/arena addspawn.");
+    }
+
+    private void setTournamentMap(Player player) {
+        // Makes sure there an arena is being set up.
+        if(plugin.arenaManager().arenaBuilder() == null) {
+            ChatUtils.chat(player, "&cError &8» &cYou need to create an arena first! /arena create");
+            return;
+        }
+
+        plugin.arenaManager().arenaBuilder().tournamentMap(true);
+        ChatUtils.chat(player, "&a&lCactusRush &8» &aSet the map as a tournament map.");
+        ChatUtils.chat(player, "&a&lCactusRush &8» &aSet the tournament spawn with &f/arena settournamentspawn&a.");
+    }
+
+    private void setTournamentSpawn(Player player) {
+        // Makes sure there an arena is being set up.
+        if(plugin.arenaManager().arenaBuilder() == null) {
+            ChatUtils.chat(player, "&cError &8» &cYou need to create an arena first! /arena create");
+            return;
+        }
+
+        // Sets the waiting area spawn.
+        plugin.arenaManager().arenaBuilder().tournamentSpawn(player.getLocation());
+        ChatUtils.chat(player, "&a&lCactusRush &8» &aYou have set the tournament spawn to your location.");
         ChatUtils.chat(player, "&a&lCactusRush &8» &aNext, add your spawns with &f/arena addspawn.");
     }
 

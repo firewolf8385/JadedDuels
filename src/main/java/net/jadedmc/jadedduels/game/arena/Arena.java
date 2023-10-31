@@ -54,6 +54,8 @@ public class Arena {
     private final Location spectatorSpawn;
     private final File configFile;
     private final List<Location> spawns = new ArrayList<>();
+    private final boolean tournamentMap;
+    private final Location tournamentSpawn;
 
     /**
      * Creates the arena.
@@ -82,6 +84,21 @@ public class Arena {
         }
         else {
             voidLevel = 0;
+        }
+
+        if(config.isSet("tournamentMap")) {
+            tournamentMap = config.getBoolean("tournamentMap");
+
+            if(tournamentMap) {
+                tournamentSpawn = LocationUtils.fromConfig(Objects.requireNonNull(config.getConfigurationSection("tournamentSpawn")));
+            }
+            else {
+                tournamentSpawn = null;
+            }
+        }
+        else {
+            tournamentMap = false;
+            tournamentSpawn = null;
         }
 
         // Load kits
@@ -147,6 +164,15 @@ public class Arena {
     }
 
     /**
+     * Check if the map is meant for tournaments.
+     * Tournament maps are designed different and have an extra spectating area.
+     * @return Whether the map is a tournament map.
+     */
+    public boolean isTournamentMap() {
+        return tournamentMap;
+    }
+
+    /**
      * Get all kits the arena is made for.
      * @return Arena kits.
      */
@@ -184,6 +210,15 @@ public class Arena {
      */
     public Location spectatorSpawn(World world) {
         return LocationUtils.replaceWorld(world, spectatorSpawn);
+    }
+
+    /**
+     * Get the arena's tournament spawn.
+     * Returns null if it doesn't have one.
+     * @return The arena's tournament spawn.
+     */
+    public Location tournamentSpawn() {
+        return tournamentSpawn;
     }
 
     /**

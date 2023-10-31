@@ -53,6 +53,8 @@ public class ArenaBuilder {
     private final Collection<Kit> kits = new HashSet<>();
     private final List<Location> spawns = new ArrayList<>();
     private boolean editMode = false;
+    private boolean tournamentMap = false;
+    private Location tournamentSpawn = null;
 
     /**
      * Creates the arena builder.
@@ -165,6 +167,12 @@ public class ArenaBuilder {
             return false;
         }
 
+        // Make sure the tournament spawn has been set if needed.
+        if(tournamentMap && tournamentSpawn == null) {
+            System.out.println("Tournament spawn not set.");
+            return false;
+        }
+
         return true;
     }
 
@@ -201,6 +209,22 @@ public class ArenaBuilder {
     }
 
     /**
+     * Set if the map should be a tournament map.
+     * @param tournamentMap Whether the map is a tournament map.
+     */
+    public void tournamentMap(boolean tournamentMap) {
+        this.tournamentMap = tournamentMap;
+    }
+
+    /**
+     * Set the tournament spawn.
+     * @param tournamentSpawn New tournament spawn.
+     */
+    public void tournamentSpawn(Location tournamentSpawn) {
+        this.tournamentSpawn = tournamentSpawn;
+    }
+
+    /**
      * Set the void level of the arena.
      * @param voidLevel Arena void level.
      */
@@ -223,6 +247,7 @@ public class ArenaBuilder {
            FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
            configuration.set("name", name);
            configuration.set("builders", builders);
+           configuration.set("tournamentMap", tournamentMap);
 
            if(voidLevel != -1) {
                configuration.set("voidLevel", voidLevel);
@@ -237,6 +262,17 @@ public class ArenaBuilder {
                waitingSection.set("z", spectatorSpawn.getZ());
                waitingSection.set("yaw", spectatorSpawn.getYaw());
                waitingSection.set("pitch", spectatorSpawn.getPitch());
+           }
+
+           // Tournament Spawn
+           if(tournamentMap) {
+               ConfigurationSection waitingSection = configuration.createSection("tournamentSpawn");
+               waitingSection.set("world", Bukkit.getWorlds().get(0).getName());
+               waitingSection.set("x", tournamentSpawn.getX());
+               waitingSection.set("y", tournamentSpawn.getY());
+               waitingSection.set("z", tournamentSpawn.getZ());
+               waitingSection.set("yaw", tournamentSpawn.getYaw());
+               waitingSection.set("pitch", tournamentSpawn.getPitch());
            }
 
            // Kits

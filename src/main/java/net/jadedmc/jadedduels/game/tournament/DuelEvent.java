@@ -296,7 +296,7 @@ public class DuelEvent {
                                 }
                             }
 
-                            List<Arena> arenas = new ArrayList<>(plugin.arenaManager().getArenas(plugin.duelEventManager().kit()));
+                            List<Arena> arenas = new ArrayList<>(plugin.arenaManager().getArenas(plugin.duelEventManager().kit(), GameType.TOURNAMENT));
                             Collections.shuffle(arenas);
 
                             plugin.gameManager().createGame(arenas.get(0), plugin.duelEventManager().kit(), GameType.TOURNAMENT, match).thenAccept(game -> {
