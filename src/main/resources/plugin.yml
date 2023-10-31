@@ -19,3 +19,5 @@ commands:
     description: View the current tournament bracket.
   cancel:
     description: Cancel a tournament.
+  arenas:
+    description: View all currently loaded arenas.

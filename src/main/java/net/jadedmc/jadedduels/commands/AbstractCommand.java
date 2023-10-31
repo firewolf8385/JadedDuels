@@ -58,6 +58,7 @@ public abstract class AbstractCommand implements CommandExecutor {
     public static void registerCommands(JadedDuelsPlugin pl) {
         plugin = pl;
         new ArenaCMD(pl);
+        new ArenasCMD(pl);
         new CreateCMD(pl);
         new StartCMD(pl);
         new BracketCMD(pl);
