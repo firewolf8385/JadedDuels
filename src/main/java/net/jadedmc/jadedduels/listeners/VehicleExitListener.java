@@ -55,6 +55,10 @@ public class VehicleExitListener implements Listener {
             return;
         }
 
+        if(game.spectators().contains(player)) {
+            return;
+        }
+
         if(!game.kit().exitVehicle()) {
             event.setCancelled(true);
         }
