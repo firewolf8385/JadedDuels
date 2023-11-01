@@ -112,7 +112,7 @@ public class ArenaManager {
         if(gameType == GameType.TOURNAMENT) {
             for(Arena arena : getArenas()) {
                 if(arena.isTournamentMap()) {
-                    if(arena.kits().add(kit)) {
+                    if(arena.kits().contains(kit)) {
                         kitArenas.add(arena);
                     }
                 }
