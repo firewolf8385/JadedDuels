@@ -43,6 +43,7 @@ public class UHCKit extends Kit {
         super(plugin, "uhc", "UHC");
         iconMaterial(Material.GOLDEN_APPLE);
         gameMode(GameMode.SURVIVAL);
+        naturalRegeneration(false);
 
         // TODO: Disable natural regeneration.
 

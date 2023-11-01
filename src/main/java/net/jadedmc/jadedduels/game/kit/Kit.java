@@ -64,6 +64,7 @@ public class Kit {
     private boolean hunger = true;
     private boolean exitVehicle = true;
     private int voidLevel = 0;
+    private boolean naturalRegeneration = true;
 
     /**
      * Create a kit.
@@ -228,6 +229,22 @@ public class Kit {
      */
     public String name() {
         return name;
+    }
+
+    /**
+     * Get if the kit should have natural regeneration.
+     * @return Whether the kit should have natural regeneration.
+     */
+    public boolean naturalRegeneration() {
+        return naturalRegeneration;
+    }
+
+    /**
+     * Change if the kit should have natural regeneration.
+     * @param naturalRegeneration Whether the kit should have natural regeneration.
+     */
+    public void naturalRegeneration(boolean naturalRegeneration) {
+        this.naturalRegeneration = naturalRegeneration;
     }
 
     /**
