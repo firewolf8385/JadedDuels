@@ -31,6 +31,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
@@ -241,6 +242,14 @@ public class Kit {
      * @param event BlockPlaceEvent
      */
     public void onBlockPlace(Game game, BlockPlaceEvent event) {}
+
+    /**
+     * Called when a player launches a projectile.
+     * @param player Player launching the projectile.
+     * @param game Game to launch.
+     * @param event ProjectileLaunchEvent.
+     */
+    public void onProjectileLaunch(Player player, Game game, ProjectileLaunchEvent event) {}
 
     /**
      * Called when a kit is applied.
