@@ -63,6 +63,7 @@ public class Kit {
     private float startingSaturation = 10;
     private boolean hunger = true;
     private boolean exitVehicle = true;
+    private int voidLevel = 0;
 
     /**
      * Create a kit.
@@ -288,5 +289,21 @@ public class Kit {
      */
     public void startingHunger(int startingHunger) {
         this.startingHunger = startingHunger;
+    }
+
+    /**
+     * Get the kit's void level.
+     * @return Void level.
+     */
+    public int voidLevel() {
+        return voidLevel;
+    }
+
+    /**
+     * Change the kit's void level.
+     * @param voidLevel New void level.
+     */
+    public void voidLevel(int voidLevel) {
+        this.voidLevel = voidLevel;
     }
 }

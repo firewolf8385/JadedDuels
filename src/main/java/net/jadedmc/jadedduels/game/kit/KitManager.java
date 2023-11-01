@@ -51,6 +51,7 @@ public class KitManager {
         duelKits.add(new HorseKit(plugin));
         duelKits.add(new IronPotKit(plugin));
         duelKits.add(new DoorKit(plugin));
+        duelKits.add(new CactusKit(plugin));
     }
 
     /**

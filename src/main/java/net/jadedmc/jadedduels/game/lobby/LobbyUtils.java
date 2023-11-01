@@ -49,8 +49,10 @@ public class LobbyUtils {
     public static void sendToLobby(final JadedDuelsPlugin plugin, Player player) {
         player.teleport(LocationUtils.getSpawn(plugin));
         player.setGameMode(GameMode.ADVENTURE);
+        player.setMaxHealth(20);
         player.setHealth(20);
         player.setFoodLevel(20);
+        player.setFireTicks(0);
 
         player.setAllowFlight(false);
         player.setFlying(false);
@@ -94,8 +96,10 @@ public class LobbyUtils {
     public static void sendToTournamentLobby(final JadedDuelsPlugin plugin, Player player) {
         player.teleport(LocationUtils.getTournamentSpawn(plugin));
         player.setGameMode(GameMode.ADVENTURE);
+        player.setMaxHealth(20);
         player.setHealth(20);
         player.setFoodLevel(20);
+        player.setFireTicks(0);
 
         player.setAllowFlight(false);
         player.setFlying(false);
