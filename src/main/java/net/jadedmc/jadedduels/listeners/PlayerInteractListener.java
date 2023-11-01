@@ -27,10 +27,12 @@ package net.jadedmc.jadedduels.listeners;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.GameState;
+import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.lobby.LobbyScoreboard;
 import net.jadedmc.jadedduels.game.lobby.LobbyUtils;
 import net.jadedmc.jadedduels.game.tournament.EventStatus;
 import net.jadedmc.jadedduels.gui.KitGUI;
+import net.jadedmc.jadedduels.gui.SpectateGUI;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
@@ -54,19 +56,20 @@ public class PlayerInteractListener implements Listener {
         // Prevent using items during game countdown.
         if(game != null && game.gameState() != GameState.RUNNING) {
             event.setCancelled(true);
-
             // Fixes visual glitch with throwables during countdown.
             player.getInventory().setItem(player.getInventory().getHeldItemSlot(), player.getItemInHand());
             return;
         }
 
         // Exit if the item is null.
-        if(event.getItem() == null)
+        if(event.getItem() == null) {
             return;
+        }
 
         // Exit if item meta is null.
-        if(event.getItem().getItemMeta() == null)
+        if(event.getItem().getItemMeta() == null) {
             return;
+        }
 
         String item = ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName());
 
@@ -93,14 +96,32 @@ public class PlayerInteractListener implements Listener {
 
             case "Leave Match" -> {
                 if(game != null && game.spectators().contains(player)) {
+                    System.out.println("Works");
                     game.removeSpectator(player);
                 }
                 event.setCancelled(true);
             }
 
             case "Spectate" -> {
-                // TODO: Spectating System: new SpectateGUI(plugin).open(player);
-                ChatUtils.chat(player, "&cComing soon.");
+                if(player.getWorld().equals(plugin.duelEventManager().world())) {
+                    new SpectateGUI(plugin, GameType.TOURNAMENT).open(player);
+                    event.setCancelled(true);
+                    return;
+                }
+
+                if(game == null) {
+                    new SpectateGUI(plugin, GameType.UNRANKED).open(player);
+                    event.setCancelled(true);
+                    return;
+                }
+
+                if(game.gameType() == GameType.TOURNAMENT) {
+                    new SpectateGUI(plugin, GameType.TOURNAMENT).open(player);
+                    event.setCancelled(true);
+                    return;
+                }
+
+                new SpectateGUI(plugin, GameType.UNRANKED).open(player);
                 event.setCancelled(true);
             }
 

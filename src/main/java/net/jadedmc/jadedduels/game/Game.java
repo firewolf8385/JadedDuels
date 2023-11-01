@@ -524,31 +524,57 @@ public class Game {
 
         // Doesn't teleport player if they were in the game before.
         if(teamManager.team(spectator) == null) {
-            spectator.teleport(arena.spectatorSpawn(this.world));
+            if(gameType != GameType.TOURNAMENT) {
+                spectator.teleport(arena.spectatorSpawn(this.world));
+            }
+            else {
+                spectator.teleport(arena.tournamentSpawn(this.world));
+            }
         }
 
-        spectator.getInventory().clear();
-        spectator.getInventory().setArmorContents(null);
-        spectator.setAllowFlight(true);
-        spectator.setFlying(true);
-        spectator.setMaxHealth(20.0);
-        spectator.setHealth(20.0);
-        spectator.setFoodLevel(20);
-        spectator.setGameMode(GameMode.ADVENTURE);
+        if(gameType != GameType.TOURNAMENT) {
+            spectator.getInventory().clear();
+            spectator.getInventory().setArmorContents(null);
+            spectator.setAllowFlight(true);
+            spectator.setFlying(true);
+            spectator.setMaxHealth(20.0);
+            spectator.setHealth(20.0);
+            spectator.setFoodLevel(20);
+            spectator.setGameMode(GameMode.ADVENTURE);
 
-        // Prevents player from interfering.
-        spectator.setCollidable(false);
+            // Prevents player from interfering.
+            spectator.setCollidable(false);
+
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                for(Player pl : world.getPlayers()) {
+                    pl.hidePlayer(plugin, spectator);
+                }
+            }, 2);
+        }
+        else {
+            spectator.getInventory().clear();
+            spectator.getInventory().setArmorContents(null);
+            spectator.setMaxHealth(20.0);
+            spectator.setHealth(20.0);
+            spectator.setFoodLevel(20);
+            spectator.setGameMode(GameMode.ADVENTURE);
+
+            if(teamManager.team(spectator) != null) {
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    for(Player pl : world.getPlayers()) {
+                        pl.hidePlayer(plugin, spectator);
+                    }
+                }, 2);
+            }
+        }
+
 
         ItemStack leave = new ItemBuilder(XMaterial.RED_BED)
                 .setDisplayName("<red>Leave Match")
                 .build();
         spectator.getInventory().setItem(8, leave);
 
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            for(Player pl : world.getPlayers()) {
-                pl.hidePlayer(plugin, spectator);
-            }
-        }, 2);
+
     }
 
     public Collection<Block> blocks() {
@@ -633,6 +659,7 @@ public class Game {
      */
     public void playerDisconnect(Player player) {
         if(spectators.contains(player)) {
+            removeSpectator(player);
             return;
         }
 
