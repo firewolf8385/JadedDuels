@@ -182,6 +182,10 @@ public class GameManager {
             if(game.players().contains(player)) {
                 return game;
             }
+
+            if(game.spectators().contains(player)) {
+                return game;
+            }
         }
 
         return null;
