@@ -30,6 +30,7 @@ import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.arena.builder.ArenaBuilder;
 import net.jadedmc.jadedduels.game.arena.file.ArenaFileManager;
 import net.jadedmc.jadedduels.game.kit.Kit;
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.File;
 import java.util.*;
@@ -108,15 +109,22 @@ public class ArenaManager {
     public Collection<Arena> getArenas(Kit kit, GameType gameType) {
         Collection<Arena> kitArenas = new HashSet<>();
 
-        for(Arena arena : getArenas()) {
-            if(arena.isTournamentMap()) {
-                if(gameType != GameType.TOURNAMENT) {
-                    continue;
+        if(gameType == GameType.TOURNAMENT) {
+            for(Arena arena : getArenas()) {
+                if(arena.isTournamentMap()) {
+                    if(arena.kits().add(kit)) {
+                        kitArenas.add(arena);
+                    }
                 }
             }
-
-            if(arena.kits().contains(kit)) {
-                kitArenas.add(arena);
+        }
+        else {
+            for(Arena arena : getArenas()) {
+                if(!arena.isTournamentMap()) {
+                    if(arena.kits().contains(kit)) {
+                        kitArenas.add(arena);
+                    }
+                }
             }
         }
 
