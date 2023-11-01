@@ -30,7 +30,6 @@ import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.utils.DateUtils;
 import net.jadedmc.jadedduels.utils.scoreboard.CustomScoreboard;
 import net.jadedmc.jadedduels.utils.scoreboard.ScoreHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 /**
@@ -69,7 +68,7 @@ public class TournamentScoreboard extends CustomScoreboard {
         // Sets up the scoreboard based on the current state of the tournament.
         switch (plugin.duelEventManager().eventStatus()) {
             case NONE -> {
-                helper.setTitle("&a&lTOURNAMENT");
+                helper.setTitle("&a&lTournament");
                 helper.setSlot(15, "&7" + DateUtils.currentDateToString());
                 helper.setSlot(14, "");
                 helper.removeSlot(13);
@@ -88,7 +87,7 @@ public class TournamentScoreboard extends CustomScoreboard {
             }
 
             case WAITING -> {
-                helper.setTitle("&a&lTOURNAMENT");
+                helper.setTitle("&a&lTournament");
                 helper.removeSlot(15);
                 helper.removeSlot(14);
                 helper.removeSlot(13);
@@ -107,7 +106,7 @@ public class TournamentScoreboard extends CustomScoreboard {
             }
 
             case RUNNING -> {
-                helper.setTitle("&a&lTOURNAMENT");
+                helper.setTitle("&a&lTournament");
                 helper.removeSlot(15);
                 helper.removeSlot(14);
                 helper.removeSlot(13);

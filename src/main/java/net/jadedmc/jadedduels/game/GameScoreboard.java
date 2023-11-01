@@ -67,7 +67,7 @@ public class GameScoreboard extends CustomScoreboard {
                     opponents.addAll(opposingTeam.players());
                 }
 
-                helper.setTitle("&a&lDUELS");
+                helper.setTitle("&a&lDuels");
 
                 helper.setSlot(15, "&7" + DateUtils.currentDateToString());
                 helper.setSlot(14, "");

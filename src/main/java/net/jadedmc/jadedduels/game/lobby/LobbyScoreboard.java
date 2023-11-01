@@ -40,7 +40,7 @@ public class LobbyScoreboard extends CustomScoreboard {
         }
 
         // Sets up the scoreboard.
-        helper.setTitle("&a&lDUELS");
+        helper.setTitle("&a&lDuels");
         helper.setSlot(15, "&7" + DateUtils.currentDateToString());
         helper.setSlot(14, "");
         helper.removeSlot(13);
