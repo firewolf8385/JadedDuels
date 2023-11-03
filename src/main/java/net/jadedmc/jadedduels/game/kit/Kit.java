@@ -65,6 +65,7 @@ public class Kit {
     private boolean exitVehicle = true;
     private int voidLevel = 0;
     private boolean naturalRegeneration = true;
+    private boolean boxingDamage = false;
 
     /**
      * Create a kit.
@@ -133,6 +134,22 @@ public class Kit {
 
         // Run kit-specific kit apply code.
         onKitApply(plugin.gameManager().game(player), player);
+    }
+
+    /**
+     * Get if the kit should use boxing damage.
+     * @return Whether the kit should use boxing damage.
+     */
+    public boolean boxingDamage() {
+        return boxingDamage;
+    }
+
+    /**
+     * Set if the kit should use boxing damage.
+     * @param boxingDamage Whether the kit should use boxing damage.
+     */
+    public void boxingDamage(boolean boxingDamage) {
+        this.boxingDamage = boxingDamage;
     }
 
     /**

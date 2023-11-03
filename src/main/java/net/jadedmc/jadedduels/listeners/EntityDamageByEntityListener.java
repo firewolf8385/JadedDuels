@@ -97,12 +97,11 @@ public class EntityDamageByEntityListener implements Listener {
         }
          */
 
-        // TODO: Boxing damage settings
-        /*
-        if(game.kit().hasBoxingDamage()) {
+
+        // Check if the kit uses boxing damage.
+        if(game.kit().boxingDamage()) {
             event.setDamage(0.2);
         }
-         */
 
         // Sends an action bar to the damager with the player's health.
         if(event.getDamager() instanceof Player damager) {
