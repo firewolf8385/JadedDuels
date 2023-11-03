@@ -79,6 +79,7 @@ public final class JadedDuelsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new ProjectileLaunchListener(this), this);
         getServer().getPluginManager().registerEvents(new VehicleExitListener(this), this);
+        getServer().getPluginManager().registerEvents(new WorldInitListener(), this);
 
         // Updates scoreboards every second
         new ScoreboardUpdate().runTaskTimer(this, 20L, 20L);
