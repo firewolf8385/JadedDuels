@@ -47,6 +47,7 @@ public class KitManager {
         activeKits.add(new BowKit(plugin));
         activeKits.add(new AxeKit(plugin));
         activeKits.add(new SwordKit(plugin));
+        activeKits.add(new DiamondPotKit(plugin));
 
         duelKits.add(new HorseKit(plugin));
         duelKits.add(new IronPotKit(plugin));
