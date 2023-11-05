@@ -21,3 +21,5 @@ commands:
     description: Cancel a tournament.
   arenas:
     description: View all currently loaded arenas.
+  duel:
+    description: Duel another player.

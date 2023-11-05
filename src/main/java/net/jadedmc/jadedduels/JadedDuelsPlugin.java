@@ -31,6 +31,7 @@ import net.jadedmc.jadedchat.features.channels.fomat.ChatFormatBuilder;
 import net.jadedmc.jadedduels.commands.AbstractCommand;
 import net.jadedmc.jadedduels.game.GameManager;
 import net.jadedmc.jadedduels.game.arena.ArenaManager;
+import net.jadedmc.jadedduels.game.duel.DuelManager;
 import net.jadedmc.jadedduels.game.kit.KitManager;
 import net.jadedmc.jadedduels.game.queue.QueueManager;
 import net.jadedmc.jadedduels.game.tournament.DuelEventManager;
@@ -40,6 +41,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class JadedDuelsPlugin extends JavaPlugin {
     private ArenaManager arenaManager;
+    private DuelManager duelManager;
     private GameManager gameManager;
     private KitManager kitManager;
     private SettingsManager settingsManager;
@@ -60,6 +62,7 @@ public final class JadedDuelsPlugin extends JavaPlugin {
         gameManager = new GameManager(this);
         queueManager = new QueueManager(this);
         duelEventManager = new DuelEventManager(this);
+        duelManager = new DuelManager(this);
 
         AbstractCommand.registerCommands(this);
 
@@ -162,6 +165,14 @@ public final class JadedDuelsPlugin extends JavaPlugin {
      */
     public DuelEventManager duelEventManager() {
         return duelEventManager;
+    }
+
+    /**
+     * Gets the Duel Manager.
+     * @return Duel Manager.
+     */
+    public DuelManager duelManager() {
+        return duelManager;
     }
 
     /**
