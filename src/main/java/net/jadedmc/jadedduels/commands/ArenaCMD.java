@@ -134,8 +134,8 @@ public class ArenaCMD extends AbstractCommand {
         player.teleport(world.getSpawnLocation());
         player.setFlying(true);
 
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aCreated an arena with the id &f" + id + "&a.");
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aNext, set the arena name with &f/arena setname [name]&a.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aCreated an arena with the id &f" + id + "&a.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aNext, set the arena name with &f/arena setname [name]&a.");
     }
 
     /**
@@ -162,8 +162,8 @@ public class ArenaCMD extends AbstractCommand {
 
         // Sets the arena name.
         plugin.arenaManager().arenaBuilder().name(name);
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aArena name set to &f" + name + "&a.");
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aNext, add all allowable modes with &f/arena addkit [kit]&a.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aArena name set to &f" + name + "&a.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aNext, add all allowable modes with &f/arena addkit [kit]&a.");
     }
 
     /**
@@ -194,8 +194,8 @@ public class ArenaCMD extends AbstractCommand {
 
         plugin.arenaManager().arenaBuilder().addKit(kit);
 
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aAdded &f" + args[1] + "&a as a valid kit.");
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aNext, set the spectator spawn with &f/arena setspectatorspawn&a.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aAdded &f" + args[1] + "&a as a valid kit.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aNext, set the spectator spawn with &f/arena setspectatorspawn&a.");
     }
 
     /**
@@ -222,7 +222,7 @@ public class ArenaCMD extends AbstractCommand {
 
         // Sets the team size.
         plugin.arenaManager().arenaBuilder().voidLevel(voidLevel);
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aVoid level has been set to &f" + voidLevel + "&a.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aVoid level has been set to &f" + voidLevel + "&a.");
     }
 
     /**
@@ -239,8 +239,8 @@ public class ArenaCMD extends AbstractCommand {
 
         // Sets the waiting area spawn.
         plugin.arenaManager().arenaBuilder().spectatorSpawn(player.getLocation());
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aYou have set the spectator spawn to your location.");
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aNext, add your spawns with &f/arena addspawn.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aYou have set the spectator spawn to your location.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aNext, add your spawns with &f/arena addspawn.");
     }
 
     private void setTournamentMap(Player player) {
@@ -251,8 +251,8 @@ public class ArenaCMD extends AbstractCommand {
         }
 
         plugin.arenaManager().arenaBuilder().tournamentMap(true);
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aSet the map as a tournament map.");
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aSet the tournament spawn with &f/arena settournamentspawn&a.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aSet the map as a tournament map.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aSet the tournament spawn with &f/arena settournamentspawn&a.");
     }
 
     private void setTournamentSpawn(Player player) {
@@ -264,8 +264,8 @@ public class ArenaCMD extends AbstractCommand {
 
         // Sets the waiting area spawn.
         plugin.arenaManager().arenaBuilder().tournamentSpawn(player.getLocation());
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aYou have set the tournament spawn to your location.");
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aNext, add your spawns with &f/arena addspawn.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aYou have set the tournament spawn to your location.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aNext, add your spawns with &f/arena addspawn.");
     }
 
     /**
@@ -283,10 +283,10 @@ public class ArenaCMD extends AbstractCommand {
         plugin.arenaManager().arenaBuilder().addSpawn(player.getLocation());
 
         int spawnCount = plugin.arenaManager().arenaBuilder().spawns().size();
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aSet spawn point &f#" + spawnCount + "&a to your location.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aSet spawn point &f#" + spawnCount + "&a to your location.");
 
         if(spawnCount == 2) {
-            ChatUtils.chat(player, "&a&lCactusRush &8» &aWhen you are done, finish the setup with &f/arena finish.");
+            ChatUtils.chat(player, "&a&lDuels &8» &aWhen you are done, finish the setup with &f/arena finish.");
         }
     }
 
@@ -308,7 +308,7 @@ public class ArenaCMD extends AbstractCommand {
             return;
         }
 
-        ChatUtils.chat(player, "&a&lCactusRush &8» &aArena has been saved.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aArena has been saved.");
 
         // Saves the arena.
         String id = plugin.arenaManager().arenaBuilder().id();
@@ -384,8 +384,8 @@ public class ArenaCMD extends AbstractCommand {
                 player.teleport(world.getSpawnLocation());
                 player.setFlying(true);
 
-                ChatUtils.chat(player, "&a&lCactusRush &8» &aYou are now editing &f" + arena.name() + "&a.");
-                ChatUtils.chat(player, "&a&lCactusRush &8» &aWhen you are done, finish the arena with &f/arena finish&a.");
+                ChatUtils.chat(player, "&a&lDuels &8» &aYou are now editing &f" + arena.name() + "&a.");
+                ChatUtils.chat(player, "&a&lDuels &8» &aWhen you are done, finish the arena with &f/arena finish&a.");
             });
         });
     }
