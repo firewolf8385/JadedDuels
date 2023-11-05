@@ -55,6 +55,7 @@ public class KitManager {
         duelKits.add(new BoxingKit(plugin));
         duelKits.add(new SpleefKit(plugin));
         duelKits.add(new HSGKit(plugin));
+        duelKits.add(new ShieldlessUHC(plugin));
     }
 
     /**
