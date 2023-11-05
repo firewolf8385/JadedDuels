@@ -53,6 +53,7 @@ public class KitManager {
         duelKits.add(new DoorKit(plugin));
         duelKits.add(new CactusKit(plugin));
         duelKits.add(new BoxingKit(plugin));
+        duelKits.add(new SpleefKit(plugin));
     }
 
     /**

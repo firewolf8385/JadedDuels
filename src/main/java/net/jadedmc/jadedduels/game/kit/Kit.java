@@ -31,14 +31,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Stores all information about a kit.
@@ -54,6 +52,7 @@ public class Kit {
     // Maps
     private final Map<Integer, ItemStack> items = new HashMap<>();
     private final List<PotionEffect> potionEffects = new ArrayList<>();
+    private final List<Material> breakableBlocks = new ArrayList<>();
 
     // Settings
     private GameMode gameMode = GameMode.ADVENTURE;
@@ -75,6 +74,14 @@ public class Kit {
         this.plugin = plugin;
         this.id = id;
         this.name = name;
+    }
+
+    /**
+     * Add a material to the breakable blocks list.
+     * @param material Material the players should be able to break.
+     */
+    public void addBreakableBlock(Material material) {
+        this.breakableBlocks.add(material);
     }
 
     /**
@@ -134,6 +141,14 @@ public class Kit {
 
         // Run kit-specific kit apply code.
         onKitApply(plugin.gameManager().game(player), player);
+    }
+
+    /**
+     * Get all materials the players should be able to break.
+     * @return Breakable materials.
+     */
+    public Collection<Material> breakableBlocks() {
+        return this.breakableBlocks;
     }
 
     /**
@@ -277,6 +292,13 @@ public class Kit {
      * @param event BlockPlaceEvent
      */
     public void onBlockPlace(Game game, BlockPlaceEvent event) {}
+
+    /**
+     * Called when a projectile hits something.
+     * @param game Game the projectile hits in.
+     * @param event ProjectileHitEvent.
+     */
+    public void onProjectileHit(Game game, ProjectileHitEvent event) {}
 
     /**
      * Called when a player launches a projectile.
