@@ -25,11 +25,17 @@
 package net.jadedmc.jadedduels.game.tournament;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import net.jadedmc.jadedduels.game.Game;
+import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.arena.ArenaChunkGenerator;
 import net.jadedmc.jadedduels.game.kit.Kit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Manages the current event and event settings.
@@ -163,6 +169,25 @@ public class DuelEventManager {
      */
     public void kit(Kit kit) {
         this.kit = kit;
+    }
+
+    /**
+     * Get all tournament players.
+     * Both in the tournament world, and in tournament games.
+     * @return All tournament players.
+     */
+    public Collection<Player> players() {
+        Set<Player> players = new HashSet<>();
+        players.addAll(tournamentWorld.getPlayers());
+
+        for(Game game : plugin.gameManager().activeGames()) {
+            if(game.gameType() == GameType.TOURNAMENT) {
+                players.addAll(game.players());
+                players.addAll(game.spectators());
+            }
+        }
+
+        return players;
     }
 
     /**

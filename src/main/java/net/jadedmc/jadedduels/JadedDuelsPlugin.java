@@ -125,6 +125,20 @@ public final class JadedDuelsPlugin extends JavaPlugin {
             gameChannel.saveToFile("team.yml");
             JadedChat.loadChannel(gameChannel);
         }
+
+        if(!JadedChat.channelExists("TOURNAMENT")) {
+            ChatChannel tournamentChannel = new ChatChannelBuilder("TOURNAMENT")
+                    .setDisplayName("<red>Tournament</red>")
+                    .addChatFormat(new ChatFormatBuilder("default")
+                            .addSection("prefix", "%jadedcore_rank_chat_prefix%")
+                            .addSection("player", "<gray>%player_name%")
+                            .addSection("seperator", "<dark_gray> » ")
+                            .addSection("message", "<gray><message>")
+                            .build())
+                    .build();
+            tournamentChannel.saveToFile("tournament.yml");
+            JadedChat.loadChannel(tournamentChannel);
+        }
     }
 
     /**

@@ -48,13 +48,9 @@ public class ChannelMessageSendListener implements Listener {
     public void onMessage(ChannelMessageSendEvent event) {
 
         switch (event.getChannel().name().toUpperCase()) {
-            case "GAME" -> {
-                gameChannel(event);
-            }
-
-            case "TEAM" -> {
-                teamChannel(event);
-            }
+            case "GAME" -> gameChannel(event);
+            case "TEAM" -> teamChannel(event);
+            case "TOURNAMENT" -> tournamentChannel(event);
         }
     }
 
@@ -96,5 +92,10 @@ public class ChannelMessageSendListener implements Listener {
         List<Player> viewers = new ArrayList<>(team.players());
 
         event.setViewers(viewers);
+    }
+
+    private void tournamentChannel(ChannelMessageSendEvent event) {
+        Player player = event.getPlayer();
+        event.setViewers(plugin.duelEventManager().players());
     }
 }

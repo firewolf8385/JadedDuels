@@ -71,7 +71,7 @@ public class LobbyUtils {
         new LobbyScoreboard(plugin, player).update(player);
 
         // Update player's chat channel.
-        if(JadedChat.getChannel(player).equals(JadedChat.getChannel("GAME")) || JadedChat.getChannel(player).equals(JadedChat.getChannel("TEAM"))) {
+        if(JadedChat.getChannel(player).equals(JadedChat.getChannel("GAME")) || JadedChat.getChannel(player).equals(JadedChat.getChannel("TEAM")) || JadedChat.getChannel(player).equals(JadedChat.getChannel("TOURNAMENT"))) {
             JadedChat.setChannel(player, JadedChat.getDefaultChannel());
         }
 
@@ -118,8 +118,8 @@ public class LobbyUtils {
         new TournamentScoreboard(plugin, player).update(player);
 
         // Update player's chat channel.
-        if(JadedChat.getChannel(player).equals(JadedChat.getChannel("GAME")) || JadedChat.getChannel(player).equals(JadedChat.getChannel("TEAM"))) {
-            JadedChat.setChannel(player, JadedChat.getDefaultChannel());
+        if(JadedChat.getChannel(player).equals(JadedChat.getChannel("GAME")) || JadedChat.getChannel(player).equals(JadedChat.getChannel("TEAM")) || JadedChat.getChannel(player).equals(JadedChat.getDefaultChannel())) {
+            JadedChat.setChannel(player, JadedChat.getChannel("TOURNAMENT"));
         }
 
         giveTournamentItems(player);

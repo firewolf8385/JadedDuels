@@ -36,7 +36,6 @@ import net.jadedmc.jadedduels.game.team.Team;
 import net.jadedmc.jadedduels.game.team.TeamManager;
 import net.jadedmc.jadedduels.game.tournament.team.EventTeam;
 import net.jadedmc.jadedduels.utils.GameUtils;
-import net.jadedmc.jadedduels.utils.LocationUtils;
 import net.jadedmc.jadedduels.utils.Timer;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.jadedmc.jadedutils.items.ItemBuilder;
@@ -483,7 +482,12 @@ public class Game {
 
         // Update player's chat channel.
         if(JadedChat.getChannel(player).isDefaultChannel()) {
-            JadedChat.setChannel(player, JadedChat.getChannel("GAME"));
+            if(gameType == GameType.TOURNAMENT) {
+                JadedChat.setChannel(player, JadedChat.getChannel("TOURNAMENT"));
+            }
+            else {
+                JadedChat.setChannel(player, JadedChat.getChannel("GAME"));
+            }
         }
     }
 
@@ -502,7 +506,12 @@ public class Game {
 
             // Update player's chat channel.
             if(JadedChat.getChannel(player).isDefaultChannel()) {
-                JadedChat.setChannel(player, JadedChat.getChannel("GAME"));
+                if(gameType == GameType.TOURNAMENT) {
+                    JadedChat.setChannel(player, JadedChat.getChannel("TOURNAMENT"));
+                }
+                else {
+                    JadedChat.setChannel(player, JadedChat.getChannel("GAME"));
+                }
             }
         }
     }
@@ -574,7 +583,15 @@ public class Game {
                 .build();
         spectator.getInventory().setItem(8, leave);
 
-
+        // Update player's chat channel.
+        if(JadedChat.getChannel(spectator).isDefaultChannel()) {
+            if(gameType == GameType.TOURNAMENT) {
+                JadedChat.setChannel(spectator, JadedChat.getChannel("TOURNAMENT"));
+            }
+            else {
+                JadedChat.setChannel(spectator, JadedChat.getChannel("GAME"));
+            }
+        }
     }
 
     public Collection<Block> blocks() {
