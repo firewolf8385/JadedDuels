@@ -24,6 +24,7 @@
  */
 package net.jadedmc.jadedduels.utils;
 
+import net.jadedmc.jadedutils.items.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -37,6 +38,10 @@ public class PotionBuilder {
     public PotionBuilder(Material potionType) {
         potion = new ItemStack(potionType);
         potionMeta = (PotionMeta) potion.getItemMeta();
+    }
+
+    public ItemBuilder asItemBuilder() {
+        return new ItemBuilder(build());
     }
 
     public PotionBuilder setPotionData(PotionType potionType, boolean extended, boolean upgraded) {
