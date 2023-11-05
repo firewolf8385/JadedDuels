@@ -53,6 +53,7 @@ public class DuelGUI extends CustomGUI {
             ItemStack kitItem = new ItemBuilder(kit.iconMaterial())
                     .setDisplayName("<green><bold>" + kit.name())
                     .addFlag(ItemFlag.HIDE_ATTRIBUTES)
+                    .addFlag(ItemFlag.HIDE_ITEM_SPECIFICS)
                     .addLore("").addLore("<green>Click to Send Request").build();
             setItem(i + 9, kitItem, (p,a) -> {
                 if(target == null) {
