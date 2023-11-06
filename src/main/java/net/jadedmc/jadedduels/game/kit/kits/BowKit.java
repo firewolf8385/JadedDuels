@@ -40,30 +40,26 @@ public class BowKit extends Kit {
     public BowKit(final JadedDuelsPlugin plugin) {
         super(plugin, "bow", "Bow");
         iconMaterial(Material.BOW);
+        naturalRegeneration(false);
 
         // Items
-        ItemStack helmet = new ItemBuilder(Material.DIAMOND_HELMET)
-                .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3)
+        ItemStack helmet = new ItemBuilder(Material.IRON_HELMET)
                 .setUnbreakable(true)
                 .build();
 
-        ItemStack chestplate = new ItemBuilder(Material.DIAMOND_CHESTPLATE)
-                .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3)
+        ItemStack chestplate = new ItemBuilder(Material.IRON_CHESTPLATE)
                 .setUnbreakable(true)
                 .build();
 
-        ItemStack leggings = new ItemBuilder(Material.DIAMOND_LEGGINGS)
-                .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3)
+        ItemStack leggings = new ItemBuilder(Material.IRON_LEGGINGS)
                 .setUnbreakable(true)
                 .build();
 
-        ItemStack boots = new ItemBuilder(Material.DIAMOND_BOOTS)
-                .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3)
+        ItemStack boots = new ItemBuilder(Material.IRON_BOOTS)
                 .setUnbreakable(true)
                 .build();
 
         ItemStack bow = new ItemBuilder(Material.BOW)
-                .addEnchantment(Enchantment.ARROW_DAMAGE, 4)
                 .addEnchantment(Enchantment.ARROW_INFINITE, 1)
                 .setUnbreakable(true)
                 .build();
