@@ -41,16 +41,22 @@ public class FoodLevelChangeListener implements Listener {
     @EventHandler
     public void onEvent(FoodLevelChangeEvent event) {
         // Makes sure we are dealing with a player.
-        if(!(event.getEntity() instanceof Player)) {
+        if(!(event.getEntity() instanceof Player player)) {
             return;
         }
 
-        Player player = (Player) event.getEntity();
         Game game = plugin.gameManager().game(player);
 
         // Hunger won't lower outside of games
         if(game == null || !game.kit().hunger()) {
             event.setCancelled(true);
+            return;
+        }
+
+        // Prevent spectators from having hunger.
+        if(game.spectators().contains(player)) {
+            event.setCancelled(true);
+            return;
         }
     }
 }
