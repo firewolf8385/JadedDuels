@@ -39,10 +39,7 @@ import net.jadedmc.jadedduels.utils.GameUtils;
 import net.jadedmc.jadedduels.utils.Timer;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.jadedmc.jadedutils.items.ItemBuilder;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -98,6 +95,15 @@ public class Game {
         this.pointsNeeded = 1;
 
         plugin.gameManager().addGame(this);
+
+        // World Game Rules.
+        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+        world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+        world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        world.setGameRule(GameRule.DO_TILE_DROPS, false);
+        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+        world.setGameRule(GameRule.DO_MOB_LOOT, false);
+        world.setGameRule(GameRule.KEEP_INVENTORY, true);
     }
 
     public Game(final JadedDuelsPlugin plugin, final Kit kit, final GameType gameType, final Arena arena, final World world, final UUID uuid, final Match match) {
@@ -114,6 +120,15 @@ public class Game {
         this.pointsNeeded = plugin.duelEventManager().bestOf().neededWins();
 
         plugin.gameManager().addGame(this);
+
+        // World Game Rules.
+        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+        world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+        world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        world.setGameRule(GameRule.DO_TILE_DROPS, false);
+        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+        world.setGameRule(GameRule.DO_MOB_LOOT, false);
+        world.setGameRule(GameRule.KEEP_INVENTORY, true);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
