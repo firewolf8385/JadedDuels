@@ -2,12 +2,9 @@ package net.jadedmc.jadedduels;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.jadedmc.jadedcore.JadedCore;
-import net.jadedmc.jadedcore.features.player.JadedPlayer;
 import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.team.Team;
 import net.jadedmc.jadedduels.utils.GameUtils;
-import net.jadedmc.jadedutils.chat.ChatUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
