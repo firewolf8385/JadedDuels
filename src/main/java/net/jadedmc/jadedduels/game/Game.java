@@ -572,6 +572,10 @@ public class Game {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 for(Player pl : world.getPlayers()) {
                     pl.hidePlayer(plugin, spectator);
+
+                    if(spectators.contains(pl)) {
+                        spectator.hidePlayer(plugin, pl);
+                    }
                 }
             }, 2);
         }
@@ -587,6 +591,10 @@ public class Game {
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     for(Player pl : world.getPlayers()) {
                         pl.hidePlayer(plugin, spectator);
+
+                        if(spectators.contains(pl)) {
+                            spectator.hidePlayer(plugin, pl);
+                        }
                     }
                 }, 2);
             }
