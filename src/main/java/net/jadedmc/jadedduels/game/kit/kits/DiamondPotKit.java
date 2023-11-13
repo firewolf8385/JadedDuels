@@ -83,6 +83,8 @@ public class DiamondPotKit extends Kit {
                 .setPotionData(PotionType.REGEN, false, true)
                 .build();
 
+        ItemStack goldenCarrots = new ItemStack(Material.GOLDEN_CARROT, 64);
+
         addItem(0, sword);
         addItem(1, enderPearls);
 
@@ -100,6 +102,8 @@ public class DiamondPotKit extends Kit {
         addItem(38, chestplate);
         addItem(37, leggings);
         addItem(36, boots);
+
+        addItem(40, goldenCarrots);
     }
 
 }
