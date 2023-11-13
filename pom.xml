@@ -99,7 +99,7 @@
         <dependency>
             <groupId>com.github.JadedMC</groupId>
             <artifactId>JadedCore</artifactId>
-            <version>fa66be1f13</version>
+            <version>caacc4708e</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
