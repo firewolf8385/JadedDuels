@@ -36,7 +36,7 @@ public class GameUtils {
      * @return Formatted health of player.
      */
     public static String getFormattedHealth(Player player) {
-        int percent = MathUtils.percent(player.getHealth(), 20.0);
+        int percent = MathUtils.percent(player.getHealth(), player.getMaxHealth());
         ChatColor color;
 
         if(percent < 25) {
