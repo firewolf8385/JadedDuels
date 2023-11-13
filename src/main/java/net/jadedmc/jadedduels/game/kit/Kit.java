@@ -74,6 +74,8 @@ public class Kit {
         this.plugin = plugin;
         this.id = id;
         this.name = name;
+
+        breakableBlocks.add(Material.FIRE);
     }
 
     /**
