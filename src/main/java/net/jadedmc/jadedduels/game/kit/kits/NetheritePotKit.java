@@ -84,6 +84,8 @@ public class NetheritePotKit extends Kit {
 
         ItemStack experienceBottles = new ItemStack(Material.EXPERIENCE_BOTTLE, 64);
 
+        ItemStack gapples = new ItemStack(Material.GOLDEN_APPLE, 64);
+
         addItem(0, sword);
         addItem(8, totem);
         addItem(9, experienceBottles);
@@ -103,6 +105,8 @@ public class NetheritePotKit extends Kit {
         addItem(38, chestplate);
         addItem(37, leggings);
         addItem(36, boots);
+
+        addItem(40, gapples);
     }
 
 }
