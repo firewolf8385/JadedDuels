@@ -28,6 +28,7 @@ import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.GameState;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -49,7 +50,6 @@ public class EntityDamageListener implements Listener {
         // Cancel damage from specific causes.
         switch (event.getCause()) {
             case LIGHTNING:
-            case ENTITY_EXPLOSION:
             case FALL:
                 event.setCancelled(true);
                 return;
@@ -75,6 +75,11 @@ public class EntityDamageListener implements Listener {
 
         // Prevents "killing" a player twice.
         if(event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE || event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+            return;
+        }
+
+        // Allow totems to work.
+        if(player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING || player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING) {
             return;
         }
 

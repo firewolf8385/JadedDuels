@@ -32,6 +32,7 @@ import net.jadedmc.jadedutils.chat.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -103,49 +104,85 @@ public class EntityDamageByEntityListener implements Listener {
             event.setDamage(0.2);
         }
 
-        // Sends an action bar to the damager with the player's health.
-        if(event.getDamager() instanceof Player damager) {
+        switch (event.getDamager().getType()) {
+            case ENDER_CRYSTAL -> {
+                // Allow totems to work.
+                if(player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING || player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING) {
+                    break;
+                }
 
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                if(player.getHealth() < event.getFinalDamage()) {
+                    event.setCancelled(true);
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> game.playerKilled(player), 1);
+                    return;
+                }
+            }
+
+            case PLAYER -> {
+                Player damager = (Player) event.getDamager();
+
                 if(event.getFinalDamage() >= player.getHealth()) {
                     damager.sendActionBar(ChatUtils.translate(game.teamManager().team(player).teamColor().chatColor() + player.getName() + "&a's Health: &c0%"));
+
+                    // Allow totems to work.
+                    if(player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING || player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING) {
+                        return;
+                    }
+
                     game.playerKilled(player, damager);
                 }
                 else {
                     damager.sendActionBar(ChatUtils.translate(game.teamManager().team(player).teamColor().chatColor() + player.getName() + "&a's Health: " + GameUtils.getFormattedHealth(player)));
                 }
-            }, 1);
-        }
+            }
 
-        // Makes sure the damager is an arrow before continuing.
-        if(!(event.getDamager() instanceof Arrow a)) {
-            return;
-        }
+            case ARROW -> {
+                Arrow arrow = (Arrow) event.getDamager();
 
-        // Makes sure a player shot the arrow.
-        if(!(a.getShooter() instanceof Player shooter)) {
-            return;
-        }
+                // Makes sure a player shot the arrow.
+                if(!(arrow.getShooter() instanceof Player shooter)) {
+                    return;
+                }
 
-        if(game.teamManager().team(player).equals(game.teamManager().team(shooter)) && !player.equals(shooter)) {
-            event.setCancelled(true);
-            return;
-        }
+                if(game.teamManager().team(player).equals(game.teamManager().team(shooter)) && !player.equals(shooter)) {
+                    event.setCancelled(true);
+                    return;
+                }
 
-        // TODO: Ranged Damage setting
-        // Applies ranged damage if enabled.
-        /*
-        if(game.kit().hasRangedDamage()) {
-            rangedDamage(event, player, shooter);
-        }
-         */
+                if(game.teamManager().team(player).equals(game.teamManager().team(shooter)) && !player.equals(shooter)) {
+                    event.setCancelled(true);
+                    return;
+                }
 
-        if(player.getHealth() > event.getFinalDamage()) {
-            ChatUtils.chat(shooter, game.teamManager().team(player).teamColor().chatColor() + player.getName() + " &ahas " + getHealthPercent((player.getHealth() - event.getFinalDamage()))  + " &aremaining.");
-        }
-        else {
-            event.setCancelled(true);
-            Bukkit.getScheduler().runTaskLater(plugin, () -> game.playerKilled(player, shooter), 1);
+                // TODO: Ranged Damage setting
+                // Applies ranged damage if enabled.
+                /*
+                if(game.kit().hasRangedDamage()) {
+                    rangedDamage(event, player, shooter);
+                }
+                */
+
+                if(player.getHealth() <= event.getFinalDamage()) {
+                    if(player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING || player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING) {
+                        break;
+                    }
+
+                    event.setCancelled(true);
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> game.playerKilled(player, shooter), 1);
+                }
+                else {
+                    ChatUtils.chat(shooter, game.teamManager().team(player).teamColor().chatColor() + player.getName() + " &ahas " + getHealthPercent((player.getHealth() - event.getFinalDamage()))  + " &aremaining.");
+                }
+            }
+
+            default -> {
+                if(player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING || player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING) {
+                    break;
+                }
+
+                event.setCancelled(true);
+                Bukkit.getScheduler().runTaskLater(plugin, () -> game.playerKilled(player), 1);
+            }
         }
     }
 
