@@ -175,6 +175,8 @@ public class EntityDamageByEntityListener implements Listener {
                 }
             }
 
+            case EGG, SNOWBALL -> {}
+
             default -> {
                 if(player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING || player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING) {
                     break;
