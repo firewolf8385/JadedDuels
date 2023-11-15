@@ -105,6 +105,8 @@ public class Game {
             world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
             world.setGameRule(GameRule.DO_MOB_LOOT, false);
             world.setGameRule(GameRule.KEEP_INVENTORY, true);
+
+            world.setDifficulty(Difficulty.HARD);
         });
     }
 
@@ -132,6 +134,8 @@ public class Game {
             world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
             world.setGameRule(GameRule.DO_MOB_LOOT, false);
             world.setGameRule(GameRule.KEEP_INVENTORY, true);
+
+            world.setDifficulty(Difficulty.HARD);
         });
     }
 
