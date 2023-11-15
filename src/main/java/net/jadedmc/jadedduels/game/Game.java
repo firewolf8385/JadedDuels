@@ -97,13 +97,15 @@ public class Game {
         plugin.gameManager().addGame(this);
 
         // World Game Rules.
-        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-        world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-        world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
-        world.setGameRule(GameRule.DO_TILE_DROPS, false);
-        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
-        world.setGameRule(GameRule.DO_MOB_LOOT, false);
-        world.setGameRule(GameRule.KEEP_INVENTORY, true);
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
+            world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+            world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+            world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+            world.setGameRule(GameRule.DO_TILE_DROPS, false);
+            world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+            world.setGameRule(GameRule.DO_MOB_LOOT, false);
+            world.setGameRule(GameRule.KEEP_INVENTORY, true);
+        });
     }
 
     public Game(final JadedDuelsPlugin plugin, final Kit kit, final GameType gameType, final Arena arena, final World world, final UUID uuid, final Match match) {
@@ -122,13 +124,15 @@ public class Game {
         plugin.gameManager().addGame(this);
 
         // World Game Rules.
-        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-        world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-        world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
-        world.setGameRule(GameRule.DO_TILE_DROPS, false);
-        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
-        world.setGameRule(GameRule.DO_MOB_LOOT, false);
-        world.setGameRule(GameRule.KEEP_INVENTORY, true);
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
+            world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+            world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+            world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+            world.setGameRule(GameRule.DO_TILE_DROPS, false);
+            world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+            world.setGameRule(GameRule.DO_MOB_LOOT, false);
+            world.setGameRule(GameRule.KEEP_INVENTORY, true);
+        });
     }
 
     // -----------------------------------------------------------------------------------------------------------------
