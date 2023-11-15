@@ -182,6 +182,10 @@ public class EntityDamageByEntityListener implements Listener {
                     break;
                 }
 
+                if(player.getHealth() > event.getFinalDamage()) {
+                    return;
+                }
+
                 event.setCancelled(true);
                 Bukkit.getScheduler().runTaskLater(plugin, () -> game.playerKilled(player), 1);
             }
