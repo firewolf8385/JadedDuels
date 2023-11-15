@@ -68,7 +68,7 @@ public class DiamondPotKit extends Kit {
         ItemStack enderPearls = new ItemStack(Material.ENDER_PEARL, 16);
 
         ItemStack healing = new PotionBuilder(Material.SPLASH_POTION)
-                .setPotionData(PotionType.INSTANT_HEAL, false, false)
+                .setPotionData(PotionType.INSTANT_HEAL, false, true)
                 .build();
 
         ItemStack speed = new PotionBuilder(Material.SPLASH_POTION)
