@@ -82,6 +82,10 @@ public class NetheritePotKit extends Kit {
                 .setPotionData(PotionType.STRENGTH, false, true)
                 .build();
 
+        ItemStack fireRes =new PotionBuilder(Material.SPLASH_POTION)
+                .setPotionData(PotionType.FIRE_RESISTANCE, false, false)
+                .build();
+
         ItemStack experienceBottles = new ItemStack(Material.EXPERIENCE_BOTTLE, 64);
 
         ItemStack gapples = new ItemStack(Material.GOLDEN_APPLE, 64);
@@ -93,13 +97,15 @@ public class NetheritePotKit extends Kit {
         addItem(11, totem);
         addItem(12, totem);
 
-        int[] healingSlots = new int[]{3,4,5,6,7,13,14,15,16,17,23,24,25,26,32,33,34,35};
+        int[] healingSlots = new int[]{4,5,6,7,13,14,15,16,17,23,24,25,32,33,34};
         int[] strengthSlots = new int[]{1,27,28,29,30,31};
         int[] speedSlots = new int[]{2,18,19,20,21,22};
+        int[] fireResSlots = new int[]{3,26,35};
 
         for(int slot : healingSlots) addItem(slot, healing);
         for(int slot : speedSlots) addItem(slot, speed);
         for(int slot : strengthSlots) addItem(slot, strength);
+        for(int slot : fireResSlots) addItem(slot, fireRes);
 
         addItem(39, helmet);
         addItem(38, chestplate);
