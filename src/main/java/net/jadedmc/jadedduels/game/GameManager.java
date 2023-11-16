@@ -190,4 +190,23 @@ public class GameManager {
 
         return null;
     }
+
+    /**
+     * Get the game of a given world.
+     * Returns null if there isn't one.
+     * @param world World to get game of.
+     * @return Game using that world.
+     */
+    public Game game(World world) {
+        // Makes a copy of the active games to prevent ConcurrentModificationException.
+        List<Game> games = new ArrayList<>(activeGames);
+
+        for(Game game : games) {
+            if(game.world().equals(world)) {
+                return game;
+            }
+        }
+
+        return null;
+    }
 }

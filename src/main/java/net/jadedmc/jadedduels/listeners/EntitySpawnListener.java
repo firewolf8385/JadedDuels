@@ -26,40 +26,34 @@ package net.jadedmc.jadedduels.listeners;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
-import net.jadedmc.jadedduels.game.GameState;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
+import org.bukkit.block.Block;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 
-public class BlockPlaceListener implements Listener {
+public class EntitySpawnListener implements Listener {
     private final JadedDuelsPlugin plugin;
 
-    public BlockPlaceListener(JadedDuelsPlugin plugin) {
+    public EntitySpawnListener(JadedDuelsPlugin plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler
-    public void onEvent(BlockPlaceEvent event) {
-        Player player = event.getPlayer();
-        Game game = plugin.gameManager().game(player);
+    public void onEntitySpawn(EntitySpawnEvent event) {
+        if(!(event.getEntity() instanceof FallingBlock fallingBlock)) {
+            return;
+        }
 
-        // Exit if the game is null.
+        Game game = plugin.gameManager().game(fallingBlock.getWorld());
+
         if(game == null) {
             return;
         }
 
-        // If the game isn't running, cancel the event.
-        if(game.gameState() == GameState.COUNTDOWN || game.gameState() == GameState.END) {
-            event.setCancelled(true);
-            return;
-        }
-
-        // Run kit-specific BlockPlaceEvent code.
-        game.kit().onBlockPlace(game, event);
-
-
-        game.addBlock(event.getBlock(), Material.AIR);
+        Block block = fallingBlock.getWorld().getBlockAt(fallingBlock.getLocation());
+        Material type = fallingBlock.getBlockData().getMaterial();
+        game.addBlock(block, type);
     }
 }

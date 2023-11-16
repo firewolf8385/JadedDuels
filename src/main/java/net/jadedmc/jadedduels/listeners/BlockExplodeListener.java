@@ -26,40 +26,28 @@ package net.jadedmc.jadedduels.listeners;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
-import net.jadedmc.jadedduels.game.GameState;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 
-public class BlockPlaceListener implements Listener {
+public class BlockExplodeListener implements Listener {
     private final JadedDuelsPlugin plugin;
 
-    public BlockPlaceListener(JadedDuelsPlugin plugin) {
+    public BlockExplodeListener(JadedDuelsPlugin plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler
-    public void onEvent(BlockPlaceEvent event) {
-        Player player = event.getPlayer();
-        Game game = plugin.gameManager().game(player);
+    public void onBlockExplode(BlockExplodeEvent event) {
+        Game game = plugin.gameManager().game(event.getBlock().getWorld());
 
-        // Exit if the game is null.
         if(game == null) {
             return;
         }
 
-        // If the game isn't running, cancel the event.
-        if(game.gameState() == GameState.COUNTDOWN || game.gameState() == GameState.END) {
-            event.setCancelled(true);
-            return;
+        for(Block block : event.blockList()) {
+            game.addBlock(block, block.getType());
         }
-
-        // Run kit-specific BlockPlaceEvent code.
-        game.kit().onBlockPlace(game, event);
-
-
-        game.addBlock(event.getBlock(), Material.AIR);
     }
 }

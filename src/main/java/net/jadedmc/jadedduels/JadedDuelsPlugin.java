@@ -67,11 +67,16 @@ public final class JadedDuelsPlugin extends JavaPlugin {
         AbstractCommand.registerCommands(this);
 
         getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
+        getServer().getPluginManager().registerEvents(new BlockExplodeListener(this), this);
+        getServer().getPluginManager().registerEvents(new BlockFormListener(this), this);
+        getServer().getPluginManager().registerEvents(new BlockFromToListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockPlaceListener(this), this);
         getServer().getPluginManager().registerEvents(new ChannelMessageSendListener(this), this);
         getServer().getPluginManager().registerEvents(new ChannelSwitchListener(this), this);
+        getServer().getPluginManager().registerEvents(new EntitySpawnListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityDamageListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityDamageByEntityListener(this), this);
+        getServer().getPluginManager().registerEvents(new EntityExplodeListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityRegainHealthListener(this), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(this), this);
         getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(this), this);

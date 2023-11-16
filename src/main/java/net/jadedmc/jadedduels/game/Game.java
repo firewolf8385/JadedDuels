@@ -69,7 +69,7 @@ public class Game {
     private final Match match;
     private int round = 0;
     private int pointsNeeded;
-    private final Collection<Block> blocks = new HashSet<>();
+    private final Map<Block, Material> blocks = new HashMap<>();
 
 
     /**
@@ -357,6 +357,7 @@ public class Game {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 
             if(winner.score() < pointsNeeded) {
+                resetArena();
                 startRound();
             }
             else {
@@ -490,8 +491,12 @@ public class Game {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public void addBlock(Block block) {
-        blocks.add(block);
+    public void addBlock(Block block, Material material) {
+        if(blocks.containsKey(block)) {
+           return;
+        }
+
+        blocks.put(block, material);
     }
 
     /**
@@ -626,7 +631,7 @@ public class Game {
     }
 
     public Collection<Block> blocks() {
-        return blocks;
+        return blocks.keySet();
     }
 
     /**
@@ -846,6 +851,14 @@ public class Game {
         else {
             LobbyUtils.sendToLobby(plugin, player);
         }
+    }
+
+    public void resetArena() {
+        for(Block block : blocks.keySet()) {
+            block.setType(blocks.get(block));
+        }
+
+        blocks.clear();
     }
 
     /**
