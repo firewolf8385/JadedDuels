@@ -577,6 +577,7 @@ public class Game {
             spectator.setMaxHealth(20.0);
             spectator.setHealth(20.0);
             spectator.setFoodLevel(20);
+            spectator.setFireTicks(0);
             spectator.setGameMode(GameMode.ADVENTURE);
 
             // Prevents player from interfering.
@@ -598,6 +599,7 @@ public class Game {
             spectator.setMaxHealth(20.0);
             spectator.setHealth(20.0);
             spectator.setFoodLevel(20);
+            spectator.setFireTicks(0);
             spectator.setGameMode(GameMode.ADVENTURE);
 
             if(teamManager.team(spectator) != null) {
