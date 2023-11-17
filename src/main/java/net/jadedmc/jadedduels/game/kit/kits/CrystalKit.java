@@ -18,6 +18,7 @@ public class CrystalKit extends Kit {
         iconMaterial(Material.END_CRYSTAL);
         gameMode(GameMode.SURVIVAL);
         voidLevel(-64);
+        build(true);
 
         ItemStack enderpearls = new ItemStack(Material.ENDER_PEARL, 16);
         ItemStack experienceBottles = new ItemStack(Material.EXPERIENCE_BOTTLE, 64);

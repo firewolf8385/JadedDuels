@@ -74,7 +74,7 @@ public class BlockBreakListener implements Listener {
             return;
         }
 
-        if(!game.blocks().contains(event.getBlock()) && !game.kit().breakableBlocks().contains(event.getBlock().getType())) {
+        if(!game.kit().build() && !game.blocks().contains(event.getBlock()) && !game.kit().breakableBlocks().contains(event.getBlock().getType())) {
             event.setCancelled(true);
             return;
         }

@@ -65,6 +65,7 @@ public class Kit {
     private int voidLevel = 0;
     private boolean naturalRegeneration = true;
     private boolean boxingDamage = false;
+    private boolean build = false;
 
     /**
      * Create a kit.
@@ -167,6 +168,22 @@ public class Kit {
      */
     public void boxingDamage(boolean boxingDamage) {
         this.boxingDamage = boxingDamage;
+    }
+
+    /**
+     * Get if the kit should allow breaking the terrain.
+     * @return Whether players should be able to break terrain.
+     */
+    public boolean build() {
+        return build;
+    }
+
+    /**
+     * Set if the kit should allow breaking the terrain.
+     * @param build Whether the kit allows building.
+     */
+    public void build(boolean build) {
+        this.build = build;
     }
 
     /**
