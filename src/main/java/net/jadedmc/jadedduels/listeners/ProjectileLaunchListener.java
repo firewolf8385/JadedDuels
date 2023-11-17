@@ -26,6 +26,7 @@ package net.jadedmc.jadedduels.listeners;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -52,6 +53,10 @@ public class ProjectileLaunchListener implements Listener {
 
         if(game.spectators().contains(player)) {
             return;
+        }
+
+        if(event.getEntity() instanceof Arrow arrow) {
+            arrow.setCritical(false);
         }
 
         game.kit().onProjectileLaunch(player, game, event);
