@@ -96,7 +96,6 @@ public class PlayerInteractListener implements Listener {
 
             case "Leave Match" -> {
                 if(game != null && game.spectators().contains(player)) {
-                    System.out.println("Works");
                     game.removeSpectator(player);
                 }
                 event.setCancelled(true);
