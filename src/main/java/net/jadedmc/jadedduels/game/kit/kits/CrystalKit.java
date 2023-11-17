@@ -35,7 +35,7 @@ public class CrystalKit extends Kit {
                 .build();
 
         ItemStack sword = new ItemBuilder(Material.NETHERITE_SWORD)
-                .addEnchantment(Enchantment.KNOCKBACK, 2)
+                .addEnchantment(Enchantment.KNOCKBACK, 1)
                 .addEnchantment(Enchantment.MENDING, 1)
                 .addEnchantment(Enchantment.DAMAGE_ALL, 5)
                 .addEnchantment(Enchantment.SWEEPING_EDGE, 3)
