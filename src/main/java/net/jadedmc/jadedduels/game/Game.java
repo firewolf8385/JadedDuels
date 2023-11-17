@@ -44,7 +44,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -107,6 +106,8 @@ public class Game {
             world.setGameRule(GameRule.KEEP_INVENTORY, true);
 
             world.setDifficulty(Difficulty.HARD);
+            world.setClearWeatherDuration(Integer.MAX_VALUE);
+            world.setTime(6000);
         });
     }
 
@@ -136,6 +137,8 @@ public class Game {
             world.setGameRule(GameRule.KEEP_INVENTORY, true);
 
             world.setDifficulty(Difficulty.HARD);
+            world.setClearWeatherDuration(Integer.MAX_VALUE);
+            world.setTime(6000);
         });
     }
 
