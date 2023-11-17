@@ -42,25 +42,21 @@ public class NetheritePotKit extends Kit {
         ItemStack helmet = new ItemBuilder(Material.NETHERITE_HELMET)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4)
                 .addEnchantment(Enchantment.MENDING, 1)
-                .setUnbreakable(true)
                 .build();
 
         ItemStack chestplate = new ItemBuilder(Material.NETHERITE_CHESTPLATE)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4)
                 .addEnchantment(Enchantment.MENDING, 1)
-                .setUnbreakable(true)
                 .build();
 
         ItemStack leggings = new ItemBuilder(Material.NETHERITE_LEGGINGS)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4)
                 .addEnchantment(Enchantment.MENDING, 1)
-                .setUnbreakable(true)
                 .build();
 
         ItemStack boots = new ItemBuilder(Material.NETHERITE_BOOTS)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4)
                 .addEnchantment(Enchantment.MENDING, 1)
-                .setUnbreakable(true)
                 .build();
 
         ItemStack sword = new ItemBuilder(Material.NETHERITE_SWORD)
