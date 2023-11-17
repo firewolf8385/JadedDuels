@@ -46,22 +46,18 @@ public class SwordKit extends Kit {
 
         ItemStack helmet = new ItemBuilder(Material.DIAMOND_HELMET)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3)
-                .setUnbreakable(true)
                 .build();
 
         ItemStack chestplate = new ItemBuilder(Material.DIAMOND_CHESTPLATE)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3)
-                .setUnbreakable(true)
                 .build();
 
         ItemStack leggings = new ItemBuilder(Material.DIAMOND_LEGGINGS)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3)
-                .setUnbreakable(true)
                 .build();
 
         ItemStack boots = new ItemBuilder(Material.DIAMOND_BOOTS)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3)
-                .setUnbreakable(true)
                 .build();
 
         ItemStack sword = new ItemBuilder(XMaterial.DIAMOND_SWORD)

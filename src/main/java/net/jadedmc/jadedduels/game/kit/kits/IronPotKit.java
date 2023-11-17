@@ -42,25 +42,21 @@ public class IronPotKit extends Kit {
         ItemStack helmet = new ItemBuilder(Material.IRON_HELMET)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4)
                 .addEnchantment(Enchantment.MENDING, 1)
-                .setUnbreakable(true)
                 .build();
 
         ItemStack chestplate = new ItemBuilder(Material.IRON_CHESTPLATE)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4)
                 .addEnchantment(Enchantment.MENDING, 1)
-                .setUnbreakable(true)
                 .build();
 
         ItemStack leggings = new ItemBuilder(Material.IRON_LEGGINGS)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4)
                 .addEnchantment(Enchantment.MENDING, 1)
-                .setUnbreakable(true)
                 .build();
 
         ItemStack boots = new ItemBuilder(Material.IRON_BOOTS)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4)
                 .addEnchantment(Enchantment.MENDING, 1)
-                .setUnbreakable(true)
                 .build();
 
         ItemStack sword = new ItemBuilder(Material.DIAMOND_SWORD)
