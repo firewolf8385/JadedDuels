@@ -367,6 +367,22 @@ public class Kit {
     }
 
     /**
+     * Get the kit's starting saturation.
+     * @return Kit's starting saturation.
+     */
+    public float startingSaturation() {
+        return startingSaturation;
+    }
+
+    /**
+     * Change the kit's starting saturation.
+     * @param startingSaturation New starting saturation.
+     */
+    public void startingSaturation(float startingSaturation) {
+        this.startingSaturation = startingSaturation;
+    }
+
+    /**
      * Get the kit's void level.
      * @return Void level.
      */

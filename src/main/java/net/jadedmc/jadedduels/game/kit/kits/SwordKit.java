@@ -41,6 +41,8 @@ public class SwordKit extends Kit {
     public SwordKit(JadedDuelsPlugin plugin) {
         super(plugin, "sword", "Sword");
         iconMaterial(Material.DIAMOND_SWORD);
+        startingSaturation(0);
+        hunger(false);
 
         ItemStack helmet = new ItemBuilder(Material.DIAMOND_HELMET)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3)
