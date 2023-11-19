@@ -31,6 +31,7 @@ import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.team.Team;
 import net.jadedmc.jadedutils.items.ItemBuilder;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 
 public class SpectateGUI extends CustomGUI {
 
@@ -67,6 +68,8 @@ public class SpectateGUI extends CustomGUI {
                 builder.addLore("");
 
                 builder.addLore(team1.teamColor().chatColor() + "" + team1.score() + " <gray>- " + team2.teamColor().chatColor() + "" + team2.score());
+
+                builder.addFlag(ItemFlag.HIDE_ATTRIBUTES);
 
                 setItem(slot, builder.build(), (p, a) -> {
                     Game oldGame = plugin.gameManager().game(p);
