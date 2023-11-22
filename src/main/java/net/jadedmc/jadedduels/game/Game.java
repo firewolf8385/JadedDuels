@@ -721,7 +721,9 @@ public class Game {
             return;
         }
 
-        plugin.queueManager().removePlaying(kit, 1);
+        if(gameType == GameType.UNRANKED) {
+            plugin.queueManager().removePlaying(kit, 1);
+        }
 
         broadcast(teamManager.team(player).teamColor().chatColor() + player.getName() + " disconnected.");
         teamManager.team(player).killPlayer(player);
