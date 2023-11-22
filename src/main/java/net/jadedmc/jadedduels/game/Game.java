@@ -448,7 +448,9 @@ public class Game {
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 
-            plugin.queueManager().removePlaying(kit, players().size());
+            if(gameType == GameType.UNRANKED) {
+                plugin.queueManager().removePlaying(kit, players().size());
+            }
 
             // Show hidden players
             for(Player player : world.getPlayers()) {
