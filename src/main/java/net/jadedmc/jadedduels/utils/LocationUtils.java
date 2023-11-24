@@ -45,6 +45,14 @@ public class LocationUtils {
         double x,y,z;
         float yaw,pitch;
 
+        if(config.isSet("World")) {
+            String worldName = config.getString("World");
+
+            if(worldName != null && Bukkit.getWorld(worldName) != null) {
+                world = Bukkit.getWorld(worldName);
+            }
+        }
+
         if(config.isSet("x")) {
             x = config.getDouble("x");
         }

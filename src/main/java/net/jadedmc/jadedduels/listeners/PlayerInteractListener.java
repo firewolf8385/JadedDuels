@@ -33,11 +33,17 @@ import net.jadedmc.jadedduels.game.lobby.LobbyUtils;
 import net.jadedmc.jadedduels.game.tournament.EventStatus;
 import net.jadedmc.jadedduels.gui.KitGUI;
 import net.jadedmc.jadedduels.gui.SpectateGUI;
+import net.jadedmc.jadedduels.utils.LocationUtils;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
@@ -51,6 +57,14 @@ public class PlayerInteractListener implements Listener {
     @EventHandler
     public void onEvent(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+
+        if(event.getAction() == Action.PHYSICAL && player.getWorld().equals(plugin.duelEventManager().world())) {
+            Location boatSpawn = LocationUtils.fromConfig(plugin.settingsManager().getConfig().getConfigurationSection("BoatRace.spawn"));
+            Boat boat = (Boat) player.getWorld().spawnEntity(boatSpawn, EntityType.BOAT);
+            boat.addPassenger(player);
+            return;
+        }
+
         Game game = plugin.gameManager().game(player);
 
         // Prevent using items during game countdown.

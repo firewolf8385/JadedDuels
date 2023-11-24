@@ -26,6 +26,7 @@ package net.jadedmc.jadedduels.listeners;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
+import net.jadedmc.jadedduels.utils.LocationUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,6 +43,12 @@ public class VehicleExitListener implements Listener {
     public void onExit(VehicleExitEvent event) {
 
         if(!(event.getExited() instanceof Player player)) {
+            return;
+        }
+
+        if(player.getWorld().equals(plugin.duelEventManager().world())) {
+            event.getVehicle().remove();
+            player.teleport(LocationUtils.fromConfig(plugin.settingsManager().getConfig().getConfigurationSection("BoatRace.exit")));
             return;
         }
 
