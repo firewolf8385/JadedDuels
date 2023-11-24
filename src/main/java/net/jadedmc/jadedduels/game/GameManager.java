@@ -209,4 +209,19 @@ public class GameManager {
 
         return null;
     }
+
+    public int playing() {
+        int playing = 0;
+
+        for(Game game : activeGames) {
+            if(game.gameType() == GameType.TOURNAMENT) {
+                continue;
+            }
+
+            playing += game.players().size();
+            playing += game.spectators().size();
+        }
+
+        return playing;
+    }
 }
