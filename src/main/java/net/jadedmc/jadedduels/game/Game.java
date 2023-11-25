@@ -420,9 +420,12 @@ public class Game {
             return;
         }
 
+        if(gameState != GameState.COUNTDOWN) {
+            timer.stop();
+        }
+
         winner.addPoint();
         gameState = GameState.END;
-        timer.stop();
 
         broadcast("&8&m+-----------------------***-----------------------+");
         broadcast(" ");
