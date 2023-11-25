@@ -40,6 +40,7 @@ public class AxeKit extends Kit {
         iconMaterial(Material.DIAMOND_AXE);
         hunger(false);
         startingSaturation(0);
+        naturalRegeneration(false);
 
         ItemStack helmet = new ItemStack(Material.DIAMOND_HELMET);
         ItemStack chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
