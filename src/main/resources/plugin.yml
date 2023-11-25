@@ -28,3 +28,5 @@ commands:
     permission: duels.admin
   duel:
     description: Duel another player.
+  event:
+    description: Join the tournament world.
