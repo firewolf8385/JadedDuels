@@ -575,12 +575,6 @@ public class Game {
             else {
                 spectator.teleport(arena.tournamentSpawn(this.world));
             }
-
-            spectator.getInventory().setItem(3, new ItemBuilder(Material.ENDER_EYE).setDisplayName("<green><bold>Spectate").build());
-            ItemStack leave = new ItemBuilder(XMaterial.RED_BED)
-                    .setDisplayName("<red>Leave Match")
-                    .build();
-            spectator.getInventory().setItem(7, leave);
         }
 
         if(gameType != GameType.TOURNAMENT) {
@@ -627,6 +621,15 @@ public class Game {
                     }
                 }, 2);
             }
+        }
+
+        // Doesn't teleport player if they were in the game before.
+        if(teamManager.team(spectator) == null) {
+            spectator.getInventory().setItem(3, new ItemBuilder(Material.ENDER_EYE).setDisplayName("<green><bold>Spectate").build());
+            ItemStack leave = new ItemBuilder(XMaterial.RED_BED)
+                    .setDisplayName("<red>Leave Match")
+                    .build();
+            spectator.getInventory().setItem(7, leave);
         }
 
         // Update player's chat channel.
