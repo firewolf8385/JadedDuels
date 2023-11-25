@@ -30,3 +30,6 @@ commands:
     description: Duel another player.
   event:
     description: Join the tournament world.
+  spectate:
+    description: Open the spectate menu.
+    aliases: [spec,watch]
