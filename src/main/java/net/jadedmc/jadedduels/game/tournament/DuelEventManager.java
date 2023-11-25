@@ -49,6 +49,7 @@ public class DuelEventManager {
     private EventStatus eventStatus;
     private BestOf bestOf;
     private final World tournamentWorld;
+    private boolean hostPlaying = true;
 
     /**
      * Creates the Duel Event Manager.
@@ -152,6 +153,14 @@ public class DuelEventManager {
      */
     public void host(Player host) {
         this.host = host;
+    }
+
+    public boolean hostPlaying() {
+        return hostPlaying;
+    }
+
+    public void hostPlaying(boolean hostPlaying) {
+        this.hostPlaying = hostPlaying;
     }
 
     /**

@@ -30,8 +30,13 @@ public class StartCMD extends AbstractCommand {
             return;
         }
 
+        int playingCount = plugin.duelEventManager().world().getPlayerCount();
+        if(!plugin.duelEventManager().hostPlaying()) {
+           playingCount--;
+        }
+
         // Make sure there are enough players to start a tournament.
-        if(plugin.duelEventManager().world().getPlayers().size() <= 1) {
+        if(playingCount <= 1) {
             ChatUtils.chat(sender, "&cError &8» &cThere are not enough players to start!");
             return;
         }

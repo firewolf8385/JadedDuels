@@ -24,6 +24,7 @@
  */
 package net.jadedmc.jadedduels.commands;
 
+import com.cryptomorin.xseries.XMaterial;
 import net.jadedmc.jadedcore.utils.gui.CustomGUI;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.kit.Kit;
@@ -116,8 +117,10 @@ public class CreateCMD extends AbstractCommand {
                     .addLore("").addLore("<green>Click to Select!").build();
             setItem(19, bo1, (p,a) -> {
                 plugin.duelEventManager().bestOf(BestOf.ONE);
-                plugin.duelEventManager().eventStatus(EventStatus.WAITING);
-                p.closeInventory();
+                //plugin.duelEventManager().eventStatus(EventStatus.WAITING);
+                //p.closeInventory();
+
+                new HostPlayingGUI().open(p);
 
                 // TODO: Update Bungeecord.
             });
@@ -128,9 +131,11 @@ public class CreateCMD extends AbstractCommand {
                     .addLore("").addLore("<green>Click to Select!").build();
             setItem(21, bo3, (p,a) -> {
                 plugin.duelEventManager().bestOf(BestOf.THREE);
-                plugin.duelEventManager().eventStatus(EventStatus.WAITING);
-                p.closeInventory();
+                //plugin.duelEventManager().eventStatus(EventStatus.WAITING);
+                //p.closeInventory();
                 // TODO: Update Bungeecord.
+
+                new HostPlayingGUI().open(p);
             });
 
             ItemStack bo5 = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODRjOGMzNzEwZGEyNTU5YTI5MWFkYzM5NjI5ZTljY2VhMzFjYTlkM2QzNTg2YmZlYTZlNmUwNjEyNGIzYyJ9fX0=")
@@ -139,8 +144,9 @@ public class CreateCMD extends AbstractCommand {
                     .addLore("").addLore("<green>Click to Select!").build();
             setItem(23, bo5, (p,a) -> {
                 plugin.duelEventManager().bestOf(BestOf.FIVE);
-                plugin.duelEventManager().eventStatus(EventStatus.WAITING);
-                p.closeInventory();
+                //plugin.duelEventManager().eventStatus(EventStatus.WAITING);
+                //p.closeInventory();
+                new HostPlayingGUI().open(p);
 
                 // TODO: Update Bungeecord.
             });
@@ -152,10 +158,39 @@ public class CreateCMD extends AbstractCommand {
             setItem(25, bo7, (p,a) -> {
 
                 plugin.duelEventManager().bestOf(BestOf.SEVEN);
-                plugin.duelEventManager().eventStatus(EventStatus.WAITING);
-                p.closeInventory();
+                //plugin.duelEventManager().eventStatus(EventStatus.WAITING);
+                //p.closeInventory();
+                new HostPlayingGUI().open(p);
 
                 // TODO: Update Bungeecord.
+            });
+        }
+    }
+
+    private class HostPlayingGUI extends CustomGUI {
+        public HostPlayingGUI() {
+            super(54, "Are you playing?");
+
+            addFiller(0,1,2,3,4,5,6,7,8,45,46,47,48,49,50,51,52,53);
+
+            ItemStack yes = new ItemBuilder(XMaterial.GREEN_WOOL)
+                    .setDisplayName("<green><bold>Yes")
+                    .addLore("<green>I am playing.")
+                    .build();
+            setItem(20, yes, (p,a) -> {
+                plugin.duelEventManager().hostPlaying(true);
+                plugin.duelEventManager().eventStatus(EventStatus.WAITING);
+                p.closeInventory();
+            });
+
+            ItemStack no = new ItemBuilder(XMaterial.RED_WOOL)
+                    .setDisplayName("<red><bold>No")
+                    .addLore("<red>I am not playing.")
+                    .build();
+            setItem(24, no, (p,a) -> {
+                plugin.duelEventManager().hostPlaying(false);
+                plugin.duelEventManager().eventStatus(EventStatus.WAITING);
+                p.closeInventory();
             });
         }
     }
