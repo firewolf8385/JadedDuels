@@ -101,6 +101,7 @@ public class SpectateGUI extends CustomGUI {
                     }
 
                     builder.addLore("");
+                    builder.addFlag(ItemFlag.HIDE_ATTRIBUTES);
                 }
 
                 setItem(slot, builder.build(), (p, a) -> {
