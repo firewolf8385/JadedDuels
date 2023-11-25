@@ -125,11 +125,6 @@ public class LobbyUtils {
         }
 
         giveTournamentItems(player);
-
-        // Add warning if the tournament is already running.
-        if(plugin.duelEventManager().eventStatus() == EventStatus.RUNNING) {
-            ChatUtils.chat(player, "&cUnfortunately the tournament has already started. You're still able to spectate though, using the spectate item in your inventory.");
-        }
     }
 
     public static void giveTournamentItems(Player player) {

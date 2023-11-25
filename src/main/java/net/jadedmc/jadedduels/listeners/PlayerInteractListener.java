@@ -164,6 +164,11 @@ public class PlayerInteractListener implements Listener {
             case "Visit Tournament Lobby" -> {
                 plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                     LobbyUtils.sendToTournamentLobby(plugin, player);
+
+                    // Add warning if the tournament is already running.
+                    if(plugin.duelEventManager().eventStatus() == EventStatus.RUNNING) {
+                        ChatUtils.chat(player, "&cUnfortunately the tournament has already started. You're still able to spectate though, using the spectate item in your inventory.");
+                    }
                 }, 1);
 
                 event.setCancelled(true);
