@@ -288,11 +288,8 @@ public class DuelEvent {
                                     continue;
                                 }
 
-                                if(game.gameType() != GameType.TOURNAMENT) {
+                                if(game.gameType() != GameType.TOURNAMENT || game.spectators().contains(player)) {
                                     game.removePlayer(player);
-                                }
-                                else {
-                                    return;
                                 }
                             }
 
