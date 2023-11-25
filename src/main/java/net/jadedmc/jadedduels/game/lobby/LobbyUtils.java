@@ -28,8 +28,10 @@ import com.cryptomorin.xseries.XMaterial;
 import net.jadedmc.jadedchat.JadedChat;
 import net.jadedmc.jadedcore.features.items.CustomItem;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import net.jadedmc.jadedduels.game.tournament.EventStatus;
 import net.jadedmc.jadedduels.game.tournament.TournamentScoreboard;
 import net.jadedmc.jadedduels.utils.LocationUtils;
+import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.jadedmc.jadedutils.items.ItemBuilder;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -123,6 +125,11 @@ public class LobbyUtils {
         }
 
         giveTournamentItems(player);
+
+        // Add warning if the tournament is already running.
+        if(plugin.duelEventManager().eventStatus() == EventStatus.RUNNING) {
+            ChatUtils.chat(player, "&cUnfortunately the tournament has already started. You're still able to spectate though, using the spectate item in your inventory.");
+        }
     }
 
     public static void giveTournamentItems(Player player) {
