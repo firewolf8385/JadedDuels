@@ -11,15 +11,20 @@ depend:
 commands:
   arena:
     description: Runs the arena command.
+    permission: duels.admin
   create:
     description: create tournament.
+    permission: tournament.use
   start:
     description: start tournament.
+    permission: tournament.use
   bracket:
     description: View the current tournament bracket.
   cancel:
     description: Cancel a tournament.
+    permission: tournament.use
   arenas:
     description: View all currently loaded arenas.
+    permission: duels.admin
   duel:
     description: Duel another player.
