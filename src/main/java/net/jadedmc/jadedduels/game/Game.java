@@ -627,7 +627,7 @@ public class Game {
         ItemStack leave = new ItemBuilder(XMaterial.RED_BED)
                 .setDisplayName("<red>Leave Match")
                 .build();
-        spectator.getInventory().setItem(8, leave);
+        spectator.getInventory().setItem(7, leave);
 
         // Update player's chat channel.
         if(JadedChat.getChannel(spectator).isDefaultChannel()) {
