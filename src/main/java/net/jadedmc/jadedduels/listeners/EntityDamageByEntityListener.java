@@ -162,10 +162,6 @@ public class EntityDamageByEntityListener implements Listener {
                 }
                 */
 
-                if(event.isCritical()) {
-                    event.setDamage(((2.0/3.0) * event.getDamage()));
-                }
-
                 if(player.getHealth() <= event.getFinalDamage()) {
                     if(player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING || player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING) {
                         break;
