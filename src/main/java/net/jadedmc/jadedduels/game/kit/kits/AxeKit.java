@@ -38,6 +38,8 @@ public class AxeKit extends Kit {
     public AxeKit(JadedDuelsPlugin plugin) {
         super(plugin, "axe", "Axe");
         iconMaterial(Material.DIAMOND_AXE);
+        hunger(false);
+        startingSaturation(0);
 
         ItemStack helmet = new ItemStack(Material.DIAMOND_HELMET);
         ItemStack chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
