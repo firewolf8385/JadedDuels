@@ -55,7 +55,7 @@ public class SpectateGUI extends CustomGUI {
 
                 builder.addLore("<!italic>" + team1.teamColor().chatColor() + "<!italic>" + team1.teamColor().displayName() + ":");
                 for(Player player : team1.players()) {
-                    builder.addLore("  <!italic>" + team1.teamColor().chatColor() + player.getName());
+                    builder.addLore("  <!italic>" + team1.teamColor().chatColor() + "<!italic>" + player.getName());
                 }
 
                 builder.addLore("");
