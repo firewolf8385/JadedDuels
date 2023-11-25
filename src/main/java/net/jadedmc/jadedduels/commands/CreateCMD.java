@@ -181,6 +181,15 @@ public class CreateCMD extends AbstractCommand {
                 plugin.duelEventManager().hostPlaying(true);
                 plugin.duelEventManager().eventStatus(EventStatus.WAITING);
                 p.closeInventory();
+
+                ChatUtils.broadcast("&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
+                ChatUtils.broadcast(ChatUtils.centerText("&a&lTournament"));
+                ChatUtils.broadcast("");
+                ChatUtils.broadcast(ChatUtils.centerText("&f" + p.getName() + " &ais hosting a &f" + plugin.duelEventManager().kit().name() + " Duels &atournament!"));
+                ChatUtils.broadcast("");
+                ChatUtils.broadcast("  <dark_gray>» <click:run_command:'/event'><hover:show_text:'<yellow>Click to Join!'><yellow>Click here to join!</hover></click>");
+                ChatUtils.broadcast("");
+                ChatUtils.broadcast("&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
             });
 
             ItemStack no = new ItemBuilder(XMaterial.RED_WOOL)
@@ -191,6 +200,15 @@ public class CreateCMD extends AbstractCommand {
                 plugin.duelEventManager().hostPlaying(false);
                 plugin.duelEventManager().eventStatus(EventStatus.WAITING);
                 p.closeInventory();
+
+                ChatUtils.broadcast("&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
+                ChatUtils.broadcast(ChatUtils.centerText("&a&lTournament"));
+                ChatUtils.broadcast("");
+                ChatUtils.broadcast(ChatUtils.centerText("&f" + p.getName() + " &ais hosting a &f" + plugin.duelEventManager().kit().name() + " Duels &atournament!"));
+                ChatUtils.broadcast("");
+                ChatUtils.broadcast("  <dark_gray>» <click:run_command:'/event'><hover:show_text:'<yellow>Click to Join!'><yellow>Click here to join!</hover></click>");
+                ChatUtils.broadcast("");
+                ChatUtils.broadcast("&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
             });
         }
     }

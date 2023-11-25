@@ -26,6 +26,9 @@ package net.jadedmc.jadedduels.listeners;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.lobby.LobbyUtils;
+import net.jadedmc.jadedduels.game.tournament.EventStatus;
+import net.jadedmc.jadedutils.chat.ChatUtils;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -39,7 +42,20 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        LobbyUtils.sendToLobby(plugin, event.getPlayer());
+        Player player = event.getPlayer();
+
+        LobbyUtils.sendToLobby(plugin, player);
+
+        if(plugin.duelEventManager().eventStatus() == EventStatus.WAITING) {
+            ChatUtils.chat(player, "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
+            ChatUtils.chat(player, ChatUtils.centerText("&a&lTournament"));
+            ChatUtils.chat(player, "");
+            ChatUtils.chat(player, ChatUtils.centerText("&f" + plugin.duelEventManager().host().getName() + " &ais hosting a &f" + plugin.duelEventManager().kit().name() + " Duels &atournament!"));
+            ChatUtils.chat(player, "");
+            ChatUtils.chat(player, "  <dark_gray>» <click:run_command:'/event'><hover:show_text:'<yellow>Click to Join!'><yellow>Click here to join!</hover></click>");
+            ChatUtils.chat(player, "");
+            ChatUtils.chat(player, "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
+        }
     }
 
 }
