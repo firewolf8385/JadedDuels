@@ -288,6 +288,11 @@ public class DuelEvent {
                                     continue;
                                 }
 
+                                // If set, stops the host from participating.
+                                if(player.equals(plugin.duelEventManager().host()) && !plugin.duelEventManager().hostPlaying()) {
+                                    continue;
+                                }
+
                                 if(game.gameType() != GameType.TOURNAMENT || game.spectators().contains(player)) {
                                     game.removePlayer(player);
                                 }
