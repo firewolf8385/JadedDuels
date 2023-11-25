@@ -137,6 +137,12 @@ public class DuelEvent {
 
                 // Create teams.
                 for(Player player : plugin.duelEventManager().world().getPlayers()) {
+
+                    // If set, stops the host from participating.
+                    if(player.equals(plugin.duelEventManager().host()) && !plugin.duelEventManager().hostPlaying()) {
+                        continue;
+                    }
+
                     eventTeamManager.createTeam(player);
                 }
 
@@ -285,11 +291,6 @@ public class DuelEvent {
                                 Game game = plugin.gameManager().game(player);
 
                                 if(game == null) {
-                                    continue;
-                                }
-
-                                // If set, stops the host from participating.
-                                if(player.equals(plugin.duelEventManager().host()) && !plugin.duelEventManager().hostPlaying()) {
                                     continue;
                                 }
 
