@@ -44,6 +44,7 @@ public class UHCKit extends Kit {
         iconMaterial(Material.GOLDEN_APPLE);
         gameMode(GameMode.SURVIVAL);
         naturalRegeneration(false);
+        hunger(false);
 
         ItemStack helmet = new ItemBuilder(Material.DIAMOND_HELMET)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3)
