@@ -143,6 +143,10 @@ class Placeholders extends PlaceholderExpansion {
 
                 return "team" + team.id();
             }
+
+            case "playing_tournament" -> {
+                return "" + plugin.duelEventManager().players().size();
+            }
         }
 
         return null;
