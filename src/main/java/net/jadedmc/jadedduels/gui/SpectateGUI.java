@@ -53,7 +53,7 @@ public class SpectateGUI extends CustomGUI {
                 Team team1 = game.teamManager().teams().get(0);
                 Team team2 = game.teamManager().teams().get(1);
 
-                builder.addLore("<!italic>" + team1.teamColor().chatColor() + team1.teamColor().displayName() + ":");
+                builder.addLore("<!italic>" + team1.teamColor().chatColor() + "<!italic>" + team1.teamColor().displayName() + ":");
                 for(Player player : team1.players()) {
                     builder.addLore("  <!italic>" + team1.teamColor().chatColor() + player.getName());
                 }
@@ -62,12 +62,12 @@ public class SpectateGUI extends CustomGUI {
 
                 builder.addLore(team2.teamColor().chatColor() + team2.teamColor().displayName() + ":");
                 for(Player player : team2.players()) {
-                    builder.addLore("  <!italic>" + team2.teamColor().chatColor() + player.getName());
+                    builder.addLore("  <!italic>" + team2.teamColor().chatColor() + "<!italic>" + player.getName());
                 }
 
                 builder.addLore("");
 
-                builder.addLore("<!italic>" + team1.teamColor().chatColor() + "" + team1.score() + " <gray>- " + team2.teamColor().chatColor() + "" + team2.score());
+                builder.addLore("<!italic>" + team1.teamColor().chatColor() + "<!italic>" + team1.score() + " <gray>- " + team2.teamColor().chatColor() + "<!italic>" + team2.score());
 
                 builder.addFlag(ItemFlag.HIDE_ATTRIBUTES);
 
@@ -94,10 +94,10 @@ public class SpectateGUI extends CustomGUI {
                         .addLore("");
 
                 for(Team team : game.teamManager().teams()) {
-                    builder.addLore("<!italic>" + team.teamColor().chatColor() + team.teamColor().displayName() + ":");
+                    builder.addLore("<!italic>" + team.teamColor().chatColor() + "<!italic>" + team.teamColor().displayName() + ":");
 
                     for(Player player : team.players()) {
-                        builder.addLore("  <!italic>" + team.teamColor().chatColor() + player.getName());
+                        builder.addLore("  <!italic>" + team.teamColor().chatColor() + "<!italic>" + player.getName());
                     }
 
                     builder.addLore("");
