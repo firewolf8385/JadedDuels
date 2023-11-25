@@ -126,6 +126,25 @@ class Placeholders extends PlaceholderExpansion {
             return GameUtils.getFormattedHealth(player);
         }
 
+
+        switch (identifier) {
+            case "game_team" -> {
+                Game game = plugin.gameManager().game(player);
+
+                if(game == null) {
+                    return "";
+                }
+
+                Team team = game.teamManager().team(player);
+
+                if(team == null) {
+                    return "team99";
+                }
+
+                return "team" + team.id();
+            }
+        }
+
         return null;
     }
 }

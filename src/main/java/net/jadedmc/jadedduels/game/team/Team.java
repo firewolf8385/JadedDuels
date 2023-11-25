@@ -42,6 +42,7 @@ public class Team {
     private final TeamColor teamColor;
     private int score = 0;
     private final EventTeam eventTeam;
+    private int id = 0;
 
     /**
      * Creates a new team with specific players.
@@ -123,5 +124,13 @@ public class Team {
 
     public int score() {
         return score;
+    }
+
+    public int id() {
+        return id;
+    }
+
+    public void id(int id) {
+        this.id = id;
     }
 }

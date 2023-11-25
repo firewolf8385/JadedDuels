@@ -66,6 +66,8 @@ public class TeamManager {
         availableColors.remove(availableColors.get(0));
         teams().add(team);
         aliveTeams.add(team);
+
+        team.id(teams.size() + 1);
         return team;
     }
 
@@ -74,6 +76,8 @@ public class TeamManager {
         availableColors.remove(availableColors.get(0));
         teams().add(team);
         aliveTeams.add(team);
+
+        team.id(teams.size() + 1);
         return team;
     }
 
