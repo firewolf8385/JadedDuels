@@ -41,8 +41,13 @@ public class SpectateGUI extends CustomGUI {
 
         if(gameType == GameType.TOURNAMENT) {
             int slot = 9;
+            int games = 0;
             for(Game game : plugin.gameManager().activeGames()) {
                 if(game.gameType() != GameType.TOURNAMENT) {
+                    continue;
+                }
+
+                if(games >= 36) {
                     continue;
                 }
 
@@ -80,12 +85,18 @@ public class SpectateGUI extends CustomGUI {
                     game.addSpectator(p);
                 });
                 slot++;
+                games++;
             }
         }
         else {
             int slot = 9;
+            int games = 0;
             for(Game game : plugin.gameManager().activeGames()) {
                 if(game.gameType() == GameType.TOURNAMENT) {
+                    continue;
+                }
+
+                if(games >= 36) {
                     continue;
                 }
 
@@ -113,6 +124,7 @@ public class SpectateGUI extends CustomGUI {
                     game.addSpectator(p);
                 });
                 slot++;
+                games++;
             }
         }
     }
