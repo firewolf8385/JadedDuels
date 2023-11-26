@@ -50,6 +50,7 @@ public class DuelEventManager {
     private BestOf bestOf;
     private final World tournamentWorld;
     private boolean hostPlaying = true;
+    private TeamSize teamSize = TeamSize.ONE_V_ONE;
 
     /**
      * Creates the Duel Event Manager.
@@ -208,6 +209,14 @@ public class DuelEventManager {
         eventStatus = EventStatus.NONE;
         host = null;
         kit = null;
+    }
+
+    public TeamSize teamSize() {
+        return teamSize;
+    }
+
+    public void teamSize(TeamSize teamSize) {
+        this.teamSize = teamSize;
     }
 
     /**

@@ -31,6 +31,7 @@ import net.jadedmc.jadedduels.game.kit.Kit;
 import net.jadedmc.jadedduels.game.tournament.BestOf;
 import net.jadedmc.jadedduels.game.tournament.EventStatus;
 import net.jadedmc.jadedduels.game.tournament.EventType;
+import net.jadedmc.jadedduels.game.tournament.TeamSize;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.jadedmc.jadedutils.items.ItemBuilder;
 import net.jadedmc.jadedutils.items.SkullBuilder;
@@ -120,7 +121,8 @@ public class CreateCMD extends AbstractCommand {
                 //plugin.duelEventManager().eventStatus(EventStatus.WAITING);
                 //p.closeInventory();
 
-                new HostPlayingGUI().open(p);
+                //new HostPlayingGUI().open(p);
+                new TeamSizeGUI().open(p);
 
                 // TODO: Update Bungeecord.
             });
@@ -135,7 +137,8 @@ public class CreateCMD extends AbstractCommand {
                 //p.closeInventory();
                 // TODO: Update Bungeecord.
 
-                new HostPlayingGUI().open(p);
+                //new HostPlayingGUI().open(p);
+                new TeamSizeGUI().open(p);
             });
 
             ItemStack bo5 = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODRjOGMzNzEwZGEyNTU5YTI5MWFkYzM5NjI5ZTljY2VhMzFjYTlkM2QzNTg2YmZlYTZlNmUwNjEyNGIzYyJ9fX0=")
@@ -146,7 +149,8 @@ public class CreateCMD extends AbstractCommand {
                 plugin.duelEventManager().bestOf(BestOf.FIVE);
                 //plugin.duelEventManager().eventStatus(EventStatus.WAITING);
                 //p.closeInventory();
-                new HostPlayingGUI().open(p);
+                //new HostPlayingGUI().open(p);
+                new TeamSizeGUI().open(p);
 
                 // TODO: Update Bungeecord.
             });
@@ -160,7 +164,8 @@ public class CreateCMD extends AbstractCommand {
                 plugin.duelEventManager().bestOf(BestOf.SEVEN);
                 //plugin.duelEventManager().eventStatus(EventStatus.WAITING);
                 //p.closeInventory();
-                new HostPlayingGUI().open(p);
+                //new HostPlayingGUI().open(p);
+                new TeamSizeGUI().open(p);
 
                 // TODO: Update Bungeecord.
             });
@@ -209,6 +214,39 @@ public class CreateCMD extends AbstractCommand {
                 ChatUtils.broadcast("  <dark_gray>» <click:run_command:'/event'><hover:show_text:'<yellow>Click to Join!'><yellow>Click here to join!</hover></click>");
                 ChatUtils.broadcast("");
                 ChatUtils.broadcast("&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
+            });
+        }
+    }
+
+    private class TeamSizeGUI extends CustomGUI {
+        public TeamSizeGUI() {
+            super(54, "Select a Team Size");
+
+            ItemStack one = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmQ2NWNlODNmMWFhNWI2ZTg0ZjliMjMzNTk1MTQwZDViNmJlY2ViNjJiNmQwYzY3ZDFhMWQ4MzYyNWZmZCJ9fX0=")
+                    .asItemBuilder()
+                    .setDisplayName("<green>1v1")
+                    .build();
+            setItem(20, one, (p,a) -> {
+                plugin.duelEventManager().teamSize(TeamSize.ONE_V_ONE);
+                new HostPlayingGUI().open(p);
+            });
+
+            ItemStack two = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGQ1NGQxZjhmYmY5MWIxZTdmNTVmMWJkYjI1ZTJlMzNiYWY2ZjQ2YWQ4YWZiZTA4ZmZlNzU3ZDMwNzVlMyJ9fX0=")
+                    .asItemBuilder()
+                    .setDisplayName("<green>2v2 Random")
+                    .build();
+            setItem(22, two, (p,a) -> {
+                plugin.duelEventManager().teamSize(TeamSize.TWO_V_TWO_RANDOM);
+                new HostPlayingGUI().open(p);
+            });
+
+            ItemStack three = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjFlNGVhNTliNTRjYzk5NDE2YmM5ZjYyNDU0OGRkYWMyYTM4ZWVhNmEyZGJmNmU0Y2NkODNjZWM3YWM5NjkifX19")
+                    .asItemBuilder()
+                    .setDisplayName("<green>3v3 Random")
+                    .build();
+            setItem(24, three, (p,a) -> {
+                plugin.duelEventManager().teamSize(TeamSize.THREE_V_THREE_RANDOM);
+                new HostPlayingGUI().open(p);
             });
         }
     }

@@ -136,14 +136,97 @@ public class DuelEvent {
                 List<ParticipantQuery> queries = new ArrayList<>();
 
                 // Create teams.
-                for(Player player : plugin.duelEventManager().world().getPlayers()) {
+                switch (plugin.duelEventManager().teamSize()) {
+                    case ONE_V_ONE -> {
+                        for(Player player : plugin.duelEventManager().world().getPlayers()) {
 
-                    // If set, stops the host from participating.
-                    if(player.equals(plugin.duelEventManager().host()) && !plugin.duelEventManager().hostPlaying()) {
-                        continue;
+                            // If set, stops the host from participating.
+                            if(player.equals(plugin.duelEventManager().host()) && !plugin.duelEventManager().hostPlaying()) {
+                                continue;
+                            }
+
+                            eventTeamManager.createTeam(player);
+                        }
                     }
 
-                    eventTeamManager.createTeam(player);
+                    case TWO_V_TWO_RANDOM -> {
+                        List<Player> waitingPlayers = new ArrayList<>(plugin.duelEventManager().world().getPlayers());
+                        Collections.shuffle(waitingPlayers);
+
+                        // If set, stops the host from participating.
+                        if(!plugin.duelEventManager().hostPlaying()) {
+                            waitingPlayers.remove(plugin.duelEventManager().host());
+                        }
+
+                        while (waitingPlayers.size() != 0) {
+
+                            if (waitingPlayers.size() >= 2) {
+                                Player one = waitingPlayers.get(0);
+                                Player two = waitingPlayers.get(1);
+
+                                waitingPlayers.remove(one);
+                                waitingPlayers.remove(two);
+
+                                List<Player> team = new ArrayList<>();
+                                team.add(one);
+                                team.add(two);
+                                eventTeamManager.createTeam(team);
+                            }
+                            else {
+                                Player one = waitingPlayers.get(0);
+
+                                waitingPlayers.remove(one);
+                                eventTeamManager.createTeam(one);
+                            }
+                        }
+                    }
+
+                    case THREE_V_THREE_RANDOM -> {
+                        List<Player> waitingPlayers = new ArrayList<>(plugin.duelEventManager().world().getPlayers());
+                        Collections.shuffle(waitingPlayers);
+
+                        // If set, stops the host from participating.
+                        if(!plugin.duelEventManager().hostPlaying()) {
+                            waitingPlayers.remove(plugin.duelEventManager().host());
+                        }
+
+                        while (waitingPlayers.size() != 0) {
+
+                            if (waitingPlayers.size() >= 3) {
+                                Player one = waitingPlayers.get(0);
+                                Player two = waitingPlayers.get(1);
+                                Player three = waitingPlayers.get(2);
+
+                                waitingPlayers.remove(one);
+                                waitingPlayers.remove(two);
+                                waitingPlayers.remove(three);
+
+                                List<Player> team = new ArrayList<>();
+                                team.add(one);
+                                team.add(two);
+                                team.add(three);
+                                eventTeamManager.createTeam(team);
+                            }
+                            else if(waitingPlayers.size() == 2) {
+                                Player one = waitingPlayers.get(0);
+                                Player two = waitingPlayers.get(1);
+
+                                waitingPlayers.remove(one);
+                                waitingPlayers.remove(two);
+
+                                List<Player> team = new ArrayList<>();
+                                team.add(one);
+                                team.add(two);
+                                eventTeamManager.createTeam(team);
+                            }
+                            else {
+                                Player one = waitingPlayers.get(0);
+
+                                waitingPlayers.remove(one);
+                                eventTeamManager.createTeam(one);
+                            }
+                        }
+                    }
                 }
 
                 // Create challonge participant queries.
@@ -202,7 +285,7 @@ public class DuelEvent {
             ChatUtils.broadcast(world, ChatUtils.centerText("&a&l" + plugin.duelEventManager().host().getName() + "'s Tournament"));
             ChatUtils.broadcast(world, "");
             ChatUtils.broadcast(world, ChatUtils.centerText("&aKit: &f" + plugin.duelEventManager().kit().name()));
-            ChatUtils.broadcast(world, ChatUtils.centerText("&aTeams: &f1v1 &7(" + plugin.duelEventManager().bestOf() + ")"));
+            ChatUtils.broadcast(world, ChatUtils.centerText("&aTeams: &f" + plugin.duelEventManager().teamSize().displayName() + " &7(" + plugin.duelEventManager().bestOf().toString() + "&7)"));
             ChatUtils.broadcast(world, "");
             ChatUtils.broadcast(world, ChatUtils.centerText("<green>Bracket: <white><click:open_url:'https://www.challonge.com/" + tournament.getUrl() + "'>https://challonge.com/" + tournament.getUrl() + "</click>"));
             ChatUtils.broadcast(world, "");

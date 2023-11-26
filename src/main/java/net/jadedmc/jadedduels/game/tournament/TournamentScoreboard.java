@@ -98,7 +98,7 @@ public class TournamentScoreboard extends CustomScoreboard {
                 helper.setSlot(8, "&aHost: &f" + plugin.duelEventManager().host().getName());
                 helper.setSlot(7, "&aKit: &f" + plugin.duelEventManager().kit().name());
                 helper.setSlot(6, "&aBracket: &f" + plugin.duelEventManager().eventType());
-                helper.setSlot(5, "&aTeam: &f1v1 &7(" + plugin.duelEventManager().bestOf().toString() + "&7)");
+                helper.setSlot(5, "&aTeam: &f" + plugin.duelEventManager().teamSize().displayName() + " &7(" + plugin.duelEventManager().bestOf().toString() + "&7)");
                 helper.setSlot(4, "");
                 helper.setSlot(3, "&aPlayers: &f" + plugin.duelEventManager().world().getPlayers().size());
                 helper.setSlot(2, "");
@@ -117,7 +117,7 @@ public class TournamentScoreboard extends CustomScoreboard {
                 helper.setSlot(8, "&aHost: &f" + plugin.duelEventManager().host().getName());
                 helper.setSlot(7, "&aKit: &f" + plugin.duelEventManager().kit().name());
                 helper.setSlot(6, "&aBracket: &f" + plugin.duelEventManager().eventType());
-                helper.setSlot(5, "&aTeam: &f1v1 &7(" + plugin.duelEventManager().bestOf().toString() + "&7)");
+                helper.setSlot(5, "&aTeam: &f" + plugin.duelEventManager().teamSize().displayName() + " &7(" + plugin.duelEventManager().bestOf().toString() + "&7)");
                 helper.setSlot(4, "");
 
                 int fighting = 0;
