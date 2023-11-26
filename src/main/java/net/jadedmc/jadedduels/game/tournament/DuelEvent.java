@@ -482,6 +482,9 @@ public class DuelEvent {
            else {
                broadcast(ChatUtils.centerText("&c&l3rd: &fNone"));
            }
+            broadcast("");
+            broadcast(ChatUtils.centerText("<green>Bracket: <white><click:open_url:'https://www.challonge.com/" + tournament.getUrl() + "'>https://challonge.com/" + tournament.getUrl() + "</click>"));
+            broadcast("");
             broadcast("&8&m+-----------------------***-----------------------+");
         });
 
