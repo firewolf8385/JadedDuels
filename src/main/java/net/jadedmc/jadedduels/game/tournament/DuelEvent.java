@@ -297,6 +297,7 @@ public class DuelEvent {
         // Repeatedly loops through the matches, starting any that are waiting to be started.
         taskID = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             boolean matchesObtained = false;
+            int games = 0;
             while(!matchesObtained) {
                 try {
                     // Gets all matches that aren't complete.
@@ -353,12 +354,17 @@ public class DuelEvent {
                             continue;
                         }
 
+                        if(games >= 14) {
+                            continue;
+                        }
+
                         // Tell challonge that the match is underway.
                         boolean sent = false;
                         while (!sent) {
                             try {
                                 challonge.markMatchAsUnderway(match);
                                 sent = true;
+                                games++;
                                 Thread.sleep(1000);
                             }
                             catch (DataAccessException | InterruptedException exception) {
