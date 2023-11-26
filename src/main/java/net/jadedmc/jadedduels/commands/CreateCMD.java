@@ -27,6 +27,7 @@ package net.jadedmc.jadedduels.commands;
 import com.cryptomorin.xseries.XMaterial;
 import net.jadedmc.jadedcore.utils.gui.CustomGUI;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.kit.Kit;
 import net.jadedmc.jadedduels.game.tournament.BestOf;
 import net.jadedmc.jadedduels.game.tournament.EventStatus;
@@ -68,6 +69,10 @@ public class CreateCMD extends AbstractCommand {
 
             int i = 0;
             for(Kit kit : plugin.kitManager().kits()) {
+                if(plugin.arenaManager().getArenas(kit, GameType.TOURNAMENT).size() == 0) {
+                    continue;
+                }
+
                 setItem(i + 9, new ItemBuilder(kit.iconMaterial())
                                 .setDisplayName("<green><bold>" + kit.name())
                                 .addFlag(ItemFlag.HIDE_ATTRIBUTES)
