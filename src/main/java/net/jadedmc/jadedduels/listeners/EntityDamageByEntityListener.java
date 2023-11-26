@@ -63,11 +63,6 @@ public class EntityDamageByEntityListener implements Listener {
                     }
                 }
             }
-            else {
-                if(event.getEntity() instanceof Boat && player.getGameMode() != GameMode.CREATIVE) {
-                    event.setCancelled(true);
-                }
-            }
         }
 
         // Exit if not a player.
