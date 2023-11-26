@@ -41,6 +41,7 @@ public class BowKit extends Kit {
         super(plugin, "bow", "Bow");
         iconMaterial(Material.BOW);
         naturalRegeneration(false);
+        hunger(false);
 
         // Items
         ItemStack helmet = new ItemBuilder(Material.IRON_HELMET)
