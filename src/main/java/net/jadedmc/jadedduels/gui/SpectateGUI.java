@@ -51,6 +51,10 @@ public class SpectateGUI extends CustomGUI {
                     continue;
                 }
 
+                if(game.teamManager().teams().size() < 2) {
+                    continue;
+                }
+
                 ItemBuilder builder = new ItemBuilder(game.kit().iconMaterial())
                         .setDisplayName("<green>" + game.kit().name() + " <gray>(" + game.arena().name() + ")")
                         .addLore("");
