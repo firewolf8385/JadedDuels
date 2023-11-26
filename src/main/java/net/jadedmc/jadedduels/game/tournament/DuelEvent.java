@@ -256,6 +256,7 @@ public class DuelEvent {
                                     .scoresCsv("0-" + plugin.duelEventManager().bestOf().neededWins())
                                     .build();
                             challonge.updateMatch(match, query);
+                            continue;
                         }
                         else if(team2.players().size() == 0) {
                             match.setForfeited(true);
@@ -266,6 +267,7 @@ public class DuelEvent {
                                     .scoresCsv(plugin.duelEventManager().bestOf().neededWins() + "-0")
                                     .build();
                             challonge.updateMatch(match, query);
+                            continue;
                         }
 
                         // Tell challonge that the match is underway.

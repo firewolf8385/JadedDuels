@@ -40,12 +40,14 @@ public class EventTeam {
     public List<Player> players() {
         List<Player> teamPlayers = new ArrayList<>();
 
-        for(UUID player : playerUUIDs) {
-            if(Bukkit.getPlayer(player) == null) {
+        for(UUID playerUUID : playerUUIDs) {
+            Player player = Bukkit.getPlayer(playerUUID);
+
+            if(player == null || !player.isOnline()) {
                 continue;
             }
 
-            teamPlayers.add(Bukkit.getPlayer(player));
+            teamPlayers.add(player);
         }
 
         return teamPlayers;
