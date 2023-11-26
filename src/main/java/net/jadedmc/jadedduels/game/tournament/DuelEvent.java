@@ -476,7 +476,6 @@ public class DuelEvent {
         plugin.getServer().getScheduler().runTask(plugin, () -> {
            broadcast("&8&m+-----------------------***-----------------------+");
            broadcast(ChatUtils.centerText("&a&lTournament"));
-           broadcast("");
            broadcast(ChatUtils.centerText("&aKit: &f" + plugin.duelEventManager().kit().name()));
            broadcast("");
            broadcast(ChatUtils.centerText("&6&l1st: &f" + top.get(0).getName()));
@@ -490,7 +489,6 @@ public class DuelEvent {
            }
             broadcast("");
             broadcast(ChatUtils.centerText("<green>Bracket: <white><click:open_url:'https://www.challonge.com/" + tournament.getUrl() + "'>https://challonge.com/" + tournament.getUrl() + "</click>"));
-            broadcast("");
             broadcast("&8&m+-----------------------***-----------------------+");
         });
 
