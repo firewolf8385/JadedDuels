@@ -47,6 +47,7 @@ public class CactusKit extends Kit {
         gameMode(GameMode.SURVIVAL);
         maxHealth(1);
         startingHealth(1);
+        hunger(false);
 
         addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 200000, 100, true));
 
