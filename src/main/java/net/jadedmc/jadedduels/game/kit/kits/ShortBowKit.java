@@ -39,15 +39,22 @@ public class ShortBowKit extends Kit {
         hunger(false);
 
         ItemStack helmet = new ItemBuilder(Material.IRON_HELMET)
+                .addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1)
                 .setUnbreakable(true)
                 .build();
+
         ItemStack chestplate = new ItemBuilder(Material.IRON_CHESTPLATE)
+                .addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1)
                 .setUnbreakable(true)
                 .build();
+
         ItemStack leggings = new ItemBuilder(Material.IRON_LEGGINGS)
+                .addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1)
                 .setUnbreakable(true)
                 .build();
+
         ItemStack boots = new ItemBuilder(Material.IRON_BOOTS)
+                .addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1)
                 .setUnbreakable(true)
                 .build();
 
