@@ -67,12 +67,21 @@ public class PlayerInteractListener implements Listener {
 
         Game game = plugin.gameManager().game(player);
 
+        if(game != null) {
+            if(game.gameState() != GameState.RUNNING) {
+                event.setCancelled(true);
+                // Fixes visual glitch with throwables during countdown.
+                player.getInventory().setItem(player.getInventory().getHeldItemSlot(), player.getItemInHand());
+                return;
+            }
+            else {
+                game.kit().onPlayerInteract(game, event);
+            }
+        }
+
         // Prevent using items during game countdown.
         if(game != null && game.gameState() != GameState.RUNNING) {
             event.setCancelled(true);
-            // Fixes visual glitch with throwables during countdown.
-            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), player.getItemInHand());
-            return;
         }
 
         // Exit if the item is null.
@@ -93,6 +102,10 @@ public class PlayerInteractListener implements Listener {
 
         if(event.getHand() != EquipmentSlot.HAND) {
             return;
+        }
+
+        if(game != null) {
+            game.kit().onNamedItemClick(game, player, item);
         }
 
         switch (item) {

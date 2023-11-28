@@ -26,6 +26,8 @@ package net.jadedmc.jadedduels.game.kit;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
+import net.jadedmc.jadedduels.game.GameScoreboard;
+import net.jadedmc.jadedduels.utils.scoreboard.CustomScoreboard;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -33,6 +35,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
@@ -314,6 +319,42 @@ public class Kit {
     public void onBlockPlace(Game game, BlockPlaceEvent event) {}
 
     /**
+     * Called when the player interacts with a named item.
+     * @param game Game the player is in.
+     * @param player Player interacting with the item.
+     * @param item Name of the item.
+     */
+    public void onNamedItemClick(Game game, Player player, String item) {}
+
+    /**
+     * Called when a player interacts with something.
+     * @param game Game the player is in.
+     * @param event PlayerInteractEvent.
+     */
+    public void onPlayerInteract(Game game, PlayerInteractEvent event) {}
+
+    /**
+     * Called when a playe rleaves a game.
+     * @param game Game the player is leaving.
+     * @param player Player leaving the game.
+     */
+    public void onGamePlayerLeave(Game game, Player player) {}
+
+    /**
+     * Called when a player toggles flight.
+     * @param game Game the player is toggling flight in.
+     * @param event PlayerToggleFlightEvent.
+     */
+    public void onPlayerToggleFlight(Game game, PlayerToggleFlightEvent event) {}
+
+    /**
+     * Called when a player toggles sneak.
+     * @param game Game the player is in.
+     * @param event PlayerToggleSneakEvent.
+     */
+    public void onPlayerToggleSneak(Game game, PlayerToggleSneakEvent event) {}
+
+    /**
      * Called when a projectile hits something.
      * @param game Game the projectile hits in.
      * @param event ProjectileHitEvent.
@@ -334,6 +375,17 @@ public class Kit {
      * @param player Player kit is being applied to.
      */
     public void onKitApply(Game game, Player player) {}
+
+    /**
+     * Get the scoreboard of the kit.
+     * Defaults to GameScoreboard
+     * @param game Game to get scoreboard of.
+     * @param player Player to get scoreboard for.
+     * @return Scoreboard.
+     */
+    public CustomScoreboard scoreboard(Game game, Player player) {
+        return new GameScoreboard(player, game);
+    }
 
     /**
      * Get the starting health of the kit.

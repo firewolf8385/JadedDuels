@@ -220,7 +220,7 @@ public class Game {
             for(Player player : team.players()) {
                 player.teleport(spawns.get(spawnCount));
                 kit.apply(player);
-                new GameScoreboard(player, this).update(player);
+                kit.scoreboard(this, player).update(player);
             }
 
             spawnCount++;
@@ -828,6 +828,8 @@ public class Game {
      * @param player Player to remove.
      */
     public void removePlayer(Player player) {
+        kit.onGamePlayerLeave(this, player);
+
         // Removes the player if they are a spectator.
         if(spectators.contains(player)) {
             removeSpectator(player);

@@ -60,6 +60,7 @@ public class KitManager {
         duelKits.add(new HSGKit(plugin));
         duelKits.add(new ShieldlessUHC(plugin));
         duelKits.add(new ShortBowKit(plugin));
+        duelKits.add(new BowSpleefKit(plugin));
     }
 
     /**
