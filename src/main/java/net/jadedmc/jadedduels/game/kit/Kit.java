@@ -66,6 +66,7 @@ public class Kit {
     private boolean naturalRegeneration = true;
     private boolean boxingDamage = false;
     private boolean build = false;
+    private boolean takeDamage = true;
 
     /**
      * Create a kit.
@@ -380,6 +381,22 @@ public class Kit {
      */
     public void startingSaturation(float startingSaturation) {
         this.startingSaturation = startingSaturation;
+    }
+
+    /**
+     * Set if players should be able to take damage.
+     * @return Whether the kit has damage.
+     */
+    public boolean takeDamage() {
+        return takeDamage;
+    }
+
+    /**
+     * Set if the kit should have damage.
+     * @param takeDamage Whether the kit has damage.
+     */
+    public void takeDamage(boolean takeDamage) {
+        this.takeDamage = takeDamage;
     }
 
     /**

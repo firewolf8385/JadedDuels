@@ -78,14 +78,11 @@ public class EntityDamageByEntityListener implements Listener {
             return;
         }
 
-        // TODO: Take Damage Setting
         // Checks if the kit should take damage
-        /*
-        if(!game.kit().hasTakeDamage()) {
+        if(!game.kit().takeDamage()) {
             event.setCancelled(true);
             return;
         }
-         */
 
         // Check if players should do damage.
         // TODO: Do Damage Settings
