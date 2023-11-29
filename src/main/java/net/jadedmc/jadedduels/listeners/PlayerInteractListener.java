@@ -186,6 +186,12 @@ public class PlayerInteractListener implements Listener {
 
                 event.setCancelled(true);
             }
+
+            default -> {
+                if(game != null && game.spectators().contains(player)) {
+                    event.setCancelled(true);
+                }
+            }
         }
 
     }
