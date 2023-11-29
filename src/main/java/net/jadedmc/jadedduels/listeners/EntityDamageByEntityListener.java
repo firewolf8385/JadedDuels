@@ -149,13 +149,10 @@ public class EntityDamageByEntityListener implements Listener {
                     return;
                 }
 
-                // TODO: Ranged Damage setting
                 // Applies ranged damage if enabled.
-                /*
-                if(game.kit().hasRangedDamage()) {
+                if(game.kit().rangedDamage()) {
                     rangedDamage(event, player, shooter);
                 }
-                */
 
                 if(player.getHealth() <= event.getFinalDamage()) {
                     if(player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING || player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING) {

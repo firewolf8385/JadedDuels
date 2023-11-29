@@ -72,6 +72,7 @@ public class Kit {
     private boolean boxingDamage = false;
     private boolean build = false;
     private boolean takeDamage = true;
+    private boolean rangedDamage = false;
 
     /**
      * Create a kit.
@@ -375,6 +376,22 @@ public class Kit {
      * @param player Player kit is being applied to.
      */
     public void onKitApply(Game game, Player player) {}
+
+    /**
+     * Get if the kit uses ranged damage.
+     * @return Whether the kit uses ranged damage.
+     */
+    public boolean rangedDamage() {
+        return rangedDamage;
+    }
+
+    /**
+     * Set the if the kit should use ranged damage.
+     * @param rangedDamage Whether the kit uses ranged damage.
+     */
+    public void rangedDamage(boolean rangedDamage) {
+        this.rangedDamage = rangedDamage;
+    }
 
     /**
      * Get the scoreboard of the kit.
