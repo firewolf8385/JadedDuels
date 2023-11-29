@@ -142,6 +142,17 @@ public class BowSpleefKit extends Kit {
             return;
         }
 
+        // Prevents players from double jumping too often.
+        if(doubleJumpDelay.contains(player)) {
+            return;
+        }
+
+        if(doubleJumps(player) < 1) {
+            player.setFlying(false);
+            player.setAllowFlight(false);
+            return;
+        }
+
         useDoubleJump(player);
 
         doubleJumpDelay.add(player);
