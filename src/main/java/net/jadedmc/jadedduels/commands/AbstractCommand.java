@@ -59,13 +59,14 @@ public abstract class AbstractCommand implements CommandExecutor {
         plugin = pl;
         new ArenaCMD(pl);
         new ArenasCMD(pl);
-        new CreateCMD(pl);
-        new StartCMD(pl);
         new BracketCMD(pl);
+        new CreateCMD(pl);
         new CancelCMD(pl);
         new DuelCMD(pl);
         new EventCMD(pl);
+        new LeaveCMD(pl);
         new SpectateCMD(pl);
+        new StartCMD(pl);
     }
 
     /**
