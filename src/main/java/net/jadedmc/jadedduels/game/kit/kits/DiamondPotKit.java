@@ -38,6 +38,7 @@ public class DiamondPotKit extends Kit {
     public DiamondPotKit(JadedDuelsPlugin plugin) {
         super(plugin, "diamond_pot", "Diamond Potion");
         iconMaterial(Material.SPLASH_POTION);
+        naturalRegeneration(false);
 
         ItemStack helmet = new ItemBuilder(Material.DIAMOND_HELMET)
                 .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4)
