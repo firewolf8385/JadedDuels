@@ -76,7 +76,7 @@ public class DiamondPotKit extends Kit {
                 .build();
 
         ItemStack regen = new PotionBuilder(Material.SPLASH_POTION)
-                .setPotionData(PotionType.REGEN, false, true)
+                .setPotionData(PotionType.REGEN, true, false)
                 .build();
 
         ItemStack goldenCarrots = new ItemStack(Material.GOLDEN_CARROT, 64);
