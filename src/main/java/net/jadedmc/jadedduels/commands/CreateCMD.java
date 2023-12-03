@@ -229,7 +229,7 @@ public class CreateCMD extends AbstractCommand {
 
             ItemStack one = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmQ2NWNlODNmMWFhNWI2ZTg0ZjliMjMzNTk1MTQwZDViNmJlY2ViNjJiNmQwYzY3ZDFhMWQ4MzYyNWZmZCJ9fX0=")
                     .asItemBuilder()
-                    .setDisplayName("<green>1v1")
+                    .setDisplayName("<green><bold>1v1")
                     .build();
             setItem(20, one, (p,a) -> {
                 plugin.duelEventManager().teamSize(TeamSize.ONE_V_ONE);
@@ -238,7 +238,7 @@ public class CreateCMD extends AbstractCommand {
 
             ItemStack two = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGQ1NGQxZjhmYmY5MWIxZTdmNTVmMWJkYjI1ZTJlMzNiYWY2ZjQ2YWQ4YWZiZTA4ZmZlNzU3ZDMwNzVlMyJ9fX0=")
                     .asItemBuilder()
-                    .setDisplayName("<green>2v2 Random")
+                    .setDisplayName("<green><bold>2v2 Random")
                     .build();
             setItem(22, two, (p,a) -> {
                 plugin.duelEventManager().teamSize(TeamSize.TWO_V_TWO_RANDOM);
@@ -247,7 +247,7 @@ public class CreateCMD extends AbstractCommand {
 
             ItemStack three = new SkullBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjFlNGVhNTliNTRjYzk5NDE2YmM5ZjYyNDU0OGRkYWMyYTM4ZWVhNmEyZGJmNmU0Y2NkODNjZWM3YWM5NjkifX19")
                     .asItemBuilder()
-                    .setDisplayName("<green>3v3 Random")
+                    .setDisplayName("<green><bold>3v3 Random")
                     .build();
             setItem(24, three, (p,a) -> {
                 plugin.duelEventManager().teamSize(TeamSize.THREE_V_THREE_RANDOM);
