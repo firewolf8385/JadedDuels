@@ -99,7 +99,7 @@
         <dependency>
             <groupId>com.github.firewolf8385</groupId>
             <artifactId>JadedCore2</artifactId>
-            <version>70c21801f4</version>
+            <version>f1b7d6da0f</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

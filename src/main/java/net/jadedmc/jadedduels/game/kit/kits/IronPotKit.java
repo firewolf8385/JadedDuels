@@ -26,8 +26,8 @@ package net.jadedmc.jadedduels.game.kit.kits;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.kit.Kit;
-import net.jadedmc.jadedduels.utils.PotionBuilder;
 import net.jadedmc.jadedutils.items.ItemBuilder;
+import net.jadedmc.jadedutils.items.PotionBuilder;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
