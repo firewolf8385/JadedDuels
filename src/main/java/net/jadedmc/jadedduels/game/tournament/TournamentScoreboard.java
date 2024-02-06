@@ -27,9 +27,9 @@ package net.jadedmc.jadedduels.game.tournament;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.GameType;
-import net.jadedmc.jadedduels.utils.DateUtils;
-import net.jadedmc.jadedduels.utils.scoreboard.CustomScoreboard;
-import net.jadedmc.jadedduels.utils.scoreboard.ScoreHelper;
+import net.jadedmc.jadedutils.DateUtils;
+import net.jadedmc.jadedutils.scoreboard.CustomScoreboard;
+import net.jadedmc.jadedutils.scoreboard.ScoreHelper;
 import org.bukkit.entity.Player;
 
 /**

@@ -25,7 +25,6 @@
 package net.jadedmc.jadedduels.commands;
 
 import com.cryptomorin.xseries.XMaterial;
-import net.jadedmc.jadedcore.utils.gui.CustomGUI;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.kit.Kit;
@@ -34,6 +33,7 @@ import net.jadedmc.jadedduels.game.tournament.EventStatus;
 import net.jadedmc.jadedduels.game.tournament.EventType;
 import net.jadedmc.jadedduels.game.tournament.TeamSize;
 import net.jadedmc.jadedutils.chat.ChatUtils;
+import net.jadedmc.jadedutils.gui.CustomGUI;
 import net.jadedmc.jadedutils.items.ItemBuilder;
 import net.jadedmc.jadedutils.items.SkullBuilder;
 import org.bukkit.command.CommandSender;

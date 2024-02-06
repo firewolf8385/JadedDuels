@@ -36,7 +36,6 @@ import net.jadedmc.jadedduels.game.kit.KitManager;
 import net.jadedmc.jadedduels.game.queue.QueueManager;
 import net.jadedmc.jadedduels.game.tournament.DuelEventManager;
 import net.jadedmc.jadedduels.listeners.*;
-import net.jadedmc.jadedduels.utils.scoreboard.ScoreboardUpdate;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class JadedDuelsPlugin extends JavaPlugin {
@@ -93,9 +92,6 @@ public final class JadedDuelsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new VehicleDamageListener(this), this);
         getServer().getPluginManager().registerEvents(new VehicleExitListener(this), this);
         getServer().getPluginManager().registerEvents(new WorldInitListener(), this);
-
-        // Updates scoreboards every second
-        new ScoreboardUpdate().runTaskTimer(this, 20L, 20L);
 
         // Register placeholders
         new Placeholders(this).register();

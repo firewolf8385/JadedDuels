@@ -24,7 +24,7 @@
  */
 package net.jadedmc.jadedduels.game.arena.file;
 
-import net.jadedmc.jadedduels.utils.FileUtils;
+import net.jadedmc.jadedutils.FileUtils;
 import org.bukkit.Bukkit;
 
 import java.io.File;

@@ -97,9 +97,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.JadedMC</groupId>
-            <artifactId>JadedCore</artifactId>
-            <version>caacc4708e</version>
+            <groupId>com.github.firewolf8385</groupId>
+            <artifactId>JadedCore2</artifactId>
+            <version>70c21801f4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -24,11 +24,11 @@
  */
 package net.jadedmc.jadedduels.gui;
 
-import net.jadedmc.jadedcore.utils.gui.CustomGUI;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.team.Team;
+import net.jadedmc.jadedutils.gui.CustomGUI;
 import net.jadedmc.jadedutils.items.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;

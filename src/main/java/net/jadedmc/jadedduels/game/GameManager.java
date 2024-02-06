@@ -29,7 +29,7 @@ import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.arena.Arena;
 import net.jadedmc.jadedduels.game.arena.ArenaChunkGenerator;
 import net.jadedmc.jadedduels.game.kit.Kit;
-import net.jadedmc.jadedduels.utils.FileUtils;
+import net.jadedmc.jadedutils.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;

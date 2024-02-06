@@ -25,10 +25,10 @@
 package net.jadedmc.jadedduels.game;
 
 import net.jadedmc.jadedduels.game.team.Team;
-import net.jadedmc.jadedduels.utils.DateUtils;
 import net.jadedmc.jadedduels.utils.GameUtils;
-import net.jadedmc.jadedduels.utils.scoreboard.CustomScoreboard;
-import net.jadedmc.jadedduels.utils.scoreboard.ScoreHelper;
+import net.jadedmc.jadedutils.DateUtils;
+import net.jadedmc.jadedutils.scoreboard.CustomScoreboard;
+import net.jadedmc.jadedutils.scoreboard.ScoreHelper;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

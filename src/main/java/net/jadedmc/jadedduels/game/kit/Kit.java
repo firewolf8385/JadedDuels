@@ -27,7 +27,7 @@ package net.jadedmc.jadedduels.game.kit;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.GameScoreboard;
-import net.jadedmc.jadedduels.utils.scoreboard.CustomScoreboard;
+import net.jadedmc.jadedutils.scoreboard.CustomScoreboard;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

@@ -26,12 +26,9 @@ package net.jadedmc.jadedduels.game.lobby;
 
 import com.cryptomorin.xseries.XMaterial;
 import net.jadedmc.jadedchat.JadedChat;
-import net.jadedmc.jadedcore.features.items.CustomItem;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
-import net.jadedmc.jadedduels.game.tournament.EventStatus;
 import net.jadedmc.jadedduels.game.tournament.TournamentScoreboard;
 import net.jadedmc.jadedduels.utils.LocationUtils;
-import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.jadedmc.jadedutils.items.ItemBuilder;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -87,7 +84,6 @@ public class LobbyUtils {
     public static void giveLobbyItems(Player player) {
         player.getInventory().clear();
 
-        player.getInventory().setItem(0, CustomItem.GAME_SELECTOR.toItemStack());
         //player.getInventory().setItem(2, new ItemBuilder(Material.EMERALD).setDisplayName("&a&lShop").build());
         player.getInventory().setItem(3, new ItemBuilder(Material.ENDER_EYE).setDisplayName("<green><bold>Spectate").build());
         player.getInventory().setItem(4, new ItemBuilder(Material.NETHER_STAR).setDisplayName("<green><bold>Kits").build());

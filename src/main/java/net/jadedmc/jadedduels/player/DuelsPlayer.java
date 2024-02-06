@@ -26,6 +26,7 @@ package net.jadedmc.jadedduels.player;
 
 import com.cryptomorin.xseries.XSound;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Boat;
 
@@ -75,14 +76,14 @@ public class DuelsPlayer {
         // TODO: Update MySQL.
     }
 
-    public Sound shieldDisableSound() {
+    public void playShieldDisableSound() {
         XSound.Record sound = XSound.parse(shieldDisableSound);
 
         if(sound == null) {
-            return null;
+            return;
         }
 
-        return sound.sound.parseSound();
+        sound.soundPlayer().forPlayers(Bukkit.getPlayer(playerUUID)).play();
     }
 
     public void shieldDisableSound(String shieldDisableSound) {
