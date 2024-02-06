@@ -24,27 +24,29 @@
  */
 package net.jadedmc.jadedduels.listeners;
 
+import net.jadedmc.jadedcore.events.LobbyJoinEvent;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
-import net.jadedmc.jadedduels.game.lobby.LobbyUtils;
 import net.jadedmc.jadedduels.game.tournament.EventStatus;
 import net.jadedmc.jadedutils.chat.ChatUtils;
+import net.jadedmc.jadedutils.items.ItemBuilder;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 
-public class PlayerJoinListener implements Listener {
+public class LobbyJoinListener implements Listener {
     private final JadedDuelsPlugin plugin;
 
-    public PlayerJoinListener(JadedDuelsPlugin plugin) {
+    public LobbyJoinListener(final JadedDuelsPlugin plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void onLobbyJoin(LobbyJoinEvent event) {
         Player player = event.getPlayer();
 
-        LobbyUtils.sendToLobby(plugin, player);
+        player.getInventory().setItem(4, new ItemBuilder(Material.NETHER_STAR).setDisplayName("<green><bold>Kits").build());
+        player.getInventory().setItem(5, new ItemBuilder(Material.ENDER_EYE).setDisplayName("<green><bold>Spectate").build());
 
         if(plugin.duelEventManager().eventStatus() == EventStatus.WAITING) {
             ChatUtils.chat(player, "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
@@ -57,5 +59,4 @@ public class PlayerJoinListener implements Listener {
             ChatUtils.chat(player, "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
         }
     }
-
 }

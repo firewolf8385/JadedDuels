@@ -82,7 +82,6 @@ public final class JadedDuelsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerEggThrowListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerToggleFlightListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerToggleSneakListener(this), this);
@@ -91,6 +90,9 @@ public final class JadedDuelsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new TNTPrimeListener(this), this);
         getServer().getPluginManager().registerEvents(new VehicleDamageListener(this), this);
         getServer().getPluginManager().registerEvents(new VehicleExitListener(this), this);
+
+        getServer().getPluginManager().registerEvents(new JadedJoinListener(this), this);
+        getServer().getPluginManager().registerEvents(new LobbyJoinListener(this), this);
 
         // Register placeholders
         new Placeholders(this).register();
