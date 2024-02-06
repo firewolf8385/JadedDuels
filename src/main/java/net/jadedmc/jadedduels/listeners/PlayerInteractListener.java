@@ -114,13 +114,6 @@ public class PlayerInteractListener implements Listener {
                 event.setCancelled(true);
             }
 
-            case "Leave Queue" -> {
-                plugin.queueManager().removePlayer(player);
-                LobbyUtils.giveLobbyItems(player);
-                new LobbyScoreboard(plugin, player);
-                event.setCancelled(true);
-            }
-
             case "Leave Match" -> {
                 if(game != null && game.spectators().contains(player)) {
                     game.removeSpectator(player);

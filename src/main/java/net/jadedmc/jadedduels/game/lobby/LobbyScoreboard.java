@@ -46,7 +46,6 @@ public class LobbyScoreboard extends CustomScoreboard {
         helper.setSlot(13, "&aPlaying:");
         helper.setSlot(12, "  &aDuels: &f" + plugin.gameManager().playing());
         helper.setSlot(11, "  &aTournament: &f" + plugin.duelEventManager().players().size());
-        helper.setSlot(10, "  &aQueue: &f" + plugin.queueManager().getQueueing());
         helper.setSlot(9, "");
         helper.removeSlot(8);
         helper.removeSlot(7);

@@ -44,15 +44,16 @@ public class KitGUI extends CustomGUI {
 
             ItemStack item = new ItemBuilder(kit.iconMaterial(), 1)
                     .setDisplayName("<green>" + kit.name())
-                    .addLore("<gray>Playing: " + plugin.queueManager().getPlaying(kit))
-                    .addLore("<gray>Queuing: " + plugin.queueManager().getQueueing(kit, GameType.UNRANKED))
+                    //.addLore("<gray>Playing: " + plugin.queueManager().getPlaying(kit))
+                    //.addLore("<gray>Queuing: " + plugin.queueManager().getQueueing(kit, GameType.UNRANKED))
+                    // TODO: Playing number using placeholders
                     .addFlag(ItemFlag.HIDE_ATTRIBUTES)
                     .addFlag(ItemFlag.HIDE_ITEM_SPECIFICS)
                     .build();
 
             setItem(iconSlots[i], item, (pl, a) -> {
                 pl.closeInventory();
-                plugin.queueManager().addPlayer(pl, kit, GameType.UNRANKED);
+                // TODO Queuing
             });
             i++;
         }

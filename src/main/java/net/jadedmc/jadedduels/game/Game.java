@@ -145,9 +145,6 @@ public class Game {
     // -----------------------------------------------------------------------------------------------------------------
 
     public void startGame() {
-        if(gameType == GameType.UNRANKED) {
-            plugin.queueManager().addPlaying(kit, players().size());
-        }
 
         for(Player player : players()) {
             List<Player> opponents = new ArrayList<>();
@@ -364,9 +361,6 @@ public class Game {
                 startRound();
             }
             else {
-                if(gameType == GameType.UNRANKED) {
-                    plugin.queueManager().removePlaying(kit, players().size());
-                }
 
                 // Show hidden players
                 for(Player player : world.getPlayers()) {
@@ -450,10 +444,6 @@ public class Game {
         broadcast("&8&m+-----------------------***-----------------------+");
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-
-            if(gameType == GameType.UNRANKED) {
-                plugin.queueManager().removePlaying(kit, players().size());
-            }
 
             // Show hidden players
             for(Player player : world.getPlayers()) {
@@ -727,10 +717,6 @@ public class Game {
         if(spectators.contains(player)) {
             removeSpectator(player);
             return;
-        }
-
-        if(gameType == GameType.UNRANKED) {
-            plugin.queueManager().removePlaying(kit, 1);
         }
 
         broadcast(teamManager.team(player).teamColor().chatColor() + player.getName() + " disconnected.");

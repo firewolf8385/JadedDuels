@@ -33,7 +33,6 @@ import net.jadedmc.jadedduels.game.GameManager;
 import net.jadedmc.jadedduels.game.arena.ArenaManager;
 import net.jadedmc.jadedduels.game.duel.DuelManager;
 import net.jadedmc.jadedduels.game.kit.KitManager;
-import net.jadedmc.jadedduels.game.queue.QueueManager;
 import net.jadedmc.jadedduels.game.tournament.DuelEventManager;
 import net.jadedmc.jadedduels.listeners.*;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,7 +44,6 @@ public final class JadedDuelsPlugin extends JavaPlugin {
     private KitManager kitManager;
     private SettingsManager settingsManager;
     private DuelEventManager duelEventManager;
-    private QueueManager queueManager;
 
     @Override
     public void onEnable() {
@@ -59,7 +57,6 @@ public final class JadedDuelsPlugin extends JavaPlugin {
         arenaManager.loadArenas();
 
         gameManager = new GameManager(this);
-        queueManager = new QueueManager(this);
         duelEventManager = new DuelEventManager(this);
         duelManager = new DuelManager(this);
 
@@ -194,13 +191,5 @@ public final class JadedDuelsPlugin extends JavaPlugin {
      */
     public DuelManager duelManager() {
         return duelManager;
-    }
-
-    /**
-     * Get the queue manager.
-     * @return QueueManager.
-     */
-    public QueueManager queueManager() {
-        return queueManager;
     }
 }

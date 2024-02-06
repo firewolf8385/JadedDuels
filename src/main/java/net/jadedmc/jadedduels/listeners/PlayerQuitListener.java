@@ -48,8 +48,6 @@ public class PlayerQuitListener implements Listener {
             game.playerDisconnect(player);
         }
 
-        plugin.queueManager().removePlayer(player);
-
         // Cancel tournament if the player is the host.
         if(plugin.duelEventManager().eventStatus() == EventStatus.WAITING
                 && plugin.duelEventManager().host().equals(player)) {
