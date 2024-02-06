@@ -91,7 +91,6 @@ public final class JadedDuelsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new TNTPrimeListener(this), this);
         getServer().getPluginManager().registerEvents(new VehicleDamageListener(this), this);
         getServer().getPluginManager().registerEvents(new VehicleExitListener(this), this);
-        getServer().getPluginManager().registerEvents(new WorldInitListener(), this);
 
         // Register placeholders
         new Placeholders(this).register();

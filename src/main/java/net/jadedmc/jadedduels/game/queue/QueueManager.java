@@ -29,9 +29,9 @@ import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.arena.Arena;
 import net.jadedmc.jadedduels.game.kit.Kit;
-import net.jadedmc.jadedduels.utils.Timer;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.jadedmc.jadedutils.items.ItemBuilder;
+import net.jadedmc.jadedutils.Timer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
