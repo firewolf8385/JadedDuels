@@ -24,23 +24,25 @@
  */
 package net.jadedmc.jadedduels.game.arena;
 
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import net.jadedmc.jadedcore.JadedAPI;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
-import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.arena.builder.ArenaBuilder;
-import net.jadedmc.jadedduels.game.arena.file.ArenaFileManager;
 import net.jadedmc.jadedduels.game.kit.Kit;
-import org.checkerframework.checker.units.qual.A;
+import org.bson.Document;
 
-import java.io.File;
 import java.util.*;
+
+import static com.mongodb.client.model.Filters.eq;
 
 /**
  * This class manages the creation and loading of arenas.
  */
 public class ArenaManager {
     private final JadedDuelsPlugin plugin;
-    private final ArenaFileManager arenaFileManager = new ArenaFileManager();
     private final Map<String, Arena> arenas = new HashMap<>();
     private ArenaBuilder arenaBuilder;
 
@@ -68,14 +70,6 @@ public class ArenaManager {
      */
     public void arenaBuilder(ArenaBuilder arenaBuilder) {
         this.arenaBuilder = arenaBuilder;
-    }
-
-    /**
-     * Gets the Arena File Manager, which manages arena worlds.
-     * @return Arena File Manager.
-     */
-    public ArenaFileManager arenaFileManager() {
-        return arenaFileManager;
     }
 
     /**
@@ -111,7 +105,7 @@ public class ArenaManager {
 
         if(gameType == GameType.TOURNAMENT) {
             for(Arena arena : getArenas()) {
-                if(arena.isTournamentMap()) {
+                if(arena.isTournamentArena()) {
                     if(arena.kits().contains(kit)) {
                         kitArenas.add(arena);
                     }
@@ -120,7 +114,7 @@ public class ArenaManager {
         }
         else {
             for(Arena arena : getArenas()) {
-                if(!arena.isTournamentMap()) {
+                if(!arena.isTournamentArena()) {
                     if(arena.kits().contains(kit)) {
                         kitArenas.add(arena);
                     }
@@ -136,41 +130,31 @@ public class ArenaManager {
      */
     public void loadArenas() {
         arenas.clear();
-        File arenasFolder = new File(plugin.getDataFolder(), "arenas");
 
-        if(!arenasFolder.exists()) {
-            arenasFolder.mkdir();
-        }
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            MongoDatabase database = JadedAPI.getMongoDB().client().getDatabase("duels");
+            MongoCollection<Document> collection = database.getCollection("maps");
 
-        for(File file : Objects.requireNonNull(arenasFolder.listFiles())) {
-            loadArena(file);
-        }
+            // Loads all arenas set up in MongoDB.
+            FindIterable<Document> documentIterator = collection.find();
+            for(Document document : documentIterator) {
+                loadArena(document);
+            }
+        });
     }
 
     /**
      * Loads an Arena from its config file.
-     * @param file Arena configuration file.
+     * Stored in MongoDB
+     * @param document Arena configuration file.
      */
-    public void loadArena(File file) {
-        Arena arena = new Arena(plugin, file);
-        arenas.put(arena.id(), arena);
+    public void loadArena(Document document) {
+        Arena arena = new Arena(plugin, document);
+        arenas.put(arena.fileName(), arena);
     }
 
-    /**
-     * Loads an arena from id.
-     * Used when adding a new arena.
-     * @param id id of the arena.
-     */
     public void loadArena(String id) {
-        arenas.remove(id);
-
-        File arenasFolder = new File(plugin.getDataFolder(), "arenas");
-        File arenaFile = new File(arenasFolder, id + ".yml");
-
-        if(!arenaFile.exists()) {
-            return;
-        }
-
-        loadArena(arenaFile);
+        Document document = JadedAPI.getMongoDB().client().getDatabase("duels").getCollection("maps").find(eq("fileName", id)).first();
+        loadArena(document);
     }
 }

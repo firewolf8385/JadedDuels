@@ -24,44 +24,48 @@
  */
 package net.jadedmc.jadedduels.game.arena.builder;
 
+import net.jadedmc.jadedcore.JadedAPI;
+import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import net.jadedmc.jadedduels.SettingsManager;
 import net.jadedmc.jadedduels.game.arena.Arena;
-import net.jadedmc.jadedduels.game.kit.Kit;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
+import org.bson.Document;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.block.data.Rotatable;
+import org.bukkit.util.Vector;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.eq;
+
 /**
  * Stores data of an arena that is still being set up.
  */
 public class ArenaBuilder {
-    private final Plugin plugin;
-    private Location spectatorSpawn;
+    private final JadedDuelsPlugin plugin;
+    private String spectatorSpawn = null;
     private String name;
     private String builders;
     private String id;
     private int voidLevel = -1;
-    private final Collection<Kit> kits = new HashSet<>();
-    private final List<Location> spawns = new ArrayList<>();
+    private final Collection<String> kits = new HashSet<>();
+    private final List<String> spawns = new ArrayList<>();
     private boolean editMode = false;
-    private boolean tournamentMap = false;
-    private Location tournamentSpawn = null;
+    private String tournamentSpawn = null;
+    private final World world;
 
     /**
      * Creates the arena builder.
      * @param plugin Instance of the plugin.
      */
-    public ArenaBuilder(final Plugin plugin) {
+    public ArenaBuilder(final JadedDuelsPlugin plugin, World world) {
         this.plugin = plugin;
+        this.world = world;
     }
 
     /**
@@ -70,39 +74,27 @@ public class ArenaBuilder {
      * @param plugin Instance of the plugin.
      * @param arena Arena to be edited.
      */
-    public ArenaBuilder(final Plugin plugin, Arena arena) {
+    public ArenaBuilder(final JadedDuelsPlugin plugin, Arena arena, World world) {
         this.plugin = plugin;
-        this.id = arena.id();
+        this.world = world;
+        this.id = arena.fileName();
         this.builders = arena.builders();
-        this.spectatorSpawn = arena.spectatorSpawn(Bukkit.getWorld(id));
+        this.spectatorSpawn = arena.spectatorSpawnRaw();
         this.voidLevel = arena.voidLevel();
         this.name = arena.name();
-        this.tournamentMap = arena.isTournamentMap();
 
-        if(tournamentMap) {
-            this.tournamentSpawn = arena.tournamentSpawn(Bukkit.getWorld(id));
-        }
-
-        kits.addAll(arena.kits());
+        kits.addAll(arena.kitsRaw());
         editMode = true;
 
-        spawns.addAll(arena.spawns(Bukkit.getWorld(id)));
+        spawns.addAll(arena.spawnsRaw());
     }
 
     /**
      * Adds a supported kit to the arena.
      * @param kit Kit to add.
      */
-    public void addKit(Kit kit) {
+    public void addKit(String kit) {
         kits.add(kit);
-    }
-
-    /**
-     * Adds a team spawn to the arena.
-     * @param location Spawn to add.
-     */
-    public void addSpawn(Location location) {
-        spawns.add(location);
     }
 
     /**
@@ -137,44 +129,63 @@ public class ArenaBuilder {
         this.id = id;
     }
 
-    /**
-     * Checks if the arena is ready to be saved.
-     * @return  Whether the arena can be saved.
-     */
     public boolean isSet() {
-        // Make sure the id is set.
-        if(id == null) {
-            System.out.println("ID not set");
-            return false;
+        spawns.clear();
+
+        // Loop through all spawn locations.
+        System.out.println("Loaded Chunks: " + world.getLoadedChunks().length);
+        for(Chunk chunk : world.getLoadedChunks()) {
+            World world = chunk.getWorld();
+            for(int x = 0; x < 16; x++) {
+                for(int y = 0; y < (world.getMaxHeight() - 1); y++) {
+                    for(int z = 0; z < 16; z++) {
+                        Block block = chunk.getBlock(x, y, z);
+
+                        if(block.getType() == Material.OAK_SIGN) {
+                            Sign sign = (Sign) block.getState();
+                            String[] lines = sign.getLines();
+
+                            if(lines.length < 2) {
+                                System.out.println("Sign found with not enough lines!");
+                                continue;
+                            }
+
+                            if(!lines[0].toLowerCase().equalsIgnoreCase("[Spawn]")) {
+                                System.out.println(lines[0]);
+                                continue;
+                            }
+
+                            Rotatable rotatable = (Rotatable) sign.getBlockData();
+                            Vector vector = rotatable.getRotation().getDirection();
+                            final double _2PI = 2 * Math.PI;
+                            final double signX = vector.getX();
+                            final double signZ = vector.getZ();
+
+                            double theta = Math.atan2(-signX, signZ);
+                            float yaw = (float) Math.toDegrees((theta + _2PI) % _2PI);
+
+                            String locationString = "world," + block.getX() + "," + block.getY() + "," + block.getZ() + "," + yaw + ",0";
+                            System.out.println("Sign Found: " + locationString + ": " + lines[1]);
+
+
+                            switch(lines[1].toLowerCase()) {
+                                case "tournament" -> tournamentSpawn = locationString;
+                                case "spectate" -> spectatorSpawn = locationString;
+                                default -> spawns.add(locationString);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        // Make sure the name is set.
-        if(name == null) {
-            System.out.println("name not set");
-            return false;
-        }
-
-        // Make sure modes are set.
-        if(kits.size() == 0) {
-            System.out.println("kits not set");
-            return false;
-        }
-
-        // Make sure the waiting area is set.
         if(spectatorSpawn == null) {
-            System.out.println("waiting area not set");
+            System.out.println("No Spectator Spawn Found");
             return false;
         }
 
-        // Make sure the spawns have been set.
         if(spawns.size() < 2) {
-            System.out.println("Spawns not set.");
-            return false;
-        }
-
-        // Make sure the tournament spawn has been set if needed.
-        if(tournamentMap && tournamentSpawn == null) {
-            System.out.println("Tournament spawn not set.");
+            System.out.println("Not Enough Spawns! Found" + spawns.size());
             return false;
         }
 
@@ -185,7 +196,7 @@ public class ArenaBuilder {
      * Gets all kits the arena is set for.
      * @return All kits.
      */
-    public Collection<Kit> kits() {
+    public Collection<String> kits() {
         return kits;
     }
 
@@ -198,38 +209,6 @@ public class ArenaBuilder {
     }
 
     /**
-     * Gets all spawns the arena currently has.
-     * @return All spawns.
-     */
-    public List<Location> spawns() {
-        return spawns;
-    }
-
-    /**
-     * Sets the location where spectators should spawn.
-     * @param spectatorSpawn Spawn point for spectators.
-     */
-    public void spectatorSpawn(Location spectatorSpawn) {
-        this.spectatorSpawn = spectatorSpawn;
-    }
-
-    /**
-     * Set if the map should be a tournament map.
-     * @param tournamentMap Whether the map is a tournament map.
-     */
-    public void tournamentMap(boolean tournamentMap) {
-        this.tournamentMap = tournamentMap;
-    }
-
-    /**
-     * Set the tournament spawn.
-     * @param tournamentSpawn New tournament spawn.
-     */
-    public void tournamentSpawn(Location tournamentSpawn) {
-        this.tournamentSpawn = tournamentSpawn;
-    }
-
-    /**
      * Set the void level of the arena.
      * @param voidLevel Arena void level.
      */
@@ -237,82 +216,43 @@ public class ArenaBuilder {
         this.voidLevel = voidLevel;
     }
 
-    /**
-     * Saves the Arena to a configuration file.
-     */
     public void save() {
-       try {
-           File file = new File(plugin.getDataFolder(), "/arenas/" + id + ".yml");
-           if(file.exists()) {
-               file.delete();
-           }
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            Document document = new Document("fileName", id)
+                    .append("name", name)
+                    .append("builders", builders)
+                    .append("voidLevel", voidLevel)
+                    .append("kits", kits).append("spectatorSpawn", spectatorSpawn)
+                    .append("spawns", spawns);
 
-           file.createNewFile();
+            if(tournamentSpawn != null) {
+                document.append("tournamentSpawn", tournamentSpawn);
+            }
 
-           FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-           configuration.set("name", name);
-           configuration.set("builders", builders);
-           configuration.set("tournamentMap", tournamentMap);
+            // Add the document to MongoDB.
+            if(!editMode) {
+                JadedAPI.getMongoDB().client().getDatabase("duels").getCollection("maps").insertOne(document);
+            }
+            else {
+                // Replaces the existing file.
+                Document old = JadedAPI.getMongoDB().client().getDatabase("duels").getCollection("maps").find(eq("fileName", id)).first();
+                JadedAPI.getMongoDB().client().getDatabase("duels").getCollection("maps").replaceOne(old, document);
+            }
 
-           if(voidLevel != -1) {
-               configuration.set("voidLevel", voidLevel);
-           }
+            File worldFolder = world.getWorldFolder();
 
-           // Spectator Spawn Location
-           {
-               ConfigurationSection waitingSection = configuration.createSection("spectatorSpawn");
-               waitingSection.set("world", Bukkit.getWorlds().get(0).getName());
-               waitingSection.set("x", spectatorSpawn.getX());
-               waitingSection.set("y", spectatorSpawn.getY());
-               waitingSection.set("z", spectatorSpawn.getZ());
-               waitingSection.set("yaw", spectatorSpawn.getYaw());
-               waitingSection.set("pitch", spectatorSpawn.getPitch());
-           }
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                world.getPlayers().forEach(player -> JadedAPI.getPlugin().lobbyManager().sendToLobby(player));
+                Bukkit.unloadWorld(world, true);
 
-           // Tournament Spawn
-           if(tournamentMap) {
-               ConfigurationSection waitingSection = configuration.createSection("tournamentSpawn");
-               waitingSection.set("world", Bukkit.getWorlds().get(0).getName());
-               waitingSection.set("x", tournamentSpawn.getX());
-               waitingSection.set("y", tournamentSpawn.getY());
-               waitingSection.set("z", tournamentSpawn.getZ());
-               waitingSection.set("yaw", tournamentSpawn.getYaw());
-               waitingSection.set("pitch", tournamentSpawn.getPitch());
-           }
+                // Saves the world to MongoDB.
+                JadedAPI.getPlugin().worldManager().saveWorld(worldFolder, id);
 
-           // Kits
-           {
-               List<String> kitStrings = new ArrayList<>();
-               for(Kit kit : kits) {
-                   kitStrings.add(kit.id());
-               }
-
-               configuration.set("kits", kitStrings);
-           }
-
-           // Team Spawns
-           {
-               ConfigurationSection teamSpawnsSection = configuration.createSection("teamSpawns");
-
-               int i = 1;
-               for(Location location : spawns) {
-                   ConfigurationSection spawnSection = teamSpawnsSection.createSection("" + i);
-                   spawnSection.set("world", Bukkit.getWorlds().get(0).getName());
-                   spawnSection.set("x", location.getX());
-                   spawnSection.set("y", location.getY());
-                   spawnSection.set("z", location.getZ());
-                   spawnSection.set("yaw", location.getYaw());
-                   spawnSection.set("pitch", location.getPitch());
-
-                   i++;
-               }
-           }
-
-           // Saves the file.
-           configuration.save(file);
-       }
-       catch (IOException exception) {
-           exception.printStackTrace();
-       }
+                // Load the new arena.
+                plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                    plugin.arenaManager().loadArena(id);
+                });
+            });
+        });
     }
 }

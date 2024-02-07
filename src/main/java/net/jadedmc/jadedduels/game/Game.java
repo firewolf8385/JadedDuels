@@ -108,6 +108,11 @@ public class Game {
             world.setDifficulty(Difficulty.HARD);
             world.setClearWeatherDuration(Integer.MAX_VALUE);
             world.setTime(6000);
+
+            // Deletes setup signs
+            world.getBlockAt(arena.spectatorSpawn(world)).setType(Material.AIR);
+            if(arena.isTournamentArena()) world.getBlockAt(arena.tournamentSpawn(world)).setType(Material.AIR);
+            arena.spawns(world).forEach(location -> world.getBlockAt(location).setType(Material.AIR));
         });
     }
 

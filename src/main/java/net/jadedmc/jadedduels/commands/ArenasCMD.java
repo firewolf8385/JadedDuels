@@ -55,7 +55,7 @@ public class ArenasCMD extends AbstractCommand {
 
         // Display all active arenas.
         for(Arena arena : plugin.arenaManager().getArenas()) {
-            ChatUtils.chat(sender, "  <dark_gray>➤ <gray>" + arena.id()) ;
+            ChatUtils.chat(sender, "  <dark_gray>➤ <gray>" + arena.fileName()) ;
         }
     }
 }

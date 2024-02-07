@@ -25,118 +25,70 @@
 package net.jadedmc.jadedduels.game.arena;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
-import net.jadedmc.jadedduels.game.arena.file.ArenaFile;
 import net.jadedmc.jadedduels.game.kit.Kit;
-import net.jadedmc.jadedduels.utils.LocationUtils;
-import net.jadedmc.jadedutils.FileUtils;
+import net.jadedmc.jadedutils.LocationUtils;
+import org.bson.Document;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents an area in which a game is played.
  */
 public class Arena {
-    private final String id;
-    private final String builders;
-    private final Collection<Kit> kits = new ArrayList<>();
+    private final JadedDuelsPlugin plugin;
+    private final String fileName;
     private final String name;
-    private final ArenaFile arenaFile;
-    private final int voidLevel;
+    private final String builders;
+    private final List<String> kits;
     private final Location spectatorSpawn;
-    private final File configFile;
-    private final List<Location> spawns = new ArrayList<>();
-    private final boolean tournamentMap;
+    private final boolean tournamentArena;
     private final Location tournamentSpawn;
+    private final List<Location> spawns = new ArrayList<>();
+    private final int voidLevel;
+
+    // Raw Location data.
+    private final List<String> spawnsRaw;
+    private final String tournamentSpawnRaw;
+    private final String spectatorSpawnRaw;
 
     /**
      * Creates the arena.
      * @param plugin Instance of the plugin.
-     * @param configFile Configuration file for the arena.
+     * @param config Configuration file for the arena, from MongoDB.
      */
-    public Arena(final JadedDuelsPlugin plugin, final File configFile) {
-        this.configFile = configFile;
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-
-        id = FileUtils.removeFileExtension(configFile.getName(), true);
-        arenaFile = plugin.arenaManager().arenaFileManager().loadArenaFile(id);
-
+    public Arena(JadedDuelsPlugin plugin, Document config) {
+        this.plugin = plugin;
+        this.fileName = config.getString("fileName");
         this.name = config.getString("name");
+        this.builders = config.getString("builders");
+        this.voidLevel = config.getInteger("voidLevel");
+        this.kits = new ArrayList<>(config.getList("kits", String.class));
 
+        this.spectatorSpawnRaw = config.getString("spectatorSpawn");
+        this.spectatorSpawn = LocationUtils.fromString(spectatorSpawnRaw);
 
-        if(config.isSet("builders")) {
-            this.builders = config.getString("builders");
+        // Set up tournament information.
+        if(config.containsKey("tournamentSpawn")) {
+            tournamentArena = true;
+            tournamentSpawnRaw = config.getString("tournamentSpawn");
+            tournamentSpawn = LocationUtils.fromString(config.getString("tournamentSpawn"));
         }
         else {
-            this.builders = "JadedMC";
-        }
-
-        if(config.isSet("voidLevel")) {
-            voidLevel = config.getInt("voidLevel");
-        }
-        else {
-            voidLevel = 0;
-        }
-
-        if(config.isSet("tournamentMap")) {
-            tournamentMap = config.getBoolean("tournamentMap");
-
-            if(tournamentMap) {
-                tournamentSpawn = LocationUtils.fromConfig(Objects.requireNonNull(config.getConfigurationSection("tournamentSpawn")));
-            }
-            else {
-                tournamentSpawn = null;
-            }
-        }
-        else {
-            tournamentMap = false;
+            tournamentArena = false;
             tournamentSpawn = null;
+            tournamentSpawnRaw = null;
         }
 
-        // Load kits
-        for(String kitID :config.getStringList("kits")) {
-            Kit kit = plugin.kitManager().kit(kitID);
-
-            if(kit == null) {
-                continue;
-            }
-
-            kits.add(kit);
+        // Load the arena spawns.
+        spawnsRaw = new ArrayList<>(config.getList("spawns", String.class));
+        for(String spawn : spawnsRaw) {
+            spawns.add(LocationUtils.fromString(spawn));
         }
-
-        spectatorSpawn = LocationUtils.fromConfig(Objects.requireNonNull(config.getConfigurationSection("spectatorSpawn")));
-
-        ConfigurationSection teamSpawns = config.getConfigurationSection("teamSpawns");
-
-        if(teamSpawns == null) {
-            return;
-        }
-
-        for(String spawnID : teamSpawns.getKeys(false)) {
-            ConfigurationSection spawnSection = teamSpawns.getConfigurationSection(spawnID);
-
-            if(spawnSection == null) {
-                continue;
-            }
-
-            spawns.add(LocationUtils.fromConfig(spawnSection));
-        }
-    }
-
-    /**
-     * Gets the file the arena is stored in.
-     * @return Arena file.
-     */
-    public ArenaFile arenaFile() {
-        return arenaFile;
     }
 
     /**
@@ -148,28 +100,29 @@ public class Arena {
     }
 
     /**
-     * Get the arena's configuration file.
-     * @return Arena config file.
+     * Gets the file name of the arena.
+     * @return Arena file name.
      */
-    public File configFile() {
-        return configFile;
+    public String fileName() {
+        return fileName;
     }
 
     /**
-     * Gets the id of the arena.
-     * @return Arena id.
+     * Check if an arena can use a given kit.
+     * @param kit Kit to check.
+     * @return Whether the kit can be used.
      */
-    public String id() {
-        return id;
+    public boolean hasKit(Kit kit) {
+        return kits.contains(kit.id());
     }
 
     /**
-     * Check if the map is meant for tournaments.
-     * Tournament maps are designed different and have an extra spectating area.
-     * @return Whether the map is a tournament map.
+     * Check if the Arena is a tournament arena.
+     * Tournament arenas are intentionally segregated for experience purposes.
+     * @return Whether the arena is a tournament arena.
      */
-    public boolean isTournamentMap() {
-        return tournamentMap;
+    public boolean isTournamentArena() {
+        return tournamentArena;
     }
 
     /**
@@ -177,6 +130,24 @@ public class Arena {
      * @return Arena kits.
      */
     public Collection<Kit> kits() {
+        Collection<Kit> kits = new HashSet<>();
+
+        for(String id : this.kits) {
+            if(plugin.kitManager().kit(id) == null) {
+                continue;
+            }
+
+            kits.add(plugin.kitManager().kit(id));
+        }
+
+        return kits;
+    }
+
+    /**
+     * Gets a raw collection of the kit ids the arena is made for.
+     * @return Arena kit ids.
+     */
+    public Collection<String> kitsRaw() {
         return kits;
     }
 
@@ -194,13 +165,17 @@ public class Arena {
      * @return List of player spawns.
      */
     public List<Location> spawns(World world) {
-        List<Location> worldSpawns = new ArrayList<>();
+        List<Location> temp = new ArrayList<>();
+        spawns.forEach(spawn -> temp.add(LocationUtils.replaceWorld(world, spawn)));
+        return temp;
+    }
 
-        for(Location spawn : this.spawns) {
-            worldSpawns.add(LocationUtils.replaceWorld(world, spawn));
-        }
-
-        return worldSpawns;
+    /**
+     * Gets the raw spawns location string list.
+     * @return List of raw spawn location strings.
+     */
+    public List<String> spawnsRaw() {
+        return spawnsRaw;
     }
 
     /**
@@ -213,6 +188,14 @@ public class Arena {
     }
 
     /**
+     * Gets the raw spectator spawn location string.
+     * @return Spectator Spawn Location String.
+     */
+    public String spectatorSpawnRaw() {
+        return spectatorSpawnRaw;
+    }
+
+    /**
      * Get the arena's tournament spawn.
      * Returns null if it doesn't have one.
      * @param world World to get the tournament spawn of.
@@ -220,6 +203,14 @@ public class Arena {
      */
     public Location tournamentSpawn(World world) {
         return LocationUtils.replaceWorld(world, tournamentSpawn);
+    }
+
+    /**
+     * Get the raw tournament spawn location string.
+     * @return Tournament Spawn Location String.
+     */
+    public String tournamentSpawnRaw() {
+        return tournamentSpawnRaw;
     }
 
     /**

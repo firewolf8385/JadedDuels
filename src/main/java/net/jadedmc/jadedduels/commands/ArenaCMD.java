@@ -24,11 +24,10 @@
  */
 package net.jadedmc.jadedduels.commands;
 
+import net.jadedmc.jadedcore.JadedAPI;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.arena.Arena;
-import net.jadedmc.jadedduels.game.arena.ArenaChunkGenerator;
 import net.jadedmc.jadedduels.game.arena.builder.ArenaBuilder;
-import net.jadedmc.jadedduels.game.kit.Kit;
 import net.jadedmc.jadedduels.utils.LocationUtils;
 import net.jadedmc.jadedutils.FileUtils;
 import net.jadedmc.jadedutils.chat.ChatUtils;
@@ -75,10 +74,6 @@ public class ArenaCMD extends AbstractCommand {
             case "setname" -> setNameCMD(player, args);
             case "addkit" -> addKit(player, args);
             case "setvoidlevel" -> setVoidLevel(player, args);
-            case "setspectatorspawn" -> setSpectatorSpawn(player);
-            case "settournamentmap" -> setTournamentMap(player);
-            case "settournamentspawn" -> setTournamentSpawn(player);
-            case "addspawn" -> addSpawn(player);
             case "finish" -> finishCMD(player);
             case "edit" -> editCMD(player, args);
         }
@@ -105,13 +100,9 @@ public class ArenaCMD extends AbstractCommand {
         // Gets the arena id.
         String id = StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " ");
 
-        // Starts the arena setup process.
-        plugin.arenaManager().arenaBuilder(new ArenaBuilder(plugin));
-        plugin.arenaManager().arenaBuilder().id(id);
-
         // Creates the arena world.
         WorldCreator worldCreator = new WorldCreator(id);
-        worldCreator.generator(new ArenaChunkGenerator());
+        worldCreator.generator(JadedAPI.getPlugin().worldManager().getGenerator("void"));
         World world = Bukkit.createWorld(worldCreator);
 
         // Sets world settings.
@@ -129,10 +120,15 @@ public class ArenaCMD extends AbstractCommand {
         world.setTime(6000);
         world.getWorldBorder().setCenter(world.getSpawnLocation());
         world.getWorldBorder().setSize(210);
+        world.setKeepSpawnInMemory(true);
 
         player.setGameMode(GameMode.CREATIVE);
         player.teleport(world.getSpawnLocation());
         player.setFlying(true);
+
+        // Starts the arena setup process.
+        plugin.arenaManager().arenaBuilder(new ArenaBuilder(plugin, world));
+        plugin.arenaManager().arenaBuilder().id(id);
 
         ChatUtils.chat(player, "&a&lDuels &8» &aCreated an arena with the id &f" + id + "&a.");
         ChatUtils.chat(player, "&a&lDuels &8» &aNext, set the arena name with &f/arena setname [name]&a.");
@@ -185,14 +181,7 @@ public class ArenaCMD extends AbstractCommand {
             return;
         }
 
-        Kit kit = plugin.kitManager().kit(args[1]);
-
-        if(kit == null) {
-            ChatUtils.chat(player, "&cError &8» &cThat is not a valid kit!");
-            return;
-        }
-
-        plugin.arenaManager().arenaBuilder().addKit(kit);
+        plugin.arenaManager().arenaBuilder().addKit(args[1]);
 
         ChatUtils.chat(player, "&a&lDuels &8» &aAdded &f" + args[1] + "&a as a valid kit.");
         ChatUtils.chat(player, "&a&lDuels &8» &aNext, set the spectator spawn with &f/arena setspectatorspawn&a.");
@@ -226,71 +215,6 @@ public class ArenaCMD extends AbstractCommand {
     }
 
     /**
-     * Runs the /arena setspectatorspawn command.
-     * This command sets the spectator spawn for the new arena.
-     * @param player Player running the command.
-     */
-    private void setSpectatorSpawn(Player player) {
-        // Makes sure there an arena is being set up.
-        if(plugin.arenaManager().arenaBuilder() == null) {
-            ChatUtils.chat(player, "&cError &8» &cYou need to create an arena first! /arena create");
-            return;
-        }
-
-        // Sets the waiting area spawn.
-        plugin.arenaManager().arenaBuilder().spectatorSpawn(player.getLocation());
-        ChatUtils.chat(player, "&a&lDuels &8» &aYou have set the spectator spawn to your location.");
-        ChatUtils.chat(player, "&a&lDuels &8» &aNext, add your spawns with &f/arena addspawn.");
-    }
-
-    private void setTournamentMap(Player player) {
-        // Makes sure there an arena is being set up.
-        if(plugin.arenaManager().arenaBuilder() == null) {
-            ChatUtils.chat(player, "&cError &8» &cYou need to create an arena first! /arena create");
-            return;
-        }
-
-        plugin.arenaManager().arenaBuilder().tournamentMap(true);
-        ChatUtils.chat(player, "&a&lDuels &8» &aSet the map as a tournament map.");
-        ChatUtils.chat(player, "&a&lDuels &8» &aSet the tournament spawn with &f/arena settournamentspawn&a.");
-    }
-
-    private void setTournamentSpawn(Player player) {
-        // Makes sure there an arena is being set up.
-        if(plugin.arenaManager().arenaBuilder() == null) {
-            ChatUtils.chat(player, "&cError &8» &cYou need to create an arena first! /arena create");
-            return;
-        }
-
-        // Sets the waiting area spawn.
-        plugin.arenaManager().arenaBuilder().tournamentSpawn(player.getLocation());
-        ChatUtils.chat(player, "&a&lDuels &8» &aYou have set the tournament spawn to your location.");
-        ChatUtils.chat(player, "&a&lDuels &8» &aNext, add your spawns with &f/arena addspawn.");
-    }
-
-    /**
-     * Runs the /arena addspawn command.
-     * This commands adds team spawn points to the new arena.
-     * @param player Player running the command.
-     */
-    private void addSpawn(Player player) {
-        // Makes sure there an arena is being set up.
-        if(plugin.arenaManager().arenaBuilder() == null) {
-            ChatUtils.chat(player, "&cError &8» &cYou need to create an arena first! /arena create");
-            return;
-        }
-
-        plugin.arenaManager().arenaBuilder().addSpawn(player.getLocation());
-
-        int spawnCount = plugin.arenaManager().arenaBuilder().spawns().size();
-        ChatUtils.chat(player, "&a&lDuels &8» &aSet spawn point &f#" + spawnCount + "&a to your location.");
-
-        if(spawnCount == 2) {
-            ChatUtils.chat(player, "&a&lDuels &8» &aWhen you are done, finish the setup with &f/arena finish.");
-        }
-    }
-
-    /**
      * Runs the /arena finish command.
      * This command checks if the arena is done and saves it if so.
      * @param player Player running the command.
@@ -311,39 +235,8 @@ public class ArenaCMD extends AbstractCommand {
         ChatUtils.chat(player, "&a&lDuels &8» &aArena has been saved.");
 
         // Saves the arena.
-        String id = plugin.arenaManager().arenaBuilder().id();
         plugin.arenaManager().arenaBuilder().save();
-
-        // Remove all players from the world.
-        World world = player.getWorld();
-        String worldID = world.getName();
-        File worldFolder = world.getWorldFolder();
-        for(Player worldPlayer : world.getPlayers()) {
-            worldPlayer.teleport(LocationUtils.getSpawn(plugin));
-        }
-
-        Bukkit.unloadWorld(world,true);
-
-        // Saves the world where it belongs.
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-            // Load applicable folders.
-            File mapsFolder = new File(worldFolder.getParentFile(), "maps");
-            File savedWorldFolder = new File(mapsFolder, worldID);
-
-            // Delete the old save if in edit mode.
-            if(plugin.arenaManager().arenaBuilder().editMode()) {
-                FileUtils.deleteDirectory(savedWorldFolder);
-            }
-
-            // Copies the world to the maps folder.
-            FileUtils.copyFileStructure(worldFolder, savedWorldFolder);
-
-            // Deletes the previous world.
-            FileUtils.deleteDirectory(worldFolder);
-
-            plugin.getServer().getScheduler().runTask(plugin, () -> plugin.arenaManager().loadArena(id));
-            plugin.arenaManager().arenaBuilder(null);
-        });
+        plugin.arenaManager().arenaBuilder(null);
     }
 
     /**
@@ -375,14 +268,13 @@ public class ArenaCMD extends AbstractCommand {
         }
 
         Arena arena = plugin.arenaManager().getArena(id);
-        arena.arenaFile().createCopy(arena.id()).thenAccept(file -> {
-            plugin.getServer().getScheduler().runTask(plugin, () -> {
-                plugin.arenaManager().arenaBuilder(new ArenaBuilder(plugin, arena));
 
-                World world = Bukkit.createWorld(new WorldCreator(arena.id()));
+        JadedAPI.getPlugin().worldManager().loadWorld(id).thenAccept(world -> {
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
                 player.setGameMode(GameMode.CREATIVE);
                 player.teleport(world.getSpawnLocation());
                 player.setFlying(true);
+                plugin.arenaManager().arenaBuilder(new ArenaBuilder(plugin, arena, world));
 
                 ChatUtils.chat(player, "&a&lDuels &8» &aYou are now editing &f" + arena.name() + "&a.");
                 ChatUtils.chat(player, "&a&lDuels &8» &aWhen you are done, finish the arena with &f/arena finish&a.");

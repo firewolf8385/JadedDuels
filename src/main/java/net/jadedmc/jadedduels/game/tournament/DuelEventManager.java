@@ -27,7 +27,6 @@ package net.jadedmc.jadedduels.game.tournament;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.GameType;
-import net.jadedmc.jadedduels.game.arena.ArenaChunkGenerator;
 import net.jadedmc.jadedduels.game.kit.Kit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -61,7 +60,7 @@ public class DuelEventManager {
 
         // Create the tournament world if it does not already exist.
         WorldCreator worldCreator = new WorldCreator("tournament");
-        worldCreator.generator(new ArenaChunkGenerator());
+        //worldCreator.generator(new ArenaChunkGenerator());
         tournamentWorld = plugin.getServer().createWorld(worldCreator);
 
         // Reset the event data
