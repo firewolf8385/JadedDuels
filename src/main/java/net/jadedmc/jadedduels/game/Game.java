@@ -28,6 +28,7 @@ import at.stefangeyer.challonge.model.Match;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import net.jadedmc.jadedchat.JadedChat;
+import net.jadedmc.jadedcore.JadedAPI;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.arena.Arena;
 import net.jadedmc.jadedduels.game.kit.Kit;
@@ -39,12 +40,14 @@ import net.jadedmc.jadedduels.utils.GameUtils;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.jadedmc.jadedutils.items.ItemBuilder;
 import net.jadedmc.jadedutils.Timer;
+import org.bson.Document;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import redis.clients.jedis.Jedis;
 
 import java.util.*;
 
@@ -64,7 +67,7 @@ public class Game {
     private final TeamManager teamManager;
 
     private GameState gameState;
-    private final Collection<Player> spectators = new HashSet<>();
+    private final Collection<UUID> spectators = new HashSet<>();
     private final Match match;
     private int round = 0;
     private int pointsNeeded;
@@ -113,6 +116,8 @@ public class Game {
             world.getBlockAt(arena.spectatorSpawn(world)).setType(Material.AIR);
             if(arena.isTournamentArena()) world.getBlockAt(arena.tournamentSpawn(world)).setType(Material.AIR);
             arena.spawns(world).forEach(location -> world.getBlockAt(location).setType(Material.AIR));
+
+            updateRedis();
         });
     }
 
@@ -144,6 +149,8 @@ public class Game {
             world.setDifficulty(Difficulty.HARD);
             world.setClearWeatherDuration(Integer.MAX_VALUE);
             world.setTime(6000);
+
+            updateRedis();
         });
     }
 
@@ -359,6 +366,8 @@ public class Game {
         broadcast(" ");
         broadcast("&8&m+-----------------------***-----------------------+");
 
+        updateRedis();
+
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 
             if(winner.score() < pointsNeeded) {
@@ -405,6 +414,10 @@ public class Game {
                 spectators.clear();
                 teamManager.teams().clear();
 
+                plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                    JadedAPI.getRedis().del("games:" + uuid);
+                });
+
                 plugin.gameManager().deleteGame(this);
             }
         }, 100);
@@ -425,6 +438,8 @@ public class Game {
 
         winner.addPoint();
         gameState = GameState.END;
+
+        updateRedis();
 
         broadcast("&8&m+-----------------------***-----------------------+");
         broadcast(" ");
@@ -485,6 +500,11 @@ public class Game {
             }
 
 
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                System.out.println("Deleting Game: " + uuid);
+                JadedAPI.getRedis().del("games:" + uuid);
+            });
+
             spectators.clear();
             teamManager.teams().clear();
 
@@ -520,6 +540,8 @@ public class Game {
                 JadedChat.setChannel(player, JadedChat.getChannel("GAME"));
             }
         }
+
+        updateRedis();
     }
 
     /**
@@ -545,6 +567,8 @@ public class Game {
                 }
             }
         }
+
+        updateRedis();
     }
 
     /**
@@ -560,7 +584,7 @@ public class Game {
      * @param spectator Spectator to add.
      */
     public void addSpectator(Player spectator) {
-        spectators.add(spectator);
+        spectators.add(spectator.getUniqueId());
 
         // Doesn't teleport player if they were in the game before.
         if(teamManager.team(spectator) == null) {
@@ -636,6 +660,8 @@ public class Game {
                 JadedChat.setChannel(spectator, JadedChat.getChannel("GAME"));
             }
         }
+
+        updateRedis();
     }
 
     public Collection<Block> blocks() {
@@ -695,7 +721,17 @@ public class Game {
      * @return All current spectators.
      */
     public Collection<Player> spectators() {
-        return spectators;
+        Collection<Player> actualSpectators = new HashSet<>();
+        for(UUID uuid : spectators) {
+            Player player = Bukkit.getPlayer(uuid);
+
+            if(player == null || !player.isOnline()) {
+                continue;
+            }
+
+            actualSpectators.add(player);
+        }
+        return actualSpectators;
     }
 
     /**
@@ -740,9 +776,7 @@ public class Game {
             }
         }
 
-        for(Player spectator : spectators) {
-            // TODO: Spectators player.showPlayer(spectator);
-        }
+        updateRedis();
     }
 
     /**
@@ -775,6 +809,8 @@ public class Game {
                 }
             }
         }
+
+        updateRedis();
     }
 
     /**
@@ -808,6 +844,8 @@ public class Game {
                 }
             }
         }
+
+        updateRedis();
     }
 
     public void removeBlock(Block block) {
@@ -840,6 +878,8 @@ public class Game {
                 }
             }
         }
+
+        updateRedis();
     }
 
     /**
@@ -859,6 +899,8 @@ public class Game {
         else {
             LobbyUtils.sendToLobby(plugin, player);
         }
+
+        updateRedis();
     }
 
     public void resetArena() {
@@ -867,6 +909,52 @@ public class Game {
         }
 
         blocks.clear();
+    }
+
+    public void updateRedis() {
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            List<String> jsonSpectators = new ArrayList<>();
+            spectators.forEach(spectator -> jsonSpectators.add(spectator.toString()));
+
+            Document document = new Document()
+                    .append("uuid", uuid)
+                    .append("kit", kit.id())
+                    .append("arena", arena.fileName())
+                    .append("type", gameType.toString())
+                    .append("state", gameState.toString())
+                    .append("server", JadedAPI.getServerName())
+                    .append("spectators", jsonSpectators);
+
+            if(gameType == GameType.TOURNAMENT) {
+                document.append("matchID", match.getId());
+                document.append("tournamentID", plugin.duelEventManager().activeEvent().tournament().getId());
+            }
+
+            Document teamsDocument = new Document();
+            for(Team team : teamManager.teams()) {
+                Document teamDocument = new Document();
+                if(gameType == GameType.TOURNAMENT) {
+                    teamDocument.append("teamID", team.eventTeam().challongeID());
+                }
+
+                List<String> uuids = new ArrayList<>();
+                List<String> usernames = new ArrayList<>();
+
+                for(Player player : team.players()) {
+                    uuids.add(player.getUniqueId().toString());
+                    usernames.add(player.getName());
+                }
+
+                teamDocument.append("uuids", uuids);
+                teamDocument.append("usernames", usernames);
+                teamsDocument.append(team.teamColor().toString(), teamDocument);
+            }
+
+            document.append("teams", teamsDocument);
+
+            // Update to redis.
+            JadedAPI.getRedis().set("games:" + uuid, document.toJson());
+        });
     }
 
     /**
