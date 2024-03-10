@@ -266,7 +266,7 @@ public class BowSpleefKit extends Kit {
 
             Location location = player.getLocation();
             location.setY(player.getLocation().getY() - 2.5);
-            Vector direction = entity.getLocation().toVector().subtract(location.toVector()).normalize().multiply(new Vector(0.48, 1.15, 0.48));
+            Vector direction = entity.getLocation().toVector().subtract(location.toVector()).normalize().multiply(new Vector(0.48, 0.8, 0.48));
             entity.setVelocity(entity.getVelocity().add(direction));
         }
     }
