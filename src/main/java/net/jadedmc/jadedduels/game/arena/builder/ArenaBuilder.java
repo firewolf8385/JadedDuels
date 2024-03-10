@@ -36,10 +36,7 @@ import org.bukkit.block.data.Rotatable;
 import org.bukkit.util.Vector;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -132,6 +129,8 @@ public class ArenaBuilder {
     public boolean isSet() {
         spawns.clear();
 
+        TreeMap<Integer, String> tempSpawnLocations = new TreeMap<>();
+
         // Loop through all spawn locations.
         System.out.println("Loaded Chunks: " + world.getLoadedChunks().length);
         for(Chunk chunk : world.getLoadedChunks()) {
@@ -171,12 +170,16 @@ public class ArenaBuilder {
                             switch(lines[1].toLowerCase()) {
                                 case "tournament" -> tournamentSpawn = locationString;
                                 case "spectate" -> spectatorSpawn = locationString;
-                                default -> spawns.add(locationString);
+                                default -> tempSpawnLocations.put(Integer.parseInt(lines[1]) - 1, locationString);
                             }
                         }
                     }
                 }
             }
+        }
+
+        for(int index : tempSpawnLocations.keySet()) {
+            spawns.add(tempSpawnLocations.get(index));
         }
 
         if(spectatorSpawn == null) {
