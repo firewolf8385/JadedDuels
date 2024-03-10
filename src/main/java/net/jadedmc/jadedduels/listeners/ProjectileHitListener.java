@@ -26,9 +26,13 @@ package net.jadedmc.jadedduels.listeners;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
+import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowball;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.util.Vector;
 
 public class ProjectileHitListener implements Listener {
     private final JadedDuelsPlugin plugin;
@@ -37,8 +41,20 @@ public class ProjectileHitListener implements Listener {
         this.plugin = plugin;
     }
 
+    @EventHandler
     public void onEvent(ProjectileHitEvent event) {
         if(!(event.getEntity().getShooter() instanceof Player player)) {
+            return;
+        }
+
+        // Fix Snowball and Egg KB.
+        if((event.getEntity() instanceof Snowball || event.getEntity() instanceof Egg) && event.getHitEntity() != null) {
+            if(event.getHitEntity() instanceof Player tempPlayer) {
+                double health = tempPlayer.getHealth();
+                tempPlayer.damage(0.001, event.getEntity());
+                tempPlayer.setHealth(health);
+            }
+            event.getHitEntity().setVelocity(event.getEntity().getVelocity().multiply(0.5).add(new Vector().setY(0.5)));
             return;
         }
 
