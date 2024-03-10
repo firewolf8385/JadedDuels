@@ -5,6 +5,7 @@ import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.kit.Kit;
 import net.jadedmc.jadedutils.Timer;
+import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.jadedmc.jadedutils.items.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -49,6 +50,12 @@ public class QueueManager {
                         new QueueScoreboard(plugin, player).addPlayer(player);
                         player.getInventory().setItem(6, new ItemBuilder(Material.RED_BED).setDisplayName("&cLeave Queue").build());
                     });
+                    return;
+                }
+
+                if(otherPlayer.equalsIgnoreCase(uuid.toString())) {
+                    player.closeInventory();
+                    ChatUtils.chat(player, "<red><bold>Error</bold> <dark_gray>» <red>You are already queuing that mode!");
                     return;
                 }
 
