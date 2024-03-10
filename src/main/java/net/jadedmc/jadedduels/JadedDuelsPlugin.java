@@ -32,6 +32,7 @@ import net.jadedmc.jadedcore.JadedAPI;
 import net.jadedmc.jadedduels.commands.AbstractCommand;
 import net.jadedmc.jadedduels.game.GameManager;
 import net.jadedmc.jadedduels.game.arena.ArenaManager;
+import net.jadedmc.jadedduels.game.duels.DuelManager;
 import net.jadedmc.jadedduels.game.kit.KitManager;
 import net.jadedmc.jadedduels.game.queue.QueueManager;
 import net.jadedmc.jadedduels.listeners.*;
@@ -43,6 +44,7 @@ public final class JadedDuelsPlugin extends JavaPlugin {
     private KitManager kitManager;
     private SettingsManager settingsManager;
     private QueueManager queueManager;
+    private DuelManager duelManager;
 
     @Override
     public void onEnable() {
@@ -57,6 +59,7 @@ public final class JadedDuelsPlugin extends JavaPlugin {
 
         gameManager = new GameManager(this);
         queueManager = new QueueManager(this);
+        duelManager = new DuelManager(this);
 
         AbstractCommand.registerCommands(this);
 
@@ -154,6 +157,10 @@ public final class JadedDuelsPlugin extends JavaPlugin {
      */
     public ArenaManager arenaManager() {
         return arenaManager;
+    }
+
+    public DuelManager duelManager() {
+        return duelManager;
     }
 
     /**
