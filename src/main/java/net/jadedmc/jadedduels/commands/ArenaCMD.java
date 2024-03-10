@@ -28,15 +28,12 @@ import net.jadedmc.jadedcore.JadedAPI;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.arena.Arena;
 import net.jadedmc.jadedduels.game.arena.builder.ArenaBuilder;
-import net.jadedmc.jadedduels.utils.LocationUtils;
-import net.jadedmc.jadedutils.FileUtils;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.File;
 import java.util.Arrays;
 
 /**
