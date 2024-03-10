@@ -62,7 +62,7 @@ public class DuelManager {
         DuelRequest duelRequest = duelRequest(sender);
         this.duelRequests.remove(duelRequest);
 
-        plugin.gameManager().createGame(duelRequest.arena(), duelRequest.kit(), GameType.DUEL, List.of(sender.getUniqueId()), List.of(receiver.getUniqueId()));
+        plugin.gameManager().createGame(duelRequest.arena(), duelRequest.kit(), GameType.DUEL, duelRequest.pointsNeeded(), List.of(sender.getUniqueId()), List.of(receiver.getUniqueId()));
     }
 
     /**
@@ -71,13 +71,13 @@ public class DuelManager {
      * @param receiver Player receiving the duel request.
      * @param kit Kit the duel is for.
      */
-    public void addRequest(Player player, Player receiver, Kit kit) {
+    public void addRequest(Player player, Player receiver, Kit kit, int pointsNeeded) {
         // Finds an arena
         List<Arena> arenas = new ArrayList<>(plugin.arenaManager().getArenas(kit, GameType.DUEL));
         Collections.shuffle(arenas);
 
         // Saves the duel request.
-        DuelRequest duelRequest = new DuelRequest(player, receiver, kit, arenas.get(0));
+        DuelRequest duelRequest = new DuelRequest(player, receiver, kit, arenas.get(0), pointsNeeded);
         duelRequests.add(duelRequest);
 
         // Makes it expire after 1 minute.

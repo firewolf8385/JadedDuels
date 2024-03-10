@@ -66,7 +66,7 @@ public class Game {
     private final Collection<UUID> spectators = new HashSet<>();
     private int round = 0;
     private final Map<Block, Material> blocks = new HashMap<>();
-    private final int pointsNeeded = 1;
+    private final int pointsNeeded;
 
     public Game(JadedDuelsPlugin plugin, World world, Document document) {
         this.plugin = plugin;
@@ -77,6 +77,7 @@ public class Game {
         this.uuid = UUID.fromString(document.getString("uuid"));
         this.gameType = GameType.valueOf(document.getString("gameType"));
         this.timer = new Timer(plugin);
+        this.pointsNeeded = document.getInteger("pointsNeeded");
 
         gameState = GameState.WAITING;
 
@@ -168,6 +169,10 @@ public class Game {
             spectators.remove(player.getUniqueId());
             player.setCollidable(true);
             player.setArrowsInBody(0);
+
+            for(Player other : players()) {
+                other.showPlayer(plugin, player);
+            }
         }
 
         // Spawn teams.
@@ -303,6 +308,11 @@ public class Game {
                 }
             }
 
+            if(pointsNeeded > 1 && gameType != GameType.FFA) {
+                ChatUtils.broadcast(world, "");
+                ChatUtils.broadcast(world, ChatUtils.centerText("&aScore: &f" + winner.score() + " - " + teamManager.opposingTeam(winner).score()));
+            }
+
             ChatUtils.broadcast(world, "");
             ChatUtils.broadcast(world, "<center><dark_gray><st>+-----------------------***-----------------------+");
         }
@@ -310,8 +320,10 @@ public class Game {
         updateRedis();
 
         if(winner.score() < pointsNeeded) {
-            resetArena();
-            startRound();
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                resetArena();
+                startRound();
+            }, 5*20);
         }
         else {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {

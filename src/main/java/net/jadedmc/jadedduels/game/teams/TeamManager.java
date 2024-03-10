@@ -75,6 +75,24 @@ public class TeamManager {
     }
 
     /**
+     * Gets an opposing team given a team.
+     * Kind of a hacky way to handle duels.
+     * @param team Given team.
+     * @return Opposing team.
+     */
+    public Team opposingTeam(Team team) {
+        for(Team opposingTeam : teams) {
+            if(team.equals(opposingTeam)) {
+                continue;
+            }
+
+            return opposingTeam;
+        }
+
+        return null;
+    }
+
+    /**
      * Kill a team.
      */
     public void killTeam(Team team) {

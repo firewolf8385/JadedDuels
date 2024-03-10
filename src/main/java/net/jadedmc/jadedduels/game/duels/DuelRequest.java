@@ -33,16 +33,18 @@ public class DuelRequest {
     private final Player receiver;
     private final Kit kit;
     private final Arena arena;
+    private final int pointsNeeded;
 
-    public DuelRequest(Player sender, Player receiver, Kit kit, Arena arena) {
+    public DuelRequest(Player sender, Player receiver, Kit kit, Arena arena, int pointsNeeded) {
         this.sender = sender;
         this.receiver = receiver;
         this.kit = kit;
         this.arena = arena;
+        this.pointsNeeded = pointsNeeded;
     }
 
-    public DuelRequest(Player sender, Player receiver, Kit kit) {
-        this(sender, receiver, kit, null);
+    public DuelRequest(Player sender, Player receiver, Kit kit, int pointsNeeded) {
+        this(sender, receiver, kit, null, pointsNeeded);
     }
 
     public Arena arena() {
@@ -59,5 +61,9 @@ public class DuelRequest {
 
     public Player sender() {
         return sender;
+    }
+
+    public int pointsNeeded() {
+        return pointsNeeded;
     }
 }

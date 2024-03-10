@@ -63,7 +63,7 @@ public class GameManager {
         List<Arena> arenas = new ArrayList<>(plugin.arenaManager().getArenas(kit, gameType));
         Collections.shuffle(arenas);
 
-        createGame(arenas.get(0), kit, gameType, teams);
+        createGame(arenas.get(0), kit, gameType, 1, teams);
     }
 
     /**
@@ -73,7 +73,7 @@ public class GameManager {
      * @param gameType Type of game.
      * @param teams Teams to add to the game.
      */
-    public void createGame(Arena arena, Kit kit, GameType gameType, List<UUID>... teams) {
+    public void createGame(Arena arena, Kit kit, GameType gameType, int pointsNeeded, List<UUID>... teams) {
         JadedAPI.getServers().thenAccept(servers -> {
             UUID gameUUID = UUID.randomUUID();
 
@@ -120,7 +120,8 @@ public class GameManager {
                     .append("kit", kit.id())
                     .append("gameType", gameType.toString())
                     .append("gameState", GameState.SETUP.toString())
-                    .append("server", serverName);
+                    .append("server", serverName)
+                    .append("pointsNeeded", pointsNeeded);
 
 
             // Create teams.
