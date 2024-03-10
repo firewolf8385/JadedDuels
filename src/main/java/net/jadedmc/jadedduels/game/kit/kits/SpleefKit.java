@@ -84,7 +84,7 @@ public class SpleefKit extends Kit {
             Location loc2 = new Location(loc.getWorld(), loc.getX()+vec.getX(), loc.getY()+vec.getY(), loc.getZ()+vec.getZ());
 
             if (loc2.getBlock().getType() == Material.SNOW_BLOCK) {
-                //game.addBlock(loc2, Material.SNOW_BLOCK);
+                game.addBlock(loc2.getBlock(), Material.SNOW_BLOCK);
                 loc2.getBlock().setType(Material.AIR);
             }
         }
