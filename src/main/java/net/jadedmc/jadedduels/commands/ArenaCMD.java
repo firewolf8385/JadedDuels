@@ -98,7 +98,7 @@ public class ArenaCMD extends AbstractCommand {
         String id = StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " ");
 
         // Creates the arena world.
-        WorldCreator worldCreator = new WorldCreator(id);
+        WorldCreator worldCreator = new WorldCreator(id).type(WorldType.FLAT);
         worldCreator.generator(JadedAPI.getPlugin().worldManager().getGenerator("void"));
         World world = Bukkit.createWorld(worldCreator);
 
