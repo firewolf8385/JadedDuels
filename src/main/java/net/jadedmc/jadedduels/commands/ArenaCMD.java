@@ -73,6 +73,8 @@ public class ArenaCMD extends AbstractCommand {
             case "setvoidlevel" -> setVoidLevel(player, args);
             case "finish" -> finishCMD(player);
             case "edit" -> editCMD(player, args);
+            case "listkits" -> listKitsCMD(player);
+            case "removekit" -> removeKit(player, args);
         }
     }
 
@@ -277,5 +279,53 @@ public class ArenaCMD extends AbstractCommand {
                 ChatUtils.chat(player, "&a&lDuels &8» &aWhen you are done, finish the arena with &f/arena finish&a.");
             });
         });
+    }
+
+    /**
+     * Runs the /arena listkits command.
+     * This command lists all kits that currently use the edited arena.
+     * @param player Player running the command.
+     */
+    private void listKitsCMD(Player player) {
+        // Makes sure there is an arena is being set up.
+        if(plugin.arenaManager().arenaBuilder() == null) {
+            ChatUtils.chat(player, "&cError &8» &cYou need to create an arena first! /arena create");
+            return;
+        }
+
+        // Print out all kits in chat.
+        ChatUtils.chat(player, "&a&lDuels &8» &aHere's all kits that use this map:");
+        for(String kit : plugin.arenaManager().arenaBuilder().kits()) {
+            ChatUtils.chat(player, "  <dark_gray>➤ <gray>" + kit);
+        }
+    }
+
+    /**
+     * Runs the /arena removekit command.
+     * This command removes a kit from the list of kits that can use the arena.
+     * @param player Player running the command.
+     * @param args Command arguments.
+     */
+    private void removeKit(Player player, String[] args) {
+        // Makes sure there an arena is being set up.
+        if(plugin.arenaManager().arenaBuilder() == null) {
+            ChatUtils.chat(player, "&cError &8» &cYou need to create an arena first! /arena create");
+            return;
+        }
+
+        // Makes sure the command is being used properly.
+        if(args.length == 1) {
+            ChatUtils.chat(player, "&cUsage &8» &c/arena removekit [kit]");
+            return;
+        }
+
+        if(!plugin.arenaManager().arenaBuilder().kits().contains(args[0])) {
+            ChatUtils.chat(player, "&c&lError &8» &cThis arena does not use that kit!");
+            return;
+        }
+
+        plugin.arenaManager().arenaBuilder().kits().remove(args[0]);
+
+        ChatUtils.chat(player, "&a&lDuels &8» &aRemoved &f" + args[1] + "&a as a valid kit.");
     }
 }
