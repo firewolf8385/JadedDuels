@@ -181,7 +181,7 @@ public class ArenaCMD extends AbstractCommand {
         plugin.arenaManager().arenaBuilder().addKit(args[1]);
 
         ChatUtils.chat(player, "&a&lDuels &8» &aAdded &f" + args[1] + "&a as a valid kit.");
-        ChatUtils.chat(player, "&a&lDuels &8» &aNext, set the spectator spawn with &f/arena setspectatorspawn&a.");
+        ChatUtils.chat(player, "&a&lDuels &8» &aWhen you are done, finish the arena with &f/arena finish&a.");
     }
 
     /**
