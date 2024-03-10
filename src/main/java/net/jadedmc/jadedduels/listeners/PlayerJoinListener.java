@@ -1,7 +1,9 @@
 package net.jadedmc.jadedduels.listeners;
 
+import net.jadedmc.jadedcore.JadedAPI;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
+import net.jadedmc.jadedutils.chat.ChatUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,6 +26,12 @@ public class PlayerJoinListener implements Listener {
             }
 
             game.addPlayer(player);
+            return;
+        }
+
+        if(!JadedAPI.getPlugin().lobbyManager().isLobbyWorld(player.getWorld())) {
+            ChatUtils.chat(player, "<red>Game not found! Sending you back to the lobby.");
+            JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS);
         }
     }
 }
