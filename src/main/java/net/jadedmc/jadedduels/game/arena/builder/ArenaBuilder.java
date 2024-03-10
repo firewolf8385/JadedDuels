@@ -250,7 +250,7 @@ public class ArenaBuilder {
 
                 // Load the new arena.
                 plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-                    plugin.arenaManager().loadArena(id);
+                    JadedAPI.getRedis().publish("game", "arena " + id);
                 });
             });
         });

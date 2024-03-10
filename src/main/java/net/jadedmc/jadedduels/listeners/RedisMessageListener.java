@@ -82,6 +82,14 @@ public class RedisMessageListener implements Listener {
                         }
                     });
                 }
+
+                case "arena" -> {
+                    plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                        String arenaID = args[1];
+                        System.out.println("Arena Update Received: " + arenaID);
+                        plugin.arenaManager().loadArena(arenaID);
+                    });
+                }
             }
         }
     }
