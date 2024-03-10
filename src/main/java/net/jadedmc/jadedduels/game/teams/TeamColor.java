@@ -22,7 +22,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package net.jadedmc.jadedduels.game.team;
+package net.jadedmc.jadedduels.game.teams;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;

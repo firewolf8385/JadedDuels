@@ -27,23 +27,12 @@ package net.jadedmc.jadedduels.listeners;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.GameState;
-import net.jadedmc.jadedduels.game.GameType;
-import net.jadedmc.jadedduels.game.lobby.LobbyScoreboard;
-import net.jadedmc.jadedduels.game.lobby.LobbyUtils;
-import net.jadedmc.jadedduels.game.tournament.EventStatus;
 import net.jadedmc.jadedduels.gui.KitGUI;
-import net.jadedmc.jadedduels.gui.SpectateGUI;
-import net.jadedmc.jadedduels.utils.LocationUtils;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Boat;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
@@ -57,13 +46,6 @@ public class PlayerInteractListener implements Listener {
     @EventHandler
     public void onEvent(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-
-        if(event.getAction() == Action.PHYSICAL && player.getWorld().equals(plugin.duelEventManager().world())) {
-            Location boatSpawn = LocationUtils.fromConfig(plugin.settingsManager().getConfig().getConfigurationSection("BoatRace.spawn"));
-            Boat boat = (Boat) player.getWorld().spawnEntity(boatSpawn, EntityType.BOAT);
-            boat.addPassenger(player);
-            return;
-        }
 
         Game game = plugin.gameManager().game(player);
 
@@ -110,55 +92,13 @@ public class PlayerInteractListener implements Listener {
 
         switch (item) {
             case "Kits" -> {
+                if(plugin.queueManager().getKit(player) != null) {
+                    ChatUtils.chat(player, "<red>You must leave your current queue first!");
+                    event.setCancelled(true);
+                   return;
+                }
+
                 new KitGUI(plugin).open(player);
-                event.setCancelled(true);
-            }
-
-            case "Leave Match" -> {
-                if(game != null && game.spectators().contains(player)) {
-                    game.removeSpectator(player);
-                }
-                event.setCancelled(true);
-            }
-
-            case "Spectate" -> {
-                if(player.getWorld().equals(plugin.duelEventManager().world())) {
-                    new SpectateGUI(plugin, GameType.TOURNAMENT).open(player);
-                    event.setCancelled(true);
-                    return;
-                }
-
-                if(game == null) {
-                    new SpectateGUI(plugin, GameType.UNRANKED).open(player);
-                    event.setCancelled(true);
-                    return;
-                }
-
-                if(game.gameType() == GameType.TOURNAMENT) {
-                    new SpectateGUI(plugin, GameType.TOURNAMENT).open(player);
-                    event.setCancelled(true);
-                    return;
-                }
-
-                new SpectateGUI(plugin, GameType.UNRANKED).open(player);
-                event.setCancelled(true);
-            }
-
-            case "Host" -> {
-                plugin.getServer().dispatchCommand(player, "create");
-                event.setCancelled(true);
-            }
-
-            case "Back to Duels" -> {
-                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    // Cancel tournament if the player is the host.
-                    if(plugin.duelEventManager().eventStatus() == EventStatus.WAITING
-                            && plugin.duelEventManager().host().equals(player)) {
-                        plugin.getServer().dispatchCommand(player, "cancel");
-                    }
-
-                    LobbyUtils.sendToLobby(plugin, player);
-                }, 1);
                 event.setCancelled(true);
             }
 
@@ -167,16 +107,8 @@ public class PlayerInteractListener implements Listener {
                 event.setCancelled(true);
             }
 
-            case "Visit Tournament Lobby" -> {
-                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    LobbyUtils.sendToTournamentLobby(plugin, player);
-
-                    // Add warning if the tournament is already running.
-                    if(plugin.duelEventManager().eventStatus() == EventStatus.RUNNING) {
-                        ChatUtils.chat(player, "&cUnfortunately the tournament has already started. You're still able to spectate though, using the spectate item in your inventory.");
-                    }
-                }, 1);
-
+            case "Leave Queue" -> {
+                plugin.queueManager().leaveQueue(player);
                 event.setCancelled(true);
             }
 

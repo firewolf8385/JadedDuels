@@ -3,7 +3,7 @@ package net.jadedmc.jadedduels;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.jadedmc.jadedduels.game.Game;
-import net.jadedmc.jadedduels.game.team.Team;
+import net.jadedmc.jadedduels.game.teams.Team;
 import net.jadedmc.jadedduels.utils.GameUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -142,10 +142,6 @@ class Placeholders extends PlaceholderExpansion {
                 }
 
                 return "team" + team.id();
-            }
-
-            case "playing_tournament" -> {
-                return "" + plugin.duelEventManager().players().size();
             }
         }
 

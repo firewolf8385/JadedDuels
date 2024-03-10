@@ -24,7 +24,6 @@
  */
 package net.jadedmc.jadedduels.game;
 
-import at.stefangeyer.challonge.model.Match;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import net.jadedmc.jadedchat.JadedChat;
@@ -32,14 +31,13 @@ import net.jadedmc.jadedcore.JadedAPI;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.arena.Arena;
 import net.jadedmc.jadedduels.game.kit.Kit;
-import net.jadedmc.jadedduels.game.lobby.LobbyUtils;
-import net.jadedmc.jadedduels.game.team.Team;
-import net.jadedmc.jadedduels.game.team.TeamManager;
-import net.jadedmc.jadedduels.game.tournament.team.EventTeam;
+import net.jadedmc.jadedduels.game.teams.Team;
+import net.jadedmc.jadedduels.game.teams.TeamColor;
+import net.jadedmc.jadedduels.game.teams.TeamManager;
 import net.jadedmc.jadedduels.utils.GameUtils;
+import net.jadedmc.jadedutils.Timer;
 import net.jadedmc.jadedutils.chat.ChatUtils;
 import net.jadedmc.jadedutils.items.ItemBuilder;
-import net.jadedmc.jadedutils.Timer;
 import org.bson.Document;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -47,7 +45,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import redis.clients.jedis.Jedis;
 
 import java.util.*;
 
@@ -56,130 +53,86 @@ import java.util.*;
  */
 public class Game {
     private final JadedDuelsPlugin plugin;
+    private final World world;
+    private final TeamManager teamManager = new TeamManager();
 
-    // Starting variables.
+    // Important variables.
     private final Kit kit;
     private final Arena arena;
-    private final World world;
     private final UUID uuid;
     private final GameType gameType;
     private Timer timer;
-    private final TeamManager teamManager;
-
     private GameState gameState;
     private final Collection<UUID> spectators = new HashSet<>();
-    private final Match match;
     private int round = 0;
-    private int pointsNeeded;
     private final Map<Block, Material> blocks = new HashMap<>();
+    private final int pointsNeeded = 1;
 
-
-    /**
-     * Creates the Game object.
-     * @param plugin Instance of the plugin.
-     * @param kit Kit being used in the game.
-     * @param gameType Type of game being played.
-     * @param arena Arena being used.
-     * @param world World the game is being played in.
-     * @param uuid UUID of the game.
-     */
-    public Game(final JadedDuelsPlugin plugin, final Kit kit, final GameType gameType, final Arena arena, final World world, final UUID uuid) {
+    public Game(JadedDuelsPlugin plugin, World world, Document document) {
         this.plugin = plugin;
-        this.kit = kit;
-        this.gameType = gameType;
-        this.arena = arena;
         this.world = world;
-        this.uuid = uuid;
 
+        this.kit = plugin.kitManager().kit(document.getString("kit"));
+        this.arena = plugin.arenaManager().getArena(document.getString("arena"));
+        this.uuid = UUID.fromString(document.getString("uuid"));
+        this.gameType = GameType.valueOf(document.getString("gameType"));
         this.timer = new Timer(plugin);
-        this.teamManager = new TeamManager(plugin);
-        this.match = null;
-        this.pointsNeeded = 1;
 
-        plugin.gameManager().addGame(this);
+        gameState = GameState.WAITING;
 
-        // World Game Rules.
+        // Try to setup teams
+        Document teamsDocument = document.get("teams", Document.class);
+        Set<String> teamsList = teamsDocument.keySet();
+
+        for(String team : teamsList) {
+            Document teamDocument = teamsDocument.get(team, Document.class);
+            teamManager.createTeam(teamDocument.getList("uuids", String.class), TeamColor.valueOf(team));
+        }
+
+        // Deletes setup signs
         plugin.getServer().getScheduler().runTask(plugin, () -> {
-            world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-            world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-            world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
-            world.setGameRule(GameRule.DO_TILE_DROPS, false);
-            world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
-            world.setGameRule(GameRule.DO_MOB_LOOT, false);
-            world.setGameRule(GameRule.KEEP_INVENTORY, true);
-
-            world.setDifficulty(Difficulty.HARD);
-            world.setClearWeatherDuration(Integer.MAX_VALUE);
-            world.setTime(6000);
-
-            // Deletes setup signs
             world.getBlockAt(arena.spectatorSpawn(world)).setType(Material.AIR);
             if(arena.isTournamentArena()) world.getBlockAt(arena.tournamentSpawn(world)).setType(Material.AIR);
             arena.spawns(world).forEach(location -> world.getBlockAt(location).setType(Material.AIR));
+        });
 
-            updateRedis();
+        updateRedis();
+
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            JadedAPI.getRedis().publish("game", "setup " + uuid);
         });
     }
 
-    public Game(final JadedDuelsPlugin plugin, final Kit kit, final GameType gameType, final Arena arena, final World world, final UUID uuid, final Match match) {
-        this.plugin = plugin;
-        this.kit = kit;
-        this.gameType = gameType;
-        this.arena = arena;
-        this.world = world;
-        this.uuid = uuid;
+    private void startGame() {
+        if(gameState == GameState.STARTING) {
+            return;
+        }
 
-        this.timer = new Timer(plugin);
-        this.teamManager = new TeamManager(plugin);
-        this.match = match;
-        this.pointsNeeded = plugin.duelEventManager().bestOf().neededWins();
+        gameState = GameState.STARTING;
 
-        plugin.gameManager().addGame(this);
-
-        // World Game Rules.
-        plugin.getServer().getScheduler().runTask(plugin, () -> {
-            world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-            world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-            world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
-            world.setGameRule(GameRule.DO_TILE_DROPS, false);
-            world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
-            world.setGameRule(GameRule.DO_MOB_LOOT, false);
-            world.setGameRule(GameRule.KEEP_INVENTORY, true);
-
-            world.setDifficulty(Difficulty.HARD);
-            world.setClearWeatherDuration(Integer.MAX_VALUE);
-            world.setTime(6000);
-
-            updateRedis();
-        });
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    public void startGame() {
-
+        // Run the start code for all players.
         for(Player player : players()) {
+            Team team = this.teamManager.team(player);
             List<Player> opponents = new ArrayList<>();
 
-            Team team = this.teamManager.team(player);
-            for(Team opposingTeam : this.teamManager.teams()) {
-                if(team.equals(opposingTeam)) {
-                    continue;
+            // Load all opponents.
+            teamManager.teams().forEach(opposingTeam -> {
+                if(!opposingTeam.equals(team)) {
+                    opponents.addAll(opposingTeam.players());
                 }
+            });
 
-                opponents.addAll(opposingTeam.players());
-            }
-
-            ChatUtils.chat(player, "&8&m+-----------------------***-----------------------+");
-            ChatUtils.chat(player, ChatUtils.centerText("&a&l" + kit.name() + " Duel"));
+            // Displays the start message.
+            ChatUtils.chat(player, "<center><dark_gray><st>+-----------------------***-----------------------+");
+            ChatUtils.chat(player, ChatUtils.centerText("<green><bold>" + kit.name() + " Duel"));
             ChatUtils.chat(player, "");
 
             // Display the opponents label, based on the number.
             if(opponents.size() == 1) {
-                ChatUtils.chat(player, ChatUtils.centerText("&aOpponent:"));
+                ChatUtils.chat(player, "<center><green>Opponent:");
             }
             else {
-                ChatUtils.chat(player, ChatUtils.centerText("&aOpponents:"));
+                ChatUtils.chat(player, "<center><green>Opponents:");
             }
 
             // Lists the opponents.
@@ -188,15 +141,18 @@ public class Game {
             }
 
             ChatUtils.chat(player, "");
-            ChatUtils.chat(player, "&8&m+-----------------------***-----------------------+");
+            ChatUtils.chat(player, "<center><dark_gray><st>+-----------------------***-----------------------+");
         }
 
+        // Start the round.
         startRound();
     }
 
     private void startRound() {
-        round++;
         teamManager.reset();
+        round++;
+
+        updateRedis();
 
         // Remove old entities at the start of each round.
         for(Entity entity : world.getEntities()) {
@@ -207,32 +163,24 @@ public class Game {
             entity.remove();
         }
 
+        // Reset players
         for(Player player : players()) {
-            spectators.remove(player);
+            spectators.remove(player.getUniqueId());
             player.setCollidable(true);
             player.setArrowsInBody(0);
         }
 
         // Spawn teams.
-        int spawnCount = 0;
-        List<Location> spawns = arena.spawns(world);
-
-
-        for(Team team : this.teamManager.teams()) {
-
-            // Loop back if we run out of spawns.
-            if(spawnCount == spawns.size()) {
-                spawnCount = 0;
-            }
+        for(Team team : teamManager.teams()) {
+            int spawnNumber = teamManager.teams().indexOf(team);
+            Location spawn = arena.spawns(world).get(spawnNumber);
 
             // Spawn in each player in the team.
             for(Player player : team.players()) {
-                player.teleport(spawns.get(spawnCount));
+                player.teleport(spawn);
                 kit.apply(player);
                 kit.scoreboard(this, player).update(player);
             }
-
-            spawnCount++;
         }
 
         // Show invisible players for round reset.
@@ -262,6 +210,8 @@ public class Game {
 
         gameState = GameState.COUNTDOWN;
 
+        updateRedis();
+
         BukkitRunnable countdown = new  BukkitRunnable() {
             int counter = 4;
             public void run() {
@@ -272,8 +222,9 @@ public class Game {
                 }
 
                 if(counter  != 0) {
-                    broadcast("&aStarting in " + counter + "...");
-                    for (Player player : players()) {
+                    ChatUtils.broadcast(world, "<green>Starting in " + counter + "...");
+
+                    for(Player player : players()) {
                         player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1, 1);
                     }
                 }
@@ -298,238 +249,112 @@ public class Game {
         timer = new Timer(plugin);
         timer.start();
 
+        updateRedis();
+
         // Spawn teams.
-        int spawnCount = 0;
-        List<Location> spawns = arena.spawns(world);
-
-
-        for(Team team : this.teamManager.teams()) {
-            // Loop back if we run out of spawns.
-            if(spawnCount == spawns.size()) {
-                spawnCount = 0;
-            }
+        for(Team team : teamManager.teams()) {
+            int spawnNumber = teamManager.teams().indexOf(team);
+            Location spawn = arena.spawns(world).get(spawnNumber);
 
             // Spawn in each player in the team.
             for(Player player : team.players()) {
-                player.teleport(spawns.get(spawnCount));
+                player.teleport(spawn);
                 player.closeInventory();
                 player.setFireTicks(0);
             }
-
-            spawnCount++;
         }
     }
 
-    public void endRound(Team winner) {
+    private void endRound(Team winner) {
+        // Prevent from running the code twice.
         if(gameState == GameState.END) {
             return;
         }
 
-        winner.addPoint();
-        gameState = GameState.END;
-        timer.stop();
-
-        broadcast("&8&m+-----------------------***-----------------------+");
-        broadcast(" ");
-        broadcast(ChatUtils.centerText("&a&l" + kit.name() + " Duel &7- &f&l" + timer));
-        broadcast(" ");
-        if(winner.players().size() > 1) {
-            broadcast(ChatUtils.centerText("&aWinners:"));
-        }
-        else {
-            broadcast(ChatUtils.centerText("&aWinner:"));
-        }
-
-        for(Player player : winner.players()) {
-            if(teamManager.team(player).deadPlayers().contains(player)) {
-                broadcast(ChatUtils.centerText("&f" + player.getName() + " &a(&c0%&a)"));
-            }
-            else {
-                broadcast(ChatUtils.centerText("&f" + player.getName() + " &a(" + GameUtils.getFormattedHealth(player) + "&a)"));
-            }
-        }
-
-        if(gameType == GameType.TOURNAMENT) {
-            Team loser = winner;
-            for(Team team : teamManager.teams()) {
-                if(team.equals(winner)) {
-                    continue;
-                }
-
-                loser = team;
-            }
-
-            broadcast("");
-            broadcast(ChatUtils.centerText("&aScore: &f" + winner.score() + " - " + loser.score()));
-        }
-
-        broadcast(" ");
-        broadcast("&8&m+-----------------------***-----------------------+");
-
-        updateRedis();
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-
-            if(winner.score() < pointsNeeded) {
-                resetArena();
-                startRound();
-            }
-            else {
-
-                // Show hidden players
-                for(Player player : world.getPlayers()) {
-                    player.spigot().getHiddenPlayers().forEach(hidden -> player.showPlayer(plugin, hidden));
-                }
-
-                // Runs tournament specific code.
-                if(gameType == GameType.TOURNAMENT) {
-                    Team loser = winner;
-                    for(Team team : teamManager.teams()) {
-                        if(team.equals(winner)) {
-                            continue;
-                        }
-
-                        loser = team;
-                    }
-
-                    plugin.duelEventManager().activeEvent().addResults(match, winner, loser);
-                    plugin.duelEventManager().activeEvent().broadcast("&a&lTournament &8» &f" + winner.eventTeam().name() + " &ahas defeated &f" + loser.eventTeam().name() + " &7(&f" + winner.score() + " &7-&f " + loser.score() + "&7)&a.");
-
-                    // Replace this with tournament lobby stuff.
-                    players().forEach(player -> LobbyUtils.sendToTournamentLobby(plugin, player));
-                    spectators().forEach(player -> LobbyUtils.sendToTournamentLobby(plugin, player));
-                }
-                else {
-                    players().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
-                    spectators().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
-                }
-
-                for(Team team : teamManager.teams()) {
-                    team.players().clear();
-                    team.alivePlayers().clear();
-                    team.deadPlayers().clear();
-                }
-
-
-                spectators.clear();
-                teamManager.teams().clear();
-
-                plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-                    JadedAPI.getRedis().del("games:" + uuid);
-                });
-
-                plugin.gameManager().deleteGame(this);
-            }
-        }, 100);
-    }
-
-    /**
-     * Ends the game.
-     * @param winner The winning team.
-     */
-    private void end(Team winner) {
-        if(gameState == GameState.END) {
-            return;
-        }
-
+        // Prevent issues if the game ends during countdown.
         if(gameState != GameState.COUNTDOWN) {
             timer.stop();
         }
 
         winner.addPoint();
         gameState = GameState.END;
+        timer.stop();
+
+        // Display the game over message.
+        {
+            ChatUtils.broadcast(world, "<center><dark_gray><st>+-----------------------***-----------------------+");
+            ChatUtils.broadcast(world, "");
+            ChatUtils.broadcast(world, "<center><green><bold>" + kit.name() + " Duel</bold> <gray>- <white><bold>" + timer.toString());
+            ChatUtils.broadcast(world, "");
+
+            if(winner.players().size() > 1) {
+                ChatUtils.broadcast(world, "<center><green>Winners:");
+            }
+            else {
+                ChatUtils.broadcast(world, "<center><green>Winner:");
+            }
+
+            for(Player player : winner.players()) {
+                if(teamManager.team(player).deadPlayers().contains(player)) {
+                    ChatUtils.broadcast(world, "<center>" + player.getName() + "<green>(<red>0%<green>)");
+                }
+                else {
+                    ChatUtils.broadcast(world, "<center>" + player.getName() + " &a(" + GameUtils.getFormattedHealth(player) + "&a)");
+                }
+            }
+
+            ChatUtils.broadcast(world, "");
+            ChatUtils.broadcast(world, "<center><dark_gray><st>+-----------------------***-----------------------+");
+        }
 
         updateRedis();
 
-        broadcast("&8&m+-----------------------***-----------------------+");
-        broadcast(" ");
-        broadcast(ChatUtils.centerText("&a&l" + kit.name() + " Duel &7- &f&l" + timer));
-        broadcast(" ");
-        if(winner.players().size() > 1) {
-            broadcast(ChatUtils.centerText("&aWinners:"));
+        if(winner.score() < pointsNeeded) {
+            resetArena();
+            startRound();
         }
         else {
-            broadcast(ChatUtils.centerText("&aWinner:"));
-        }
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                for(Player player : players()) {
+                    JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS);
+                }
 
-        for(Player player : winner.players()) {
-            if(teamManager.team(player).deadPlayers().contains(player)) {
-                broadcast(ChatUtils.centerText("&f" + player.getName() + " &a(&c0%&a)"));
-            }
-            else {
-                broadcast(ChatUtils.centerText("&f" + player.getName() + " &a(" + GameUtils.getFormattedHealth(player) + "&a)"));
-            }
-        }
-        broadcast(" ");
-        broadcast("&8&m+-----------------------***-----------------------+");
+                for(Player player : spectators()) {
+                    JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS);
+                }
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 
-            // Show hidden players
-            for(Player player : world.getPlayers()) {
-                player.spigot().getHiddenPlayers().forEach(hidden -> player.showPlayer(plugin, hidden));
-            }
+                plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                    JadedAPI.getRedis().del("games:" + uuid);
+                });
 
-            // Runs tournament specific code.
-            if(gameType == GameType.TOURNAMENT) {
-                Team loser = winner;
-                for(Team team : teamManager.teams()) {
-                    if(team.equals(winner)) {
+                for(Entity entity : world.getEntities()) {
+                    if(entity instanceof Player) {
                         continue;
                     }
 
-                    loser = team;
+                    entity.remove();
                 }
 
-                plugin.duelEventManager().activeEvent().addResults(match, winner, loser);
-                plugin.duelEventManager().activeEvent().broadcast("&a&lTournament &8» &f" + winner.eventTeam().name() + " &ahas defeated &f" + loser.eventTeam().name() + " &7(&f" + winner.score() + " &7-&f " + loser.score() + "&7)&a.");
-
-                // Replace this with tournament lobby stuff.
-                players().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
-                spectators().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
-            }
-            else {
-                players().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
-                spectators().forEach(player -> LobbyUtils.sendToLobby(plugin, player));
-            }
-
-            for(Team team : teamManager.teams()) {
-                team.players().clear();
-                team.alivePlayers().clear();
-                team.deadPlayers().clear();
-            }
-
-
-            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-                System.out.println("Deleting Game: " + uuid);
-                JadedAPI.getRedis().del("games:" + uuid);
-            });
-
-            spectators.clear();
-            teamManager.teams().clear();
-
-            plugin.gameManager().deleteGame(this);
-        }, 100);
+                plugin.gameManager().deleteGame(this);
+            }, 5*20);
+        }
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     public void addBlock(Block block, Material material) {
         if(blocks.containsKey(block)) {
-           return;
+            return;
         }
 
         blocks.put(block, material);
     }
 
-    /**
-     * Add a player to the game.
-     * @param player Player to add.
-     */
     public void addPlayer(Player player) {
-        List<Player> members = new ArrayList<>();
-        members.add(player);
-        teamManager.createTeam(members);
+        Team playerTeam = teamManager.team(player);
+        int spawn = teamManager.teams().indexOf(playerTeam);
+        player.teleport(arena.spawns(world).get(spawn));
+
+        updateRedis();
 
         // Update player's chat channel.
         if(JadedChat.getChannel(player).isDefaultChannel()) {
@@ -541,39 +366,27 @@ public class Game {
             }
         }
 
-        updateRedis();
-    }
+        // Check if we can start the game.
+        {
+            int count = 0;
+            int expected = 0;
 
-    /**
-     * Add a player to the arena.
-     * @param players Players to add.
-     */
-    public void addPlayers(List<Player> players) {
-        teamManager.createTeam(players);
-    }
+            // Loop through all teams checking if the player counts match.
+            for(Team team : teamManager.teams()) {
+                count += team.players().size();
+                expected += team.uuids().size();
+            }
 
-    public void addPlayers(EventTeam team) {
-        teamManager.createTeam(team);
-
-        for(Player player : team.players()) {
-
-            // Update player's chat channel.
-            if(JadedChat.getChannel(player).isDefaultChannel()) {
-                if(gameType == GameType.TOURNAMENT) {
-                    JadedChat.setChannel(player, JadedChat.getChannel("TOURNAMENT"));
-                }
-                else {
-                    JadedChat.setChannel(player, JadedChat.getChannel("GAME"));
-                }
+            // If they do, start the game.
+            if(count == expected) {
+                startGame();
             }
         }
-
-        updateRedis();
     }
 
     /**
-     * Get the arena being used in the game.
-     * @return Arena being used.
+     * Gets the arena being used in the game.
+     * @return Game arena.
      */
     public Arena arena() {
         return arena;
@@ -585,6 +398,8 @@ public class Game {
      */
     public void addSpectator(Player spectator) {
         spectators.add(spectator.getUniqueId());
+
+        updateRedis();
 
         // Doesn't teleport player if they were in the game before.
         if(teamManager.team(spectator) == null) {
@@ -669,15 +484,7 @@ public class Game {
     }
 
     /**
-     * Broadcast a message to the arena.
-     * @param message Message to broadcast.
-     */
-    public void broadcast(String message) {
-        ChatUtils.broadcast(this.world, message);
-    }
-
-    /**
-     * Get the current state of the game.
+     * Gets the current state of the game.
      * @return Game state.
      */
     public GameState gameState() {
@@ -685,15 +492,15 @@ public class Game {
     }
 
     /**
-     * Get the current game type.
-     * @return Game Type of the game.
+     * Gets the Game Type.
+     * @return Game type.
      */
     public GameType gameType() {
         return gameType;
     }
 
     /**
-     * Get the kit used in the game.
+     * Gets the kit the game is using.
      * @return Kit being used.
      */
     public Kit kit() {
@@ -701,66 +508,16 @@ public class Game {
     }
 
     /**
-     * Get all players in the game.
-     * Includes spectators.
-     * @return Collection of all players.
-     */
-    public Collection<Player> players() {
-        Collection<Player> players = new HashSet<>();
-
-        // Add all players on teams.
-        for(Team team : this.teamManager.teams()) {
-            players.addAll(team.players());
-        }
-
-        return players;
-    }
-
-    /**
-     * Get all current spectators.
-     * @return All current spectators.
-     */
-    public Collection<Player> spectators() {
-        Collection<Player> actualSpectators = new HashSet<>();
-        for(UUID uuid : spectators) {
-            Player player = Bukkit.getPlayer(uuid);
-
-            if(player == null || !player.isOnline()) {
-                continue;
-            }
-
-            actualSpectators.add(player);
-        }
-        return actualSpectators;
-    }
-
-    /**
-     * Get the game's Team Manager.
-     * @return TeamManager.
-     */
-    public TeamManager teamManager() {
-        return teamManager;
-    }
-
-    /**
-     * Get the game timer.
-     * @return Game timer.
-     */
-    public Timer timer() {
-        return timer;
-    }
-
-    /**
      * Runs when a played disconnects.
      * @param player Player who disconnected.
      */
     public void playerDisconnect(Player player) {
-        if(spectators.contains(player)) {
+        if(spectators.contains(player.getUniqueId())) {
             removeSpectator(player);
             return;
         }
 
-        broadcast(teamManager.team(player).teamColor().chatColor() + player.getName() + " disconnected.");
+        ChatUtils.broadcast(world, teamManager.team(player).teamColor().chatColor() + player.getName() + " disconnected.");
         teamManager.team(player).killPlayer(player);
         player.getLocation().getWorld().strikeLightningEffect(player.getLocation());
 
@@ -770,7 +527,7 @@ public class Game {
 
                 if(teamManager.aliveTeams().size() == 1) {
                     Team winner = teamManager.aliveTeams().get(0);
-                    end(winner);
+                    endRound(winner);
                     break;
                 }
             }
@@ -784,14 +541,14 @@ public class Game {
      * @param player Player who was killed.
      */
     public void playerKilled(Player player) {
-        if(spectators.contains(player)) {
+        if(spectators.contains(player.getUniqueId())) {
             return;
         }
 
         player.getLocation().getWorld().strikeLightningEffect(player.getLocation());
         addSpectator(player);
         teamManager.team(player).killPlayer(player);
-        broadcast(teamManager.team(player).teamColor().chatColor()  + player.getName() + " &ahas died!");
+        ChatUtils.broadcast(world, teamManager.team(player).teamColor().chatColor()  + player.getName() + " &ahas died!");
 
         // Prevents stuff from breaking if the game is already over.
         if(gameState == GameState.END) {
@@ -826,7 +583,7 @@ public class Game {
         player.getLocation().getWorld().strikeLightningEffect(player.getLocation());
         addSpectator(player);
         teamManager.team(player).killPlayer(player);
-        broadcast(teamManager.team(player).teamColor().chatColor()  + player.getName() + " &awas killed by " + teamManager.team(killer).teamColor().chatColor() + killer.getName() + " &a(" + GameUtils.getFormattedHealth(killer) + "&a)");
+        ChatUtils.broadcast(world, teamManager.team(player).teamColor().chatColor()  + player.getName() + " &awas killed by " + teamManager.team(killer).teamColor().chatColor() + killer.getName() + " &a(" + GameUtils.getFormattedHealth(killer) + "&a)");
 
         // Prevents stuff from breaking if the game is already over.
         if(gameState == GameState.END) {
@@ -848,38 +605,18 @@ public class Game {
         updateRedis();
     }
 
-    public void removeBlock(Block block) {
-        blocks.remove(block);
-    }
-
     /**
-     * Removes a player from the game.
-     * @param player Player to remove.
+     * Get all players that are on a team.
+     * @return All game players.
      */
-    public void removePlayer(Player player) {
-        kit.onGamePlayerLeave(this, player);
-
-        // Removes the player if they are a spectator.
-        if(spectators.contains(player)) {
-            removeSpectator(player);
-            return;
-        }
-
-        teamManager.team(player).removePlayer(player);
+    public Collection<Player> players() {
+        Collection<Player> players = new HashSet<>();
 
         for(Team team : teamManager.teams()) {
-            if(team.alivePlayers().size() == 0) {
-                teamManager.killTeam(team);
-
-                if(teamManager.aliveTeams().size() == 1) {
-                    Team winner = teamManager.aliveTeams().get(0);
-                    end(winner);
-                    break;
-                }
-            }
+            players.addAll(team.players());
         }
 
-        updateRedis();
+        return players;
     }
 
     /**
@@ -894,10 +631,10 @@ public class Game {
         }
 
         if(gameType == GameType.TOURNAMENT) {
-            LobbyUtils.sendToTournamentLobby(plugin, player);
+            JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.TOURNAMENTS);
         }
         else {
-            LobbyUtils.sendToLobby(plugin, player);
+            JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS);
         }
 
         updateRedis();
@@ -911,13 +648,50 @@ public class Game {
         blocks.clear();
     }
 
+    /**
+     * Get all players currently spectating.
+     * @return All current spectators.
+     */
+    public Collection<Player> spectators() {
+        Collection<Player> players = new HashSet<>();
+
+        for(UUID uuid : spectators) {
+            Player player = Bukkit.getPlayer(uuid);
+
+            if(player == null || !player.isOnline()) {
+                continue;
+            }
+
+            players.add(player);
+        }
+
+        return players;
+    }
+
+    /**
+     * Gets the game team manager.
+     * @return Team manager.
+     */
+    public TeamManager teamManager() {
+        return teamManager;
+    }
+
+    /**
+     * Gets the game's timer.
+     * Changes after each round.
+     * @return Current game timer.
+     */
+    public Timer timer() {
+        return timer;
+    }
+
     public void updateRedis() {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             List<String> jsonSpectators = new ArrayList<>();
             spectators.forEach(spectator -> jsonSpectators.add(spectator.toString()));
 
             Document document = new Document()
-                    .append("uuid", uuid)
+                    .append("uuid", uuid.toString())
                     .append("kit", kit.id())
                     .append("arena", arena.fileName())
                     .append("type", gameType.toString())
@@ -926,22 +700,29 @@ public class Game {
                     .append("spectators", jsonSpectators);
 
             if(gameType == GameType.TOURNAMENT) {
-                document.append("matchID", match.getId());
-                document.append("tournamentID", plugin.duelEventManager().activeEvent().tournament().getId());
+                //document.append("matchID", match.getId());
+                //document.append("tournamentID", plugin.duelEventManager().activeEvent().tournament().getId());
             }
 
             Document teamsDocument = new Document();
             for(Team team : teamManager.teams()) {
                 Document teamDocument = new Document();
                 if(gameType == GameType.TOURNAMENT) {
-                    teamDocument.append("teamID", team.eventTeam().challongeID());
+                    //teamDocument.append("teamID", team.eventTeam().challongeID());
                 }
 
                 List<String> uuids = new ArrayList<>();
                 List<String> usernames = new ArrayList<>();
 
-                for(Player player : team.players()) {
-                    uuids.add(player.getUniqueId().toString());
+                for(UUID uuid : team.uuids()) {
+                    uuids.add(uuid.toString());
+
+                    Player player = Bukkit.getPlayer(uuid);
+
+                    if(player == null || !player.isOnline()) {
+                        continue;
+                    }
+
                     usernames.add(player.getName());
                 }
 
@@ -958,7 +739,7 @@ public class Game {
     }
 
     /**
-     * Get the world the game is being played in.
+     * Gets the game world.
      * @return Game world.
      */
     public World world() {

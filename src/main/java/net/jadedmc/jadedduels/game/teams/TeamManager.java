@@ -22,72 +22,24 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package net.jadedmc.jadedduels.game.team;
+package net.jadedmc.jadedduels.game.teams;
 
-import net.jadedmc.jadedduels.JadedDuelsPlugin;
-import net.jadedmc.jadedduels.game.tournament.team.EventTeam;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TeamManager {
-    private final JadedDuelsPlugin plugin;
     private final List<Team> teams = new ArrayList<>();
     private final List<Team> aliveTeams = new ArrayList<>();
-    private final List<TeamColor> availableColors = new ArrayList<>();
 
-    /**
-     * Creates the team manager.
-     */
-    public TeamManager(final JadedDuelsPlugin plugin) {
-        this.plugin = plugin;
+    public Team createTeam(List<String> players, TeamColor teamColor) {
+        Team team = new Team(players, teamColor, teams().size() + 1);
 
-        availableColors.add(TeamColor.RED);
-        availableColors.add(TeamColor.BLUE);
-        availableColors.add(TeamColor.YELLOW);
-        availableColors.add(TeamColor.GREEN);
-        availableColors.add(TeamColor.PURPLE);
-        availableColors.add(TeamColor.ORANGE);
-        availableColors.add(TeamColor.AQUA);
-        availableColors.add(TeamColor.PINK);
-        availableColors.add(TeamColor.DARK_GREEN);
-        availableColors.add(TeamColor.BLACK);
-        availableColors.add(TeamColor.WHITE);
-    }
-
-    /**
-     * Create a new team.
-     * @param players Players to add to the team.
-     * @return The new team.
-     */
-    public Team createTeam(List<Player> players) {
-        Team team = new Team(players, availableColors.get(0));
-        availableColors.remove(availableColors.get(0));
-        teams().add(team);
+        teams.add(team);
         aliveTeams.add(team);
 
-        team.id(teams.size() + 1);
         return team;
-    }
-
-    public Team createTeam(EventTeam eventTeam) {
-        Team team = new Team(eventTeam.players(), availableColors.get(0), eventTeam);
-        availableColors.remove(availableColors.get(0));
-        teams().add(team);
-        aliveTeams.add(team);
-
-        team.id(teams.size() + 1);
-        return team;
-    }
-
-    /**
-     * Delete a team.
-     * @param team Team to delete.
-     */
-    public void deleteTeam(Team team) {
-        teams().remove(team);
-        aliveTeams.remove(team);
     }
 
     /**
@@ -129,14 +81,19 @@ public class TeamManager {
         aliveTeams.remove(team);
     }
 
+    /**
+     * Resets all teams.
+     * Done after the end of each round.
+     */
     public void reset() {
-        aliveTeams.clear();
-        aliveTeams.addAll(teams);
+        teams.forEach(Team::reset);
 
-        for(Team team : teams) {
-            team.deadPlayers().clear();
-            team.alivePlayers().clear();
-            team.alivePlayers().addAll(team.players());
-        }
+        aliveTeams.clear();
+
+        teams.forEach(team -> {
+            if(team.alivePlayers().size() > 0) {
+                aliveTeams.add(team);
+            }
+        });
     }
 }

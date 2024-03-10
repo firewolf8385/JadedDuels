@@ -28,7 +28,9 @@ package net.jadedmc.jadedduels.game;
  * Represents the current state of a Game.
  */
 public enum GameState {
+    SETUP,
     WAITING,
+    STARTING,
     COUNTDOWN,
     RUNNING,
     END

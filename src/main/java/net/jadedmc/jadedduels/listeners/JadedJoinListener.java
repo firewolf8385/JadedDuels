@@ -26,6 +26,8 @@ package net.jadedmc.jadedduels.listeners;
 
 import net.jadedmc.jadedcore.events.JadedJoinEvent;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import net.jadedmc.jadedduels.game.Game;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 

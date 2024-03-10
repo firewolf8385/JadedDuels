@@ -46,22 +46,12 @@ public class ChannelSwitchListener implements Listener {
 
         if(game == null) {
             if(event.getToChannel().name().equalsIgnoreCase("GAME") || event.getToChannel().name().equalsIgnoreCase("TEAM")) {
-                if(event.getPlayer().getWorld().equals(plugin.duelEventManager().world())) {
-                    event.setToChannel(JadedChat.getChannel("TOURNAMENT"));
-                }
-                else {
-                    event.setToChannel(JadedChat.getDefaultChannel());
-                }
+                event.setToChannel(JadedChat.getDefaultChannel());
             }
         }
         else {
             if(event.getToChannel().equals(JadedChat.getDefaultChannel())) {
-                if(event.getPlayer().getWorld().equals(plugin.duelEventManager().world())) {
-                    event.setToChannel(JadedChat.getChannel("TOURNAMENT"));
-                }
-                else {
-                    event.setToChannel(JadedChat.getChannel("GAME"));
-                }
+                event.setToChannel(JadedChat.getChannel("GAME"));
             }
         }
     }

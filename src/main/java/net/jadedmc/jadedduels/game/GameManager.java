@@ -24,12 +24,14 @@
  */
 package net.jadedmc.jadedduels.game;
 
-import at.stefangeyer.challonge.model.Match;
 import net.jadedmc.jadedcore.JadedAPI;
+import net.jadedmc.jadedcore.servers.Server;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.arena.Arena;
 import net.jadedmc.jadedduels.game.kit.Kit;
+import net.jadedmc.jadedduels.game.teams.TeamColor;
 import net.jadedmc.jadedutils.FileUtils;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -40,7 +42,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class GameManager {
     private final JadedDuelsPlugin plugin;
-    private final Collection<Game> activeGames = new HashSet<>();
+    private final Collection<Game> games = new HashSet<>();
 
     /**
      * Creates the Game Manager.
@@ -51,46 +53,103 @@ public class GameManager {
     }
 
     /**
-     * Gets all currently existing games.
-     * @return All active games.
+     * Creates a game with a random arena and sends it to Redis.
+     * @param kit Kit the game is using.
+     * @param gameType Type of game.
+     * @param teams Teams to add to the game.
      */
-    public Collection<Game> activeGames() {
-        return activeGames;
+    public void createGame(Kit kit, GameType gameType, List<UUID>... teams) {
+        // Finds an arena
+        List<Arena> arenas = new ArrayList<>(plugin.arenaManager().getArenas(kit, gameType));
+        Collections.shuffle(arenas);
+
+        createGame(arenas.get(0), kit, gameType, teams);
     }
 
     /**
-     * Manually add a game. Used in duels.
-     * @param game Game to add.
+     * Creates a game and sends it to Redis.
+     * @param arena Arena the game is in.
+     * @param kit Kit the game is using.
+     * @param gameType Type of game.
+     * @param teams Teams to add to the game.
      */
-    public void addGame(Game game) {
-        activeGames.add(game);
-    }
+    public void createGame(Arena arena, Kit kit, GameType gameType, List<UUID>... teams) {
+        JadedAPI.getServers().thenAccept(servers -> {
+            UUID gameUUID = UUID.randomUUID();
 
-    /**
-     * Creates a game
-     * @param arena Arena the game should use.
-     * @param kit Kit the game should use.
-     * @param gameType Game type the game should use.
-     * @return Created game.
-     */
-    public CompletableFuture<Game> createGame(Arena arena, Kit kit, GameType gameType) {
-        UUID gameUUID = UUID.randomUUID();
+            String serverName = "";
+            {
+                System.out.println("Servers Found: " + servers.size());
+                int count = 999;
 
-        // Makes a copy of the arena.
-        CompletableFuture<World> worldCopy = JadedAPI.getPlugin().worldManager().copyWorld(arena.fileName(), gameUUID.toString());
+                // Loop through all online servers looking for a server to send the game to.
+                for(Server server : servers) {
+                    // Make sure the server is a duels server.
+                    if(!server.mode().equalsIgnoreCase("DUELS")) {
+                        continue;
+                    }
 
-        // Creates the game.
-        return worldCopy.thenCompose(world -> CompletableFuture.supplyAsync(() -> new Game(plugin, kit,gameType, arena, world, gameUUID)));
-    }
+                    // Make sure the server isn't a lobby server.
+                    if(!server.type().equalsIgnoreCase("GAME")) {
+                        continue;
+                    }
 
-    public CompletableFuture<Game> createGame(Arena arena, Kit kit, GameType gameType, Match match) {
-        UUID gameUUID = UUID.randomUUID();
+                    // Make sure there is room for another game.
+                    if(server.online() + 2 >= server.capacity()) {
+                        continue;
+                    }
 
-        // Makes a copy of the arena.
-        CompletableFuture<World> worldCopy = JadedAPI.getPlugin().worldManager().copyWorld(arena.fileName(), gameUUID.toString());
+                    //
+                    if(server.online() < count) {
+                        count = server.online();
+                        serverName = server.name();
+                    }
+                }
 
-        // Creates the game.
-        return worldCopy.thenCompose(world -> CompletableFuture.supplyAsync(() -> new Game(plugin, kit,gameType, arena, world, gameUUID, match)));
+                // If no server is found, give up ¯\_(ツ)_/¯
+                if(count == 999) {
+                    return;
+                }
+            }
+
+            System.out.println("Writing Document...");
+            // Create the document to eventually send to Redis.
+            Document document = new Document()
+                    .append("uuid", gameUUID.toString())
+                    .append("arena", arena.fileName())
+                    .append("kit", kit.id())
+                    .append("gameType", gameType.toString())
+                    .append("gameState", GameState.SETUP.toString())
+                    .append("server", serverName);
+
+
+            // Create teams.
+            List<TeamColor> availableColors = new ArrayList<>();
+            availableColors.add(TeamColor.RED);
+            availableColors.add(TeamColor.BLUE);
+            availableColors.add(TeamColor.GREEN);
+            availableColors.add(TeamColor.YELLOW);
+
+            Document teamsDocument = new Document();
+            for(List<UUID> team : teams) {
+                // Assign team color.
+                TeamColor color = availableColors.get(0);
+                availableColors.remove(0);
+
+                // Load uuids.
+                List<String> uuids = new ArrayList<>();
+                team.forEach(uuid -> uuids.add(uuid.toString()));
+
+                // Add to document.
+                Document teamDocument = new Document().append("uuids", uuids);
+                teamsDocument.append(color.toString(), teamDocument);
+            }
+            document.append("teams", teamsDocument);
+
+            // Update Redis
+            JadedAPI.getRedis().set("games:" + gameUUID, document.toJson());
+            JadedAPI.getRedis().publish("game", "create " + gameUUID);
+        }).whenComplete((result, error) -> error.printStackTrace());
     }
 
     /**
@@ -99,13 +158,29 @@ public class GameManager {
      * @param game Game to delete.
      */
     public void deleteGame(Game game) {
-        activeGames.remove(game);
+        games.remove(game);
         File worldFolder = game.world().getWorldFolder();
         Bukkit.unloadWorld(game.world(), false);
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> FileUtils.deleteDirectory(worldFolder));
+    }
 
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-            FileUtils.deleteDirectory(worldFolder);
-        });
+    /**
+     * Loads a game from a document.
+     * Generally loaded from Redis.
+     * @param document Document to create game with.
+     * @return Created Game.
+     */
+    public CompletableFuture<Game> fromDocument(Document document) {
+        // Makes a copy of the arena.
+        CompletableFuture<World> worldCopy = JadedAPI.getPlugin().worldManager().copyWorld(document.getString("arena"), document.getString("uuid"));
+
+        // Creates a game using that info.
+        return worldCopy.thenCompose(world -> CompletableFuture.supplyAsync(() -> {
+            Game game = new Game(plugin, world, document);
+            games.add(game);
+
+            return game;
+        }));
     }
 
     /**
@@ -116,7 +191,7 @@ public class GameManager {
      */
     public Game game(Player player) {
         // Makes a copy of the active games to prevent ConcurrentModificationException.
-        List<Game> games = new ArrayList<>(activeGames);
+        List<Game> games = new ArrayList<>(this.games);
 
         // Loop through each game looking for the player.
         for(Game game : games) {
@@ -140,7 +215,7 @@ public class GameManager {
      */
     public Game game(World world) {
         // Makes a copy of the active games to prevent ConcurrentModificationException.
-        List<Game> games = new ArrayList<>(activeGames);
+        List<Game> games = new ArrayList<>(this.games);
 
         for(Game game : games) {
             if(game.world().equals(world)) {
@@ -151,18 +226,11 @@ public class GameManager {
         return null;
     }
 
-    public int playing() {
-        int playing = 0;
-
-        for(Game game : activeGames) {
-            if(game.gameType() == GameType.TOURNAMENT) {
-                continue;
-            }
-
-            playing += game.players().size();
-            playing += game.spectators().size();
-        }
-
-        return playing;
+    /**
+     * Get all active games.
+     * @return Collection of all current games.
+     */
+    public Collection<Game> games() {
+        return new HashSet<>(games);
     }
 }

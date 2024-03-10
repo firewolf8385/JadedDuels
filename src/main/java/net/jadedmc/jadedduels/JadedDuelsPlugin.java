@@ -28,22 +28,21 @@ import net.jadedmc.jadedchat.JadedChat;
 import net.jadedmc.jadedchat.features.channels.channel.ChatChannel;
 import net.jadedmc.jadedchat.features.channels.channel.ChatChannelBuilder;
 import net.jadedmc.jadedchat.features.channels.fomat.ChatFormatBuilder;
+import net.jadedmc.jadedcore.JadedAPI;
 import net.jadedmc.jadedduels.commands.AbstractCommand;
 import net.jadedmc.jadedduels.game.GameManager;
 import net.jadedmc.jadedduels.game.arena.ArenaManager;
-import net.jadedmc.jadedduels.game.duel.DuelManager;
 import net.jadedmc.jadedduels.game.kit.KitManager;
-import net.jadedmc.jadedduels.game.tournament.DuelEventManager;
+import net.jadedmc.jadedduels.game.queue.QueueManager;
 import net.jadedmc.jadedduels.listeners.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class JadedDuelsPlugin extends JavaPlugin {
     private ArenaManager arenaManager;
-    private DuelManager duelManager;
     private GameManager gameManager;
     private KitManager kitManager;
     private SettingsManager settingsManager;
-    private DuelEventManager duelEventManager;
+    private QueueManager queueManager;
 
     @Override
     public void onEnable() {
@@ -57,8 +56,7 @@ public final class JadedDuelsPlugin extends JavaPlugin {
         arenaManager.loadArenas();
 
         gameManager = new GameManager(this);
-        duelEventManager = new DuelEventManager(this);
-        duelManager = new DuelManager(this);
+        queueManager = new QueueManager(this);
 
         AbstractCommand.registerCommands(this);
 
@@ -79,11 +77,13 @@ public final class JadedDuelsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerEggThrowListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerToggleFlightListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerToggleSneakListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new ProjectileLaunchListener(this), this);
+        getServer().getPluginManager().registerEvents(new RedisMessageListener(this), this);
         getServer().getPluginManager().registerEvents(new TNTPrimeListener(this), this);
         getServer().getPluginManager().registerEvents(new VehicleDamageListener(this), this);
         getServer().getPluginManager().registerEvents(new VehicleExitListener(this), this);
@@ -143,6 +143,9 @@ public final class JadedDuelsPlugin extends JavaPlugin {
             tournamentChannel.saveToFile("tournament.yml");
             JadedChat.loadChannel(tournamentChannel);
         }
+
+        // Registers the game creation channel.
+        JadedAPI.getRedis().subscribe("game");
     }
 
     /**
@@ -177,19 +180,7 @@ public final class JadedDuelsPlugin extends JavaPlugin {
         return settingsManager;
     }
 
-    /**
-     * Gets the Tournament Manager.
-     * @return Tournament manager.
-     */
-    public DuelEventManager duelEventManager() {
-        return duelEventManager;
-    }
-
-    /**
-     * Gets the Duel Manager.
-     * @return Duel Manager.
-     */
-    public DuelManager duelManager() {
-        return duelManager;
+    public QueueManager queueManager() {
+        return queueManager;
     }
 }

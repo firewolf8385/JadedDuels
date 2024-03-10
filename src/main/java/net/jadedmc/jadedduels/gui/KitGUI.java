@@ -53,7 +53,7 @@ public class KitGUI extends CustomGUI {
 
             setItem(iconSlots[i], item, (pl, a) -> {
                 pl.closeInventory();
-                // TODO Queuing
+                plugin.queueManager().addToQueue(pl, kit);
             });
             i++;
         }

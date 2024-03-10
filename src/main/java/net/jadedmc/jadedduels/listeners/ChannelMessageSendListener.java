@@ -27,7 +27,7 @@ package net.jadedmc.jadedduels.listeners;
 import net.jadedmc.jadedchat.features.channels.events.ChannelMessageSendEvent;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
-import net.jadedmc.jadedduels.game.team.Team;
+import net.jadedmc.jadedduels.game.teams.Team;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,7 +50,6 @@ public class ChannelMessageSendListener implements Listener {
         switch (event.getChannel().name().toUpperCase()) {
             case "GAME" -> gameChannel(event);
             case "TEAM" -> teamChannel(event);
-            case "TOURNAMENT" -> tournamentChannel(event);
         }
     }
 
@@ -92,10 +91,5 @@ public class ChannelMessageSendListener implements Listener {
         List<Player> viewers = new ArrayList<>(team.players());
 
         event.setViewers(viewers);
-    }
-
-    private void tournamentChannel(ChannelMessageSendEvent event) {
-        Player player = event.getPlayer();
-        event.setViewers(plugin.duelEventManager().players());
     }
 }

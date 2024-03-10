@@ -26,7 +26,6 @@ package net.jadedmc.jadedduels.listeners;
 
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
-import net.jadedmc.jadedduels.game.tournament.EventStatus;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -48,10 +47,6 @@ public class PlayerQuitListener implements Listener {
             game.playerDisconnect(player);
         }
 
-        // Cancel tournament if the player is the host.
-        if(plugin.duelEventManager().eventStatus() == EventStatus.WAITING
-                && plugin.duelEventManager().host().equals(player)) {
-            plugin.getServer().dispatchCommand(player, "cancel");
-        }
+        plugin.queueManager().removePlayer(player);
     }
 }

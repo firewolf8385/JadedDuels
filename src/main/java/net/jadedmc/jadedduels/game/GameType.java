@@ -28,11 +28,10 @@ package net.jadedmc.jadedduels.game;
  * Represents a form of match.
  */
 public enum GameType {
-    UNRANKED("Unranked"),
+    RANKED("Ranked"),
     PARTY("Party"),
     DUEL("Duel"),
     FFA("FFA"),
-    RANKED("Ranked"),
     TOURNAMENT("Tournament");
 
     private final String name;
