@@ -41,7 +41,7 @@ public class RedisMessageListener implements Listener {
                        String gameUUID = args[1];
 
                        try(Jedis jedis = JadedAPI.getRedis().jedisPool().getResource()) {
-                           Document document = Document.parse(jedis.get("games:" + gameUUID));
+                           Document document = Document.parse(jedis.get("duels:modern:games:" + gameUUID));
 
                            if(!document.getString("server").equalsIgnoreCase(JadedAPI.getServerName())) {
                                 return;
@@ -61,7 +61,7 @@ public class RedisMessageListener implements Listener {
                         try(Jedis jedis = JadedAPI.getRedis().jedisPool().getResource()) {
                             Collection<String> playerUUIDs = new HashSet<>();
 
-                            Document document = Document.parse(jedis.get("games:" + gameUUID));
+                            Document document = Document.parse(jedis.get("duels:modern:games:" + gameUUID));
                             String serverName = document.getString("server");
 
                             if(serverName.equalsIgnoreCase(JadedAPI.getServerName())) {
@@ -127,7 +127,7 @@ public class RedisMessageListener implements Listener {
                         }
                     }
 
-                    if(JadedAPI.getServerGame() == net.jadedmc.jadedcore.games.Game.TOURNAMENTS) {
+                    if(JadedAPI.getServerGame() == net.jadedmc.jadedcore.games.Game.TOURNAMENTS_MODERN) {
                         ChatUtils.broadcast(message);
                     }
                 }

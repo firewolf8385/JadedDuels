@@ -28,10 +28,10 @@ public class QueueManager {
         UUID uuid = player.getUniqueId();
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             try(Jedis jedis = JadedAPI.getRedis().jedisPool().getResource()) {
-                String otherPlayer = jedis.get("queue:" + kit.id());
+                String otherPlayer = jedis.get("duels:modern:queue:" + kit.id());
 
                 if(otherPlayer == null) {
-                    jedis.set("queue:" + kit.id(), uuid.toString());
+                    jedis.set("duels:modern:queue:" + kit.id(), uuid.toString());
 
                     if(queue.get(kit) != null) {
                         Timer timer = new Timer(plugin);

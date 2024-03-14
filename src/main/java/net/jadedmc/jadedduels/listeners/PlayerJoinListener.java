@@ -31,7 +31,7 @@ public class PlayerJoinListener implements Listener {
 
         if(!JadedAPI.getPlugin().lobbyManager().isLobbyWorld(player.getWorld())) {
             ChatUtils.chat(player, "<red>Game not found! Sending you back to the lobby.");
-            JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS);
+            JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS_MODERN);
         }
     }
 }

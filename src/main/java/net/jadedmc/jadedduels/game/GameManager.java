@@ -96,7 +96,7 @@ public class GameManager {
                 // Loop through all online servers looking for a server to send the game to.
                 for(Server server : servers) {
                     // Make sure the server is a duels server.
-                    if(!server.mode().equalsIgnoreCase("DUELS")) {
+                    if(!server.mode().equalsIgnoreCase("DUELS_MODERN")) {
                         continue;
                     }
 
@@ -177,7 +177,7 @@ public class GameManager {
             document.append("teams", teamsDocument);
 
             // Update Redis
-            JadedAPI.getRedis().set("games:" + gameUUID, document.toJson());
+            JadedAPI.getRedis().set("duels:modern:games:" + gameUUID, document.toJson());
             JadedAPI.getRedis().publish("game", "create " + gameUUID);
         }).whenComplete((result, error) -> error.printStackTrace());
     }

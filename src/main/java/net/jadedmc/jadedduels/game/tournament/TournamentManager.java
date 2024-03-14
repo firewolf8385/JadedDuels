@@ -114,7 +114,7 @@ public class TournamentManager {
                 // Add players to the tournament.
                 {
                     List<ParticipantQuery> queries = new ArrayList<>();
-                    List<JadedAPI.NetworkPlayer> waitingPlayers = new ArrayList<>(JadedAPI.getPlayers(net.jadedmc.jadedcore.games.Game.TOURNAMENTS).getPlayers());
+                    List<JadedAPI.NetworkPlayer> waitingPlayers = new ArrayList<>(JadedAPI.getPlayers(net.jadedmc.jadedcore.games.Game.TOURNAMENTS_MODERN).getPlayers());
                     Collections.shuffle(waitingPlayers);
 
                     // Remove the host from the waiting players if they are not playing.
@@ -281,8 +281,8 @@ public class TournamentManager {
 
         taskID = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             Collection<JadedAPI.NetworkPlayer> potentialPlayers = new ArrayList<>();
-            potentialPlayers.addAll(JadedAPI.getPlayers(net.jadedmc.jadedcore.games.Game.DUELS).getPlayers());
-            potentialPlayers.addAll(JadedAPI.getPlayers(net.jadedmc.jadedcore.games.Game.TOURNAMENTS).getPlayers());
+            potentialPlayers.addAll(JadedAPI.getPlayers(net.jadedmc.jadedcore.games.Game.DUELS_MODERN).getPlayers());
+            potentialPlayers.addAll(JadedAPI.getPlayers(net.jadedmc.jadedcore.games.Game.TOURNAMENTS_MODERN).getPlayers());
 
             int games = 0;
             boolean matchesObtained = false;

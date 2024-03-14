@@ -395,19 +395,19 @@ public class Game {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 for(Player player : players()) {
                     if(gameType == GameType.TOURNAMENT) {
-                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.TOURNAMENTS);
+                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.TOURNAMENTS_MODERN);
                     }
                     else {
-                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS);
+                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS_MODERN);
                     }
                 }
 
                 for(Player player : spectators()) {
                     if(gameType == GameType.TOURNAMENT) {
-                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.TOURNAMENTS);
+                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.TOURNAMENTS_MODERN);
                     }
                     else {
-                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS);
+                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS_MODERN);
                     }
                 }
 
@@ -719,10 +719,10 @@ public class Game {
         }
 
         if(gameType == GameType.TOURNAMENT) {
-            JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.TOURNAMENTS);
+            JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.TOURNAMENTS_MODERN);
         }
         else {
-            JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS);
+            JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS_MODERN);
         }
 
         updateRedis();
@@ -822,7 +822,7 @@ public class Game {
             document.append("teams", teamsDocument);
 
             // Update to redis.
-            JadedAPI.getRedis().set("games:" + uuid, document.toJson());
+            JadedAPI.getRedis().set("duels:modern:games:" + uuid, document.toJson());
         });
     }
 
