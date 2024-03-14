@@ -289,6 +289,7 @@ public class Game {
                 player.teleport(spawn);
                 player.closeInventory();
                 player.setFireTicks(0);
+                kit.onRoundStart(this, player);
             }
         }
     }
@@ -307,6 +308,10 @@ public class Game {
         winner.addPoint();
         gameState = GameState.END;
         timer.stop();
+
+        for(Player player : players()) {
+            kit.onRoundEnd(this, player);
+        }
 
         // Display the game over message.
         {

@@ -483,4 +483,8 @@ public class Kit {
     public void voidLevel(int voidLevel) {
         this.voidLevel = voidLevel;
     }
+
+    public void onRoundStart(Game game, Player player) {}
+
+    public void onRoundEnd(Game game, Player player) {}
 }

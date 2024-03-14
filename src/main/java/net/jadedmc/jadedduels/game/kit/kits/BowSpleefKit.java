@@ -133,7 +133,8 @@ public class BowSpleefKit extends Kit {
         repulsors.put(player, 10);
         tripleShots.put(player, 10);
 
-        player.setAllowFlight(true);
+        player.setAllowFlight(false);
+        player.setFlying(false);
     }
 
     @Override
@@ -216,6 +217,7 @@ public class BowSpleefKit extends Kit {
 
         // Prevents players from double jumping too often.
         if(doubleJumpDelay.contains(player)) {
+            event.setCancelled(true);
             return;
         }
 
@@ -269,6 +271,18 @@ public class BowSpleefKit extends Kit {
             Vector direction = entity.getLocation().toVector().subtract(location.toVector()).normalize().multiply(new Vector(0.48, 0.8, 0.48));
             entity.setVelocity(entity.getVelocity().add(direction));
         }
+    }
+
+    @Override
+    public void onRoundStart(Game game, Player player) {
+        player.setFlying(false);
+        player.setAllowFlight(true);
+    }
+
+    @Override
+    public void onRoundEnd(Game game, Player player) {
+        player.setFlying(false);
+        player.setAllowFlight(false);
     }
 
     @Override
