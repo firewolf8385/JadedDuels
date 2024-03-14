@@ -74,6 +74,17 @@ public class GameManager {
      * @param teams Teams to add to the game.
      */
     public void createGame(Arena arena, Kit kit, GameType gameType, int pointsNeeded, List<UUID>... teams) {
+        createGame(arena, kit, gameType, pointsNeeded, "", 0, 0, 0, teams);
+    }
+
+    /**
+     * Creates a game and sends it to Redis.
+     * @param arena Arena the game is in.
+     * @param kit Kit the game is using.
+     * @param gameType Type of game.
+     * @param teams Teams to add to the game.
+     */
+    public void createGame(Arena arena, Kit kit, GameType gameType, int pointsNeeded, String tournamentURL, long matchID, long challongeID1, long challongeID2, List<UUID>... teams) {
         JadedAPI.getServers().thenAccept(servers -> {
             UUID gameUUID = UUID.randomUUID();
 
@@ -123,6 +134,10 @@ public class GameManager {
                     .append("server", serverName)
                     .append("pointsNeeded", pointsNeeded);
 
+            if(gameType == GameType.TOURNAMENT) {
+                document.append("tournamentURL", tournamentURL);
+                document.append("matchID", matchID);
+            }
 
             // Create teams.
             List<TeamColor> availableColors = new ArrayList<>();
@@ -130,6 +145,8 @@ public class GameManager {
             availableColors.add(TeamColor.BLUE);
             availableColors.add(TeamColor.GREEN);
             availableColors.add(TeamColor.YELLOW);
+
+            int teamNumber = 1;
 
             Document teamsDocument = new Document();
             for(List<UUID> team : teams) {
@@ -143,6 +160,18 @@ public class GameManager {
 
                 // Add to document.
                 Document teamDocument = new Document().append("uuids", uuids);
+
+                if(gameType == GameType.TOURNAMENT) {
+                    if(teamNumber == 1) {
+                        teamDocument.append("challongeID", challongeID1);
+                    }
+                    else {
+                        teamDocument.append("challongeID", challongeID2);
+                    }
+
+                    teamNumber++;
+                }
+
                 teamsDocument.append(color.toString(), teamDocument);
             }
             document.append("teams", teamsDocument);

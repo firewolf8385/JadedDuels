@@ -60,6 +60,8 @@ public abstract class AbstractCommand implements CommandExecutor {
         new ArenaCMD(pl);
         new ArenasCMD(pl);
         new DuelCMD(pl);
+        new CreateCMD(pl);
+        new StartCMD(pl);
     }
 
     /**

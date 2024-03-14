@@ -68,7 +68,12 @@ public class GameScoreboard extends CustomScoreboard {
                     opponents.addAll(opposingTeam.players());
                 }
 
-                helper.setTitle("&a&lDuels");
+                if(game.gameType() == GameType.TOURNAMENT) {
+                    helper.setTitle("&a&lTournament");
+                }
+                else {
+                    helper.setTitle("&a&lDuels");
+                }
 
                 helper.setSlot(15, "&7" + DateUtils.currentDateToString() + " &8" + JadedAPI.getServerName());
                 helper.setSlot(14, "");

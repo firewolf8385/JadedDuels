@@ -24,6 +24,10 @@
  */
 package net.jadedmc.jadedduels.game;
 
+import at.stefangeyer.challonge.exception.DataAccessException;
+import at.stefangeyer.challonge.model.Match;
+import at.stefangeyer.challonge.model.Tournament;
+import at.stefangeyer.challonge.model.query.MatchQuery;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import net.jadedmc.jadedchat.JadedChat;
@@ -67,6 +71,8 @@ public class Game {
     private int round = 0;
     private final Map<Block, Material> blocks = new HashMap<>();
     private final int pointsNeeded;
+    private final long matchID;
+    private final String tournamentURL;
 
     public Game(JadedDuelsPlugin plugin, World world, Document document) {
         this.plugin = plugin;
@@ -87,7 +93,24 @@ public class Game {
 
         for(String team : teamsList) {
             Document teamDocument = teamsDocument.get(team, Document.class);
-            teamManager.createTeam(teamDocument.getList("uuids", String.class), TeamColor.valueOf(team));
+
+            if(gameType == GameType.TOURNAMENT) {
+                // turning long, to int, to long here too
+                teamManager.createTeam(teamDocument.getList("uuids", String.class), TeamColor.valueOf(team), Long.valueOf(teamDocument.getInteger("challongeID")));
+            }
+            else {
+                teamManager.createTeam(teamDocument.getList("uuids", String.class), TeamColor.valueOf(team));
+            }
+        }
+
+        if(gameType == GameType.TOURNAMENT) {
+            // Fuck MongoDB for making me do this
+            matchID = Long.valueOf(document.getInteger("matchID"));
+            tournamentURL = document.getString("tournamentURL");
+        }
+        else {
+            matchID = 0;
+            tournamentURL = null;
         }
 
         // Deletes setup signs
@@ -326,13 +349,66 @@ public class Game {
             }, 5*20);
         }
         else {
+
+            if(gameType == GameType.TOURNAMENT) {
+                Team loser = teamManager.opposingTeam(winner);
+
+                plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+                    MatchQuery.MatchQueryBuilder builder;
+                    Match match = null;
+                    try {
+                        Tournament tournament = plugin.tournamentManager().getChallonge().getTournament(tournamentURL);
+                        match = plugin.tournamentManager().getChallonge().getMatch(tournament, matchID);
+                    }
+                    catch (DataAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    if(winner.challongeID() == match.getPlayer1Id()) {
+                        builder = MatchQuery.builder()
+                                .winnerId(winner.challongeID())
+                                .scoresCsv(winner.score() + "-" + loser.score());
+                    }
+                    else {
+                        builder = MatchQuery.builder()
+                                .winnerId(winner.challongeID())
+                                .scoresCsv(loser.score() + "-" + winner.score());
+                    }
+
+                    boolean sent = false;
+                    while(!sent) {
+                        try {
+                            plugin.tournamentManager().getChallonge().updateMatch(match, builder.build());
+                            sent = true;
+                            Thread.sleep(1000);
+                        }
+                        catch (DataAccessException | InterruptedException exception) {
+                            exception.printStackTrace();
+                        }
+
+                    }
+                }, 3*20);
+
+                plugin.tournamentManager().broadcastMessage("&a&lTournament &8» &f" + winner.name() + " &ahas defeated &f" + loser.name() + " &7(&f" + winner.score() + " &8- &f" + loser.score() + "&7)&a.");
+            }
+
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 for(Player player : players()) {
-                    JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS);
+                    if(gameType == GameType.TOURNAMENT) {
+                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.TOURNAMENTS);
+                    }
+                    else {
+                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS);
+                    }
                 }
 
                 for(Player player : spectators()) {
-                    JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS);
+                    if(gameType == GameType.TOURNAMENT) {
+                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.TOURNAMENTS);
+                    }
+                    else {
+                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS);
+                    }
                 }
 
 
@@ -712,15 +788,15 @@ public class Game {
                     .append("spectators", jsonSpectators);
 
             if(gameType == GameType.TOURNAMENT) {
-                //document.append("matchID", match.getId());
-                //document.append("tournamentID", plugin.duelEventManager().activeEvent().tournament().getId());
+                document.append("matchID", matchID);
+                document.append("tournamentURL", tournamentURL);
             }
 
             Document teamsDocument = new Document();
             for(Team team : teamManager.teams()) {
                 Document teamDocument = new Document();
                 if(gameType == GameType.TOURNAMENT) {
-                    //teamDocument.append("teamID", team.eventTeam().challongeID());
+                    teamDocument.append("teamID", team.challongeID());
                 }
 
                 List<String> uuids = new ArrayList<>();

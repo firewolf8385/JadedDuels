@@ -42,6 +42,15 @@ public class TeamManager {
         return team;
     }
 
+    public Team createTeam(List<String> players, TeamColor teamColor, long challongeID) {
+        Team team = new Team(players, teamColor, teams().size() + 1, challongeID);
+
+        teams.add(team);
+        aliveTeams.add(team);
+
+        return team;
+    }
+
     /**
      * Get all teams that are still alive.
      * @return All alive teams.

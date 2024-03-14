@@ -38,14 +38,19 @@ public class Team {
     private final Set<UUID> deadPlayers = new HashSet<>();
     private int score = 0;
     private final TeamColor teamColor;
-    private final  int id;
+    private final int id;
+    private final long challongeID;
+
+    public Team(List<String> uuids, TeamColor teamColor, int id) {
+        this(uuids, teamColor, id, 0);
+    }
 
     /**
      * Creates a team.
      * @param uuids UUIDs of all team members.
      * @param teamColor Team color being used.
      */
-    public Team(List<String> uuids, TeamColor teamColor, int id) {
+    public Team(List<String> uuids, TeamColor teamColor, int id, long challongeID) {
         // Load players.
         uuids.forEach(uuid -> players.add(UUID.fromString(uuid)));
         alivePlayers.addAll(players);
@@ -54,6 +59,7 @@ public class Team {
         this.teamColor = teamColor;
 
         this.id = id;
+        this.challongeID = challongeID;
     }
 
     /**
@@ -194,5 +200,32 @@ public class Team {
      */
     public List<UUID> uuids() {
         return players;
+    }
+
+    public long challongeID() {
+        return challongeID;
+    }
+
+    public String name() {
+        StringBuilder builder = new StringBuilder();
+
+        int count = 0;
+        for(UUID uuid : players) {
+            Player player = Bukkit.getPlayer(uuid);
+
+            if(player == null || !player.isOnline()) {
+                continue;
+            }
+
+            if(count > 0) {
+                builder.append(", ");
+            }
+
+            builder.append(player.getName());
+
+            count++;
+        }
+
+        return builder.toString();
     }
 }

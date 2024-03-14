@@ -35,6 +35,7 @@ import net.jadedmc.jadedduels.game.arena.ArenaManager;
 import net.jadedmc.jadedduels.game.duels.DuelManager;
 import net.jadedmc.jadedduels.game.kit.KitManager;
 import net.jadedmc.jadedduels.game.queue.QueueManager;
+import net.jadedmc.jadedduels.game.tournament.TournamentManager;
 import net.jadedmc.jadedduels.listeners.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -45,6 +46,7 @@ public final class JadedDuelsPlugin extends JavaPlugin {
     private SettingsManager settingsManager;
     private QueueManager queueManager;
     private DuelManager duelManager;
+    private TournamentManager tournamentManager;
 
     @Override
     public void onEnable() {
@@ -60,6 +62,7 @@ public final class JadedDuelsPlugin extends JavaPlugin {
         gameManager = new GameManager(this);
         queueManager = new QueueManager(this);
         duelManager = new DuelManager(this);
+        tournamentManager = new TournamentManager(this);
 
         AbstractCommand.registerCommands(this);
 
@@ -149,7 +152,7 @@ public final class JadedDuelsPlugin extends JavaPlugin {
         }
 
         // Registers the game creation channel.
-        JadedAPI.getRedis().subscribe("game");
+        JadedAPI.getRedis().subscribe("game", "tournament");
     }
 
     /**
@@ -190,5 +193,9 @@ public final class JadedDuelsPlugin extends JavaPlugin {
 
     public QueueManager queueManager() {
         return queueManager;
+    }
+
+    public TournamentManager tournamentManager() {
+        return tournamentManager;
     }
 }

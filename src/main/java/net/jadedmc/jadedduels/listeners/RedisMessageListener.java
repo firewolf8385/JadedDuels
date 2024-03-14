@@ -3,6 +3,14 @@ package net.jadedmc.jadedduels.listeners;
 import net.jadedmc.jadedcore.JadedAPI;
 import net.jadedmc.jadedcore.events.RedisMessageEvent;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
+import net.jadedmc.jadedduels.game.Game;
+import net.jadedmc.jadedduels.game.GameType;
+import net.jadedmc.jadedduels.game.kit.Kit;
+import net.jadedmc.jadedduels.game.tournament.BestOf;
+import net.jadedmc.jadedduels.game.tournament.EliminationType;
+import net.jadedmc.jadedduels.game.tournament.TeamType;
+import net.jadedmc.jadedutils.chat.ChatUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -89,6 +97,39 @@ public class RedisMessageListener implements Listener {
                         System.out.println("Arena Update Received: " + arenaID);
                         plugin.arenaManager().loadArena(arenaID);
                     });
+                }
+            }
+        }
+        else if(event.getChannel().equalsIgnoreCase("tournament")) {
+            String[] args = event.getMessage().split(" ");
+
+            switch (args[0].toLowerCase()) {
+                case "create" -> {
+                    String host = args[1];
+                    Kit kit = plugin.kitManager().kit(args[2]);
+                    TeamType teamType = TeamType.valueOf(args[3]);
+                    EliminationType eliminationType = EliminationType.valueOf(args[4]);
+                    BestOf bestOf = BestOf.valueOf(args[5]);
+
+                    plugin.tournamentManager().setupTournament(host, kit, teamType, eliminationType, bestOf);
+                }
+
+                case "clear" -> {
+                    plugin.tournamentManager().reset();
+                }
+
+                case "broadcast" -> {
+                    String message = StringUtils.join(Arrays.copyOfRange(args, 1, args.length), ' ');
+
+                    for(Game game : plugin.gameManager().games()) {
+                        if(game.gameType() == GameType.TOURNAMENT) {
+                            ChatUtils.broadcast(game.world(), message);
+                        }
+                    }
+
+                    if(JadedAPI.getServerGame() == net.jadedmc.jadedcore.games.Game.TOURNAMENTS) {
+                        ChatUtils.broadcast(message);
+                    }
                 }
             }
         }
