@@ -31,7 +31,7 @@ public class RedisMessageListener implements Listener {
         if(event.getChannel().equalsIgnoreCase("game")) {
             String[] args = event.getMessage().split(" ");
 
-            if(args.length > 3) {
+            if(args.length > 4) {
                 return;
             }
 
@@ -100,10 +100,16 @@ public class RedisMessageListener implements Listener {
                 }
 
                 case "spectator" -> {
-                    String gameUUID = args[1];
-                    String spectatorUUID = args[2];
+                    UUID gameUUID = UUID.fromString(args[1]);
+                    UUID spectatorUUID = UUID.fromString(args[2]);
 
-
+                    for(Game game : plugin.gameManager().games()) {
+                        if(game.uuid().equals(gameUUID)) {
+                            game.addSpectator(spectatorUUID);
+                            JadedAPI.sendToServer(spectatorUUID, JadedAPI.getServerName());
+                            break;
+                        }
+                    }
                 }
             }
         }

@@ -443,6 +443,11 @@ public class Game {
     }
 
     public void addPlayer(Player player) {
+        if(spectators.contains(player.getUniqueId())) {
+            addSpectator(player);
+            return;
+        }
+
         Team playerTeam = teamManager.team(player);
         int spawn = teamManager.teams().indexOf(playerTeam);
         player.teleport(arena.spawns(world).get(spawn));
@@ -490,7 +495,9 @@ public class Game {
      * @param spectator Spectator to add.
      */
     public void addSpectator(Player spectator) {
-        spectators.add(spectator.getUniqueId());
+        if(!spectators.contains(spectator.getUniqueId())) {
+            spectators.add(spectator.getUniqueId());
+        }
 
         updateRedis();
 
@@ -837,5 +844,13 @@ public class Game {
      */
     public World world() {
         return world;
+    }
+
+    public UUID uuid() {
+        return uuid;
+    }
+
+    public void addSpectator(UUID uuid) {
+        spectators.add(uuid);
     }
 }
