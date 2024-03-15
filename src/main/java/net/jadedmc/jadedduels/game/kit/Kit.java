@@ -27,6 +27,7 @@ package net.jadedmc.jadedduels.game.kit;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.GameScoreboard;
+import net.jadedmc.jadedutils.items.ItemBuilder;
 import net.jadedmc.jadedutils.scoreboard.CustomScoreboard;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -39,6 +40,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
@@ -75,6 +78,7 @@ public class Kit {
     private boolean rangedDamage = false;
     private double maxDamage = -1;
     private boolean waterKills = false;
+    private boolean dropItems = true;
 
     /**
      * Create a kit.
@@ -117,7 +121,7 @@ public class Kit {
      * Apply a kit to a player.
      * @param player Player to apply kit to.
      */
-    public void apply(Player player) {
+    public void apply(Game game, Player player) {
         // Clear inventory.
         player.closeInventory();
         player.getInventory().clear();
@@ -131,6 +135,14 @@ public class Kit {
 
         // Give items
         for(int slot : items.keySet()) {
+            ItemStack item = items.get(slot);
+            ItemMeta meta = item.getItemMeta();
+
+            if(meta instanceof LeatherArmorMeta dyable) {
+                dyable.setColor(game.teamManager().team(player).teamColor().leatherColor());
+                item.setItemMeta(meta);
+            }
+
             player.getInventory().setItem(slot, items.get(slot));
         }
 
@@ -193,6 +205,22 @@ public class Kit {
      */
     public void build(boolean build) {
         this.build = build;
+    }
+
+    /**
+     * Get if items should be dropped from blocks.
+     * @return Whether items drop from blocks.
+     */
+    public boolean dropItems() {
+        return dropItems;
+    }
+
+    /**
+     * Change if items drop from blocks.
+     * @param dropItems Whether items should drop from blocks.
+     */
+    public void dropItems(boolean dropItems) {
+        this.dropItems = dropItems;
     }
 
     /**

@@ -64,6 +64,7 @@ public class KitManager {
         duelKits.add(new ArcherKit(plugin));
         duelKits.add(new SpeedArcherKit(plugin));
         duelKits.add(new SumoKit(plugin));
+        duelKits.add(new BlockSumoKit(plugin));
     }
 
     /**

@@ -84,6 +84,9 @@ public class BlockBreakListener implements Listener {
 
         // Get the drops from the block and add them to the inventory.
         Collection<ItemStack> drops = event.getBlock().getDrops(player.getInventory().getItemInMainHand());
-        drops.forEach(drop -> player.getInventory().addItem(drop));
+
+        if(game.kit().dropItems()) {
+            drops.forEach(drop -> player.getInventory().addItem(drop));
+        }
     }
 }

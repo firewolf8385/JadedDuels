@@ -31,7 +31,7 @@ public class RedisMessageListener implements Listener {
         if(event.getChannel().equalsIgnoreCase("game")) {
             String[] args = event.getMessage().split(" ");
 
-            if(args.length > 2) {
+            if(args.length > 3) {
                 return;
             }
 
@@ -97,6 +97,13 @@ public class RedisMessageListener implements Listener {
                         System.out.println("Arena Update Received: " + arenaID);
                         plugin.arenaManager().loadArena(arenaID);
                     });
+                }
+
+                case "spectator" -> {
+                    String gameUUID = args[1];
+                    String spectatorUUID = args[2];
+
+
                 }
             }
         }

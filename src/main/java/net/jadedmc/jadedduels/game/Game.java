@@ -206,7 +206,7 @@ public class Game {
             // Spawn in each player in the team.
             for(Player player : team.players()) {
                 player.teleport(spawn);
-                kit.apply(player);
+                kit.apply(this, player);
                 kit.scoreboard(this, player).update(player);
             }
         }
