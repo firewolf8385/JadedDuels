@@ -27,6 +27,9 @@ package net.jadedmc.jadedduels.listeners;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.GameState;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -46,6 +49,21 @@ public class PlayerMoveListener implements Listener {
 
         if(game == null) {
             return;
+        }
+
+        if(game.kit().waterKills()) {
+            if(game.spectators().contains(player)) {
+                player.teleport(game.arena().spectatorSpawn(game.world()));
+                return;
+            }
+
+            Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+            Block block2 = player.getLocation().getBlock();
+
+            if(block.getType() == Material.WATER || block2.getType() == Material.WATER) {
+                game.playerKilled(player);
+                return;
+            }
         }
 
         if(player.getLocation().getY() < game.kit().voidLevel()) {

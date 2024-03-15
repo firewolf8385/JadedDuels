@@ -99,6 +99,10 @@ public class EntityDamageByEntityListener implements Listener {
             event.setDamage(0.2);
         }
 
+        if(event.getDamage() > game.kit().maxDamage()) {
+            event.setDamage(game.kit().maxDamage());
+        }
+
         switch (event.getDamager().getType()) {
             case ENDER_CRYSTAL -> {
                 // Allow totems to work.

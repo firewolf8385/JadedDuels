@@ -73,6 +73,8 @@ public class Kit {
     private boolean build = false;
     private boolean takeDamage = true;
     private boolean rangedDamage = false;
+    private double maxDamage = -1;
+    private boolean waterKills = false;
 
     /**
      * Create a kit.
@@ -282,6 +284,22 @@ public class Kit {
     }
 
     /**
+     * Get the maximum amount of damage a player can do.
+     * @return Max damage.
+     */
+    public double maxDamage() {
+        return maxDamage;
+    }
+
+    /**
+     * Change the maximum amount of damage a player can do.
+     * @param maxDamage New max damage.
+     */
+    public void maxDamage(double maxDamage) {
+        this.maxDamage = maxDamage;
+    }
+
+    /**
      * Get the name of the kit.
      * @return Kit name.
      */
@@ -487,4 +505,20 @@ public class Kit {
     public void onRoundStart(Game game, Player player) {}
 
     public void onRoundEnd(Game game, Player player) {}
+
+    /**
+     * Get if water should kill players.
+     * @return Whether water should kill players.
+     */
+    public boolean waterKills() {
+        return waterKills;
+    }
+
+    /**
+     * Change if water should kill.
+     * @param waterKills Whether water should kill.
+     */
+    public void waterKills(boolean waterKills) {
+        this.waterKills = waterKills;
+    }
 }
