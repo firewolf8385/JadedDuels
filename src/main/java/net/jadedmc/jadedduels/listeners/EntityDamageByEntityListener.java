@@ -99,7 +99,7 @@ public class EntityDamageByEntityListener implements Listener {
             event.setDamage(0.2);
         }
 
-        if(event.getDamage() > game.kit().maxDamage()) {
+        if(game.kit().maxDamage() >= 0 && (event.getDamage() > game.kit().maxDamage())) {
             event.setDamage(game.kit().maxDamage());
         }
 
