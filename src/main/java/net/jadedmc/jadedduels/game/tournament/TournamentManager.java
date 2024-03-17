@@ -204,6 +204,8 @@ public class TournamentManager {
             }
             catch (DataAccessException exception) {
                 ChatUtils.broadcast("&c&lError &8» &cSomething went wrong while creating the tournament! Check console for details.");
+                exception.printStackTrace();
+                return;
             }
 
             // Start the tournament.
