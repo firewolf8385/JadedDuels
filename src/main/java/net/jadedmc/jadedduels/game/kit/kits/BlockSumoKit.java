@@ -46,6 +46,7 @@ public class BlockSumoKit extends Kit {
         maxDamage(0);
         gameMode(GameMode.SURVIVAL);
         dropItems(false);
+        hunger(false);
 
         ItemStack helmet = new ItemBuilder(Material.LEATHER_HELMET)
                 .setUnbreakable(true)
