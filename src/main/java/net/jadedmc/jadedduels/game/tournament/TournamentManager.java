@@ -16,6 +16,8 @@ import at.stefangeyer.challonge.rest.retrofit.RetrofitRestClient;
 import at.stefangeyer.challonge.serializer.Serializer;
 import at.stefangeyer.challonge.serializer.gson.GsonSerializer;
 import net.jadedmc.jadedcore.JadedAPI;
+import net.jadedmc.jadedcore.minigames.Minigame;
+import net.jadedmc.jadedcore.networking.player.NetworkPlayer;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.arena.Arena;
@@ -114,7 +116,7 @@ public class TournamentManager {
                 // Add players to the tournament.
                 {
                     List<ParticipantQuery> queries = new ArrayList<>();
-                    List<JadedAPI.NetworkPlayer> waitingPlayers = new ArrayList<>(JadedAPI.getPlayers(net.jadedmc.jadedcore.games.Game.TOURNAMENTS_MODERN).getPlayers());
+                    List<NetworkPlayer> waitingPlayers = new ArrayList<>(JadedAPI.getPlayers(Minigame.TOURNAMENTS_MODERN));
                     Collections.shuffle(waitingPlayers);
 
                     // Remove the host from the waiting players if they are not playing.
@@ -130,19 +132,19 @@ public class TournamentManager {
 
                             while (waitingPlayers.size() != 0) {
                                 if (waitingPlayers.size() >= 2) {
-                                    JadedAPI.NetworkPlayer one = waitingPlayers.get(0);
-                                    JadedAPI.NetworkPlayer two = waitingPlayers.get(1);
+                                    NetworkPlayer one = waitingPlayers.get(0);
+                                    NetworkPlayer two = waitingPlayers.get(1);
 
                                     waitingPlayers.remove(one);
                                     waitingPlayers.remove(two);
 
-                                    List<JadedAPI.NetworkPlayer> team = new ArrayList<>();
+                                    List<NetworkPlayer> team = new ArrayList<>();
                                     team.add(one);
                                     team.add(two);
                                     createTeam(team);
                                 }
                                 else {
-                                    JadedAPI.NetworkPlayer one = waitingPlayers.get(0);
+                                    NetworkPlayer one = waitingPlayers.get(0);
 
                                     waitingPlayers.remove(one);
                                     createTeam(one);
@@ -154,34 +156,34 @@ public class TournamentManager {
                             while (waitingPlayers.size() != 0) {
 
                                 if (waitingPlayers.size() >= 3) {
-                                    JadedAPI.NetworkPlayer one = waitingPlayers.get(0);
-                                    JadedAPI.NetworkPlayer two = waitingPlayers.get(1);
-                                    JadedAPI.NetworkPlayer three = waitingPlayers.get(2);
+                                    NetworkPlayer one = waitingPlayers.get(0);
+                                    NetworkPlayer two = waitingPlayers.get(1);
+                                    NetworkPlayer three = waitingPlayers.get(2);
 
                                     waitingPlayers.remove(one);
                                     waitingPlayers.remove(two);
                                     waitingPlayers.remove(three);
 
-                                    List<JadedAPI.NetworkPlayer> team = new ArrayList<>();
+                                    List<NetworkPlayer> team = new ArrayList<>();
                                     team.add(one);
                                     team.add(two);
                                     team.add(three);
                                     createTeam(team);
                                 }
                                 else if(waitingPlayers.size() == 2) {
-                                    JadedAPI.NetworkPlayer one = waitingPlayers.get(0);
-                                    JadedAPI.NetworkPlayer two = waitingPlayers.get(1);
+                                    NetworkPlayer one = waitingPlayers.get(0);
+                                    NetworkPlayer two = waitingPlayers.get(1);
 
                                     waitingPlayers.remove(one);
                                     waitingPlayers.remove(two);
 
-                                    List<JadedAPI.NetworkPlayer> team = new ArrayList<>();
+                                    List<NetworkPlayer> team = new ArrayList<>();
                                     team.add(one);
                                     team.add(two);
                                     createTeam(team);
                                 }
                                 else {
-                                    JadedAPI.NetworkPlayer one = waitingPlayers.get(0);
+                                    NetworkPlayer one = waitingPlayers.get(0);
 
                                     waitingPlayers.remove(one);
                                     createTeam(one);
@@ -210,14 +212,14 @@ public class TournamentManager {
         });
     }
 
-    public TournamentTeam createTeam(JadedAPI.NetworkPlayer player) {
+    public TournamentTeam createTeam(NetworkPlayer player) {
         TournamentTeam team = new TournamentTeam();
         team.addPlayer(player);
         teams.add(team);
         return team;
     }
 
-    public TournamentTeam createTeam(List<JadedAPI.NetworkPlayer> players) {
+    public TournamentTeam createTeam(List<NetworkPlayer> players) {
         TournamentTeam team = new TournamentTeam();
         players.forEach(team::addPlayer);
         teams.add(team);
@@ -280,9 +282,9 @@ public class TournamentManager {
         });
 
         taskID = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> {
-            Collection<JadedAPI.NetworkPlayer> potentialPlayers = new ArrayList<>();
-            potentialPlayers.addAll(JadedAPI.getPlayers(net.jadedmc.jadedcore.games.Game.DUELS_MODERN).getPlayers());
-            potentialPlayers.addAll(JadedAPI.getPlayers(net.jadedmc.jadedcore.games.Game.TOURNAMENTS_MODERN).getPlayers());
+            Collection<NetworkPlayer> potentialPlayers = new ArrayList<>();
+            potentialPlayers.addAll(JadedAPI.getPlayers(Minigame.TOURNAMENTS_MODERN));
+            potentialPlayers.addAll(JadedAPI.getPlayers(Minigame.TOURNAMENTS_MODERN));
 
             int games = 0;
             boolean matchesObtained = false;
@@ -321,8 +323,8 @@ public class TournamentManager {
                         List<UUID> team2Players = new ArrayList<>();
 
                         for (UUID player : team1.players()) {
-                            for (JadedAPI.NetworkPlayer networkPlayer : potentialPlayers) {
-                                if (networkPlayer.getUniqueID().equals(player)) {
+                            for (NetworkPlayer networkPlayer : potentialPlayers) {
+                                if (networkPlayer.getUniqueUID().equals(player)) {
                                     team1Players.add(player);
                                     break;
                                 }
@@ -330,8 +332,8 @@ public class TournamentManager {
                         }
 
                         for (UUID player : team2.players()) {
-                            for (JadedAPI.NetworkPlayer networkPlayer : potentialPlayers) {
-                                if (networkPlayer.getUniqueID().equals(player)) {
+                            for (NetworkPlayer networkPlayer : potentialPlayers) {
+                                if (networkPlayer.getUniqueUID().equals(player)) {
                                     team2Players.add(player);
                                     break;
                                 }

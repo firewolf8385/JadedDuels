@@ -1,6 +1,6 @@
 package net.jadedmc.jadedduels.game.tournament;
 
-import net.jadedmc.jadedcore.JadedAPI;
+import net.jadedmc.jadedcore.networking.player.NetworkPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ public class TournamentTeam {
     private Long challongeID;
     private String name = "";
 
-    public void addPlayer(JadedAPI.NetworkPlayer player) {
-        playerUUIDs.add(player.getUniqueID());
+    public void addPlayer(NetworkPlayer player) {
+        playerUUIDs.add(player.getUniqueUID());
 
         StringBuilder nameBuilder = new StringBuilder(name);
 

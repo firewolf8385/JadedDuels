@@ -25,7 +25,9 @@
 package net.jadedmc.jadedduels.game;
 
 import net.jadedmc.jadedcore.JadedAPI;
-import net.jadedmc.jadedcore.servers.Server;
+import net.jadedmc.jadedcore.minigames.Minigame;
+import net.jadedmc.jadedcore.networking.Instance;
+import net.jadedmc.jadedcore.networking.InstanceType;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.arena.Arena;
 import net.jadedmc.jadedduels.game.kit.Kit;
@@ -85,35 +87,35 @@ public class GameManager {
      * @param teams Teams to add to the game.
      */
     public void createGame(Arena arena, Kit kit, GameType gameType, int pointsNeeded, String tournamentURL, long matchID, long challongeID1, long challongeID2, List<UUID>... teams) {
-        JadedAPI.getServers().thenAccept(servers -> {
+        JadedAPI.getInstanceMonitor().getInstancesAsync().thenAccept(instances -> {
             UUID gameUUID = UUID.randomUUID();
 
             String serverName = "";
             {
-                System.out.println("Servers Found: " + servers.size());
+                System.out.println("Servers Found: " + instances.size());
                 int count = 999;
 
                 // Loop through all online servers looking for a server to send the game to.
-                for(Server server : servers) {
+                for(Instance instance : instances) {
                     // Make sure the server is a duels server.
-                    if(!server.mode().equalsIgnoreCase("DUELS_MODERN")) {
+                    if(instance.getMinigame() != Minigame.DUELS_MODERN) {
                         continue;
                     }
 
                     // Make sure the server isn't a lobby server.
-                    if(!server.type().equalsIgnoreCase("GAME")) {
+                    if(instance.getType() != InstanceType.GAME) {
                         continue;
                     }
 
                     // Make sure there is room for another game.
-                    if(server.online() + 2 >= server.capacity()) {
+                    if(instance.getOnline() + 2 >= instance.getCapacity()) {
                         continue;
                     }
 
                     //
-                    if(server.online() < count) {
-                        count = server.online();
-                        serverName = server.name();
+                    if(instance.getOnline() < count) {
+                        count = instance.getOnline();
+                        serverName = instance.getName();
                     }
                 }
 

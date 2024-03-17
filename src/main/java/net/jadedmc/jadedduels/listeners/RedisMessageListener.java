@@ -2,6 +2,7 @@ package net.jadedmc.jadedduels.listeners;
 
 import net.jadedmc.jadedcore.JadedAPI;
 import net.jadedmc.jadedcore.events.RedisMessageEvent;
+import net.jadedmc.jadedcore.minigames.Minigame;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedduels.game.GameType;
@@ -43,7 +44,7 @@ public class RedisMessageListener implements Listener {
                        try(Jedis jedis = JadedAPI.getRedis().jedisPool().getResource()) {
                            Document document = Document.parse(jedis.get("duels:modern:games:" + gameUUID));
 
-                           if(!document.getString("server").equalsIgnoreCase(JadedAPI.getServerName())) {
+                           if(!document.getString("server").equalsIgnoreCase(JadedAPI.getCurrentInstance().getName())) {
                                 return;
                            }
 
@@ -64,7 +65,7 @@ public class RedisMessageListener implements Listener {
                             Document document = Document.parse(jedis.get("duels:modern:games:" + gameUUID));
                             String serverName = document.getString("server");
 
-                            if(serverName.equalsIgnoreCase(JadedAPI.getServerName())) {
+                            if(serverName.equalsIgnoreCase(JadedAPI.getCurrentInstance().getName())) {
                                 return;
                             }
 
@@ -106,7 +107,7 @@ public class RedisMessageListener implements Listener {
                     for(Game game : plugin.gameManager().games()) {
                         if(game.uuid().equals(gameUUID)) {
                             game.addSpectator(spectatorUUID);
-                            JadedAPI.sendToServer(spectatorUUID, JadedAPI.getServerName());
+                            JadedAPI.sendToServer(spectatorUUID, JadedAPI.getCurrentInstance().getName());
                             break;
                         }
                     }
@@ -140,7 +141,7 @@ public class RedisMessageListener implements Listener {
                         }
                     }
 
-                    if(JadedAPI.getServerGame() == net.jadedmc.jadedcore.games.Game.TOURNAMENTS_MODERN) {
+                    if(JadedAPI.getCurrentInstance().getMinigame() == Minigame.TOURNAMENTS_MODERN) {
                         ChatUtils.broadcast(message);
                     }
                 }

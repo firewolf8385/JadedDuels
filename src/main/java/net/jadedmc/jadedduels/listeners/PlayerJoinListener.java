@@ -1,6 +1,7 @@
 package net.jadedmc.jadedduels.listeners;
 
 import net.jadedmc.jadedcore.JadedAPI;
+import net.jadedmc.jadedcore.minigames.Minigame;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
 import net.jadedmc.jadedutils.chat.ChatUtils;
@@ -31,7 +32,7 @@ public class PlayerJoinListener implements Listener {
 
         if(!JadedAPI.getPlugin().lobbyManager().isLobbyWorld(player.getWorld())) {
             ChatUtils.chat(player, "<red>Game not found! Sending you back to the lobby.");
-            JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS_MODERN);
+            JadedAPI.sendToLobby(player, Minigame.DUELS_MODERN);
         }
     }
 }

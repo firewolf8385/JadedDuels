@@ -29,7 +29,7 @@ public class QueueScoreboard extends CustomScoreboard {
         }
 
         helper.setTitle("&a&lDuels");
-        helper.setSlot(15, "&7" + DateUtils.currentDateToString() + " &8" + JadedAPI.getServerName());
+        helper.setSlot(15, "&7" + DateUtils.currentDateToString() + " &8" + JadedAPI.getCurrentInstance().getName());
         helper.setSlot(14, "");
         helper.setSlot(13, "&aQueue:");
         helper.setSlot(12, "  &aKit: &f" + plugin.queueManager().getKit(player).name());

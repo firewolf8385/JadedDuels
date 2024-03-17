@@ -32,6 +32,7 @@ import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import net.jadedmc.jadedchat.JadedChat;
 import net.jadedmc.jadedcore.JadedAPI;
+import net.jadedmc.jadedcore.minigames.Minigame;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.arena.Arena;
 import net.jadedmc.jadedduels.game.kit.Kit;
@@ -400,19 +401,19 @@ public class Game {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 for(Player player : players()) {
                     if(gameType == GameType.TOURNAMENT) {
-                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.TOURNAMENTS_MODERN);
+                        JadedAPI.sendToLobby(player, Minigame.TOURNAMENTS_MODERN);
                     }
                     else {
-                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS_MODERN);
+                        JadedAPI.sendToLobby(player, Minigame.DUELS_MODERN);
                     }
                 }
 
                 for(Player player : spectators()) {
                     if(gameType == GameType.TOURNAMENT) {
-                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.TOURNAMENTS_MODERN);
+                        JadedAPI.sendToLobby(player, Minigame.TOURNAMENTS_MODERN);
                     }
                     else {
-                        JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS_MODERN);
+                        JadedAPI.sendToLobby(player, Minigame.DUELS_MODERN);
                     }
                 }
 
@@ -731,10 +732,10 @@ public class Game {
         }
 
         if(gameType == GameType.TOURNAMENT) {
-            JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.TOURNAMENTS_MODERN);
+            JadedAPI.sendToLobby(player, Minigame.TOURNAMENTS_MODERN);
         }
         else {
-            JadedAPI.sendToLobby(player, net.jadedmc.jadedcore.games.Game.DUELS_MODERN);
+            JadedAPI.sendToLobby(player, Minigame.DUELS_MODERN);
         }
 
         updateRedis();
@@ -796,7 +797,7 @@ public class Game {
                     .append("arena", arena.fileName())
                     .append("type", gameType.toString())
                     .append("state", gameState.toString())
-                    .append("server", JadedAPI.getServerName())
+                    .append("server", JadedAPI.getCurrentInstance().getName())
                     .append("spectators", jsonSpectators);
 
             if(gameType == GameType.TOURNAMENT) {
