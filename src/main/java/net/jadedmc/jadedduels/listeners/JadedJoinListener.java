@@ -24,9 +24,12 @@
  */
 package net.jadedmc.jadedduels.listeners;
 
+import net.jadedmc.jadedcore.JadedAPI;
 import net.jadedmc.jadedcore.events.JadedJoinEvent;
+import net.jadedmc.jadedcore.minigames.Minigame;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.Game;
+import net.jadedmc.jadedutils.chat.ChatUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,5 +44,20 @@ public class JadedJoinListener implements Listener {
     @EventHandler
     public void onJadedJoin(JadedJoinEvent event) {
         // TODO: Load DuelPlayer object.
+        Player player = event.getJadedPlayer().getPlayer();
+
+        for(Game game : plugin.gameManager().games()) {
+            if(!game.players().contains(player)) {
+                continue;
+            }
+
+            game.addPlayer(player);
+            return;
+        }
+
+        if(!JadedAPI.getPlugin().lobbyManager().isLobbyWorld(player.getWorld())) {
+            ChatUtils.chat(player, "<red>Game not found! Sending you back to the lobby.");
+            JadedAPI.sendToLobby(player, Minigame.DUELS_MODERN);
+        }
     }
 }

@@ -24,6 +24,7 @@
  */
 package net.jadedmc.jadedduels.game.duels;
 
+import net.jadedmc.jadedcore.JadedAPI;
 import net.jadedmc.jadedduels.JadedDuelsPlugin;
 import net.jadedmc.jadedduels.game.GameType;
 import net.jadedmc.jadedduels.game.arena.Arena;
@@ -96,7 +97,7 @@ public class DuelManager {
         ChatUtils.chat(receiver, "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
         ChatUtils.chat(receiver, ChatUtils.centerText("&a&lDuel Request"));
         ChatUtils.chat(receiver, "");
-        ChatUtils.chat(receiver, ChatUtils.centerText("&f" + player.getName() + " &7wants to duel you in &f" + kit.name() + "&7!"));
+        ChatUtils.chat(receiver, ChatUtils.centerText(JadedAPI.getJadedPlayer(player).getRank().getChatPrefix() + player.getName() + " &7wants to duel you in &f" + kit.name() + "&7!"));
         ChatUtils.chat(receiver, "");
         ChatUtils.chat(receiver, "  <dark_gray>» <click:run_command:'/duel accept " + player.getName() + "'><hover:show_text:'<green>Click to accept'><green>/duel accept " + player.getName() + "</hover></click>");
         ChatUtils.chat(receiver, "  <dark_gray>» <click:run_command:'/duel deny " + player.getName() + "'><hover:show_text:'<red>Click to deny'><red>/duel deny " + player.getName() + "</hover></click>");

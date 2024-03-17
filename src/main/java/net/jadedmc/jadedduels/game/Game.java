@@ -129,7 +129,7 @@ public class Game {
     }
 
     private void startGame() {
-        if(gameState == GameState.STARTING) {
+        if(gameState != GameState.WAITING) {
             return;
         }
 
@@ -147,6 +147,8 @@ public class Game {
                 }
             });
 
+            System.out.println("Player: " + player.getName());
+
             // Displays the start message.
             ChatUtils.chat(player, "<center><dark_gray><st>+-----------------------***-----------------------+");
             ChatUtils.chat(player, ChatUtils.centerText("<green><bold>" + kit.name() + " Duel"));
@@ -162,7 +164,7 @@ public class Game {
 
             // Lists the opponents.
             for(Player opponent : opponents) {
-                ChatUtils.chat(player, ChatUtils.centerText(opponent.getName()));
+                ChatUtils.chat(player, ChatUtils.centerText(JadedAPI.getJadedPlayer(opponent).getRank().getChatPrefix() + opponent.getName()));
             }
 
             ChatUtils.chat(player, "");
@@ -330,10 +332,10 @@ public class Game {
 
             for(Player player : winner.players()) {
                 if(teamManager.team(player).deadPlayers().contains(player)) {
-                    ChatUtils.broadcast(world, "<center>" + player.getName() + "<green>(<red>0%<green>)");
+                    ChatUtils.broadcast(world, "<center>" + JadedAPI.getJadedPlayer(player).getRank().getChatPrefix() + player.getName() + "<green>(<red>0%<green>)");
                 }
                 else {
-                    ChatUtils.broadcast(world, "<center>" + player.getName() + " &a(" + GameUtils.getFormattedHealth(player) + "&a)");
+                    ChatUtils.broadcast(world, "<center>" + JadedAPI.getJadedPlayer(player).getRank().getChatPrefix() + player.getName() + " &a(" + GameUtils.getFormattedHealth(player) + "&a)");
                 }
             }
 
